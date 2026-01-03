@@ -32,7 +32,6 @@ function attachVehicleSearchListeners() {
     }
   } catch (err) {
     // If attaching listeners fails, ensure it doesn't break the rest of the script
-    console.warn('Could not attach vehicle search listeners', err)
   }
 }
 

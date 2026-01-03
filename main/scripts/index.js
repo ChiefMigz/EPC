@@ -718,7 +718,7 @@ async function initMainApplication() {
       sessionData = JSON.parse(storedSession)
     }
   } catch (e) {
-    console.warn('Could not load officerInformationSession from localStorage', e)
+    // Failed to load session data, will use server data
   }
   
   // Merge server data with session data (session data takes precedence for form fields)
@@ -732,7 +732,7 @@ async function initMainApplication() {
       JSON.stringify(mergedData || {})
     )
   } catch (e) {
-    console.warn('Could not save officerInformationSession to localStorage', e)
+    // Failed to save session data
   }
   
   // Add auto-save functionality for form changes
@@ -785,7 +785,7 @@ function setupAutoSaveForOfficerInformation() {
       applyOfficerInformationToDOM(currentFormData)
       
     } catch (e) {
-      console.warn('Could not auto-save officer information to localStorage', e)
+      // Auto-save failed, changes will be saved on manual save
     }
   }
 }
@@ -831,7 +831,7 @@ function setupDutyStatusUpdater() {
         officerInfo.dutyStatus = selectedStatus;
         localStorage.setItem('officerInformationSession', JSON.stringify(officerInfo));
       } catch (e) {
-        console.warn('Could not persist duty status to localStorage', e);
+        // Failed to persist duty status
       }
     })
   }
@@ -1799,7 +1799,7 @@ if (settingsSaveButton) {
           await fetch('/data/officerInformationData')
         ).json()
       } catch (e) {
-        console.warn('Failed fetching officer information after save', e)
+        // Failed to fetch updated data, will use sent data
       }
 
       // If server didn't return division/unit, merge in the just-sent values
@@ -1808,7 +1808,7 @@ if (settingsSaveButton) {
       try {
         localStorage.setItem('officerInformationSession', JSON.stringify(merged))
       } catch (e) {
-        console.warn('Could not persist officerInformationSession after save', e)
+        // Failed to persist session data
       }
       
     } else {
@@ -2649,7 +2649,7 @@ function syncOfficersToStorage() {
 }
 
 // Add Officer Form Handler
-document.addEventListener('DOMContentLoaded', () => {
+function initAddOfficerForm() {
   const addOfficerForm = document.getElementById('addOfficerForm');
   
   if (addOfficerForm) {
@@ -2853,7 +2853,14 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Check if logged in user has management access
   checkOfficerManagementAccess();
-});
+}
+
+// Initialize the form when DOM is ready or immediately if already loaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAddOfficerForm);
+} else {
+  initAddOfficerForm();
+}
 
 // Make Officer Management window draggable
 document.addEventListener('DOMContentLoaded', () => {
