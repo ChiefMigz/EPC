@@ -1959,17 +1959,19 @@ function openPlayerSettings() {
     loadTimeDisplayModeSetting();
     loadInterfaceCustomization();
     
-    // Update sidebar with officer information
-    const officerName = localStorage.getItem('officerName');
-    const unitID = localStorage.getItem('unitID');
+    // Update sidebar with officer information from session
+    const loggedInOfficer = JSON.parse(sessionStorage.getItem('loggedInOfficer'));
     
     const sidebarName = document.getElementById('settingsSidebarName');
     const sidebarUnit = document.getElementById('settingsSidebarUnit');
     
-    if (officerName && unitID) {
+    if (loggedInOfficer) {
       // Logged in - show full info
+      const fullName = `${loggedInOfficer.firstName} ${loggedInOfficer.lastName}`;
+      const unitID = loggedInOfficer.callSign || 'UNASSIGNED';
+      
       if (sidebarName) {
-        sidebarName.textContent = officerName;
+        sidebarName.textContent = fullName;
         sidebarName.style.color = '#fff';
         sidebarName.style.fontSize = '16px';
         sidebarName.style.fontWeight = '600';

@@ -680,10 +680,12 @@
           startMenu.style.display = 'block';
           
           // Update user name in start menu
-          if (loggedInOfficer) {
-            const userNameEl = document.getElementById('startMenuUser');
-            if (userNameEl) {
+          const userNameEl = document.getElementById('startMenuUser');
+          if (userNameEl) {
+            if (loggedInOfficer) {
               userNameEl.textContent = `${loggedInOfficer.firstName} ${loggedInOfficer.lastName}`;
+            } else {
+              userNameEl.textContent = '05-220';
             }
           }
           
