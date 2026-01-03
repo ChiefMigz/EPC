@@ -1,0 +1,286 @@
+{
+  "inGame": {
+    "loaded": "ExternalPoliceComputer has been loaded.",
+    "unloaded": "ExternalPoliceComputer has been unloaded.",
+    "listeningOnIpAddress": "EPC can be accessed on: "
+  },
+  "index": {
+    "static": {
+      "title": "ExternalPoliceComputer",
+      "desktop": {
+        "pedSearch": "Ped Lookup",
+        "vehicleSearch": "Vehicle Lookup",
+        "reports": "Reports",
+        "shiftHistory": "Shift History",
+        "court": "Court Cases"
+      },
+      "taskbar": {
+        "settings": "Control Panel"
+      },
+      "settings": {
+        "officerInformation": {
+          "title": "Officer Information",
+          "firstName": "First Name",
+          "lastName": "Last Name",
+          "rank": "Rank",
+          "callSign": "Call Sign",
+          "agency": "Agency",
+          "badgeNumber": "Badge Number",
+          "autoFill": "Auto Fill",
+          "save": "Save"
+        },
+        "currentShift": {
+          "startShift": "Start Shift",
+          "endShift": "End Shift"
+        }
+      }
+    },
+    "settings": {
+      "version": "Version",
+      "currentShift": {
+        "startTime": "Start Time",
+        "duration": "Duration",
+        "offDuty": "You are currently off duty."
+      }
+    },
+    "notifications": {
+      "webSocketOnClose": "A WebSocket lost connection. Please reload the page.",
+      "officerInformationSaved": "Successfully saved officer information data.",
+      "officerInformationError": "An error occurred while trying to save officer information data.",
+      "currentShiftStartedOfficerInformationExists": "You are now on duty as",
+      "currentShiftStarted": "You are now on duty.",
+      "currentShiftStartedError": "An error occurred while trying to start your shift.",
+      "currentShiftEnded": "You are now off duty.",
+      "currentShiftEndedError": "An error occurred while trying to end your shift."
+    }
+  },
+  "pedSearch": {
+    "static": {
+      "title": "Ped Lookup",
+      "search": "Search Ped",
+      "searchInput": "Search ped by name",
+      "basicInfoTitle": "Basic Information",
+      "legalInfoTitle": "Legal Information",
+      "licensesTitle": "Licenses & Permits",
+      "historyTitle": "History",
+      "labels": {
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "gender": "Gender",
+        "birthday": "Date Of Birth",
+        "age": "Age",
+        "address": "Address",
+        "gangAffiliation": "Gang Affiliation",
+        "advisory": "Advisory",
+        "wantedStatus": "Warrant Status",
+        "timesStopped": "Times Stopped",
+        "probationStatus": "Probation Status",
+        "paroleStatus": "Parole Status",
+        "licenseStatus": "Driving License Status",
+        "licenseExpiration": "Driving License Expiration",
+        "weaponPermitStatus": "Weapon Permit Status",
+        "weaponPermitExpiration": "Weapon Permit Expiration",
+        "fishingPermitStatus": "Fishing Permit Status",
+        "fishingPermitExpiration": "Fishing Permit Expiration",
+        "huntingPermitStatus": "Hunting Permit Status",
+        "huntingPermitExpiration": "Hunting Permit Expiration",
+        "citations": "Citations",
+        "arrests": "Arrests"
+      }
+    },
+    "notifications": {
+      "emptySearchInput": "Please enter a ped's name.",
+      "pedNotFound": "Couldn't find a ped with that name."
+    }
+  },
+  "vehicleSearch": {
+    "static": {
+      "title": "Vehicle Lookup",
+      "search": "Search Vehicle",
+      "searchInput": "Search vehicle by license plate or VIN",
+      "basicInfoTitle": "Basic Information",
+      "documentsTitle": "Documents",
+      "labels": {
+        "licensePlate": "License Plate",
+        "owner": "Owner",
+        "isStolen": "Stolen",
+        "color": "Color",
+        "vehicleModel": "Vehicle Model",
+        "registrationStatus": "Registration Status",
+        "registrationExpiration": "Registration Expiration",
+        "insuranceStatus": "Insurance Status",
+        "insuranceExpiration": "Insurance Expiration"
+      }
+    },
+    "notifications": {
+      "emptySearchInput": "Please enter a vehicle's license plate or VIN.",
+      "vehicleNotFound": "Couldn't find a vehicle with that license plate or VIN."
+    }
+  },
+  "values": {
+    "wanted": "Wanted for",
+    "notWanted": "Not wanted",
+    "true": "Yes",
+    "false": "No",
+    "empty": "N/A",
+    "Valid": "Valid",
+    "Expired": "Expired",
+    "Revoked": "Revoked",
+    "Suspended": "Suspended",
+    "Unlicensed": "Unlicensed",
+    "None": "None",
+    "CcwPermit": "Carrying a concealed weapon (CCW)",
+    "FflPermit": "Federal firearms license (FFL)",
+    "Government": "Government",
+    "LosSantos": "Los Santos",
+    "LosSantosCounty": "Los Santos County",
+    "BlaineCounty": "Blaine County",
+    "SanAndreas": "San Andreas",
+    "NorthYankton": "North Yankton",
+    "CayoPerico": "Cayo Perico"
+  },
+  "reports": {
+    "newReportTitle": "New Report",
+    "editReportTitle": "Edit Report",
+    "statusMap": [
+      "Closed",
+      "Open",
+      "Canceled"
+    ],
+    "static": {
+      "title": "Reports",
+      "listPage": {
+        "createButton": "Create New Reports",
+        "reportType": {
+          "incident": "Incident Reports",
+          "citation": "Citation Reports",
+          "arrest": "Arrest Reports"
+        }
+      },
+      "createPage": {
+        "saveButton": "Save Report",
+        "cancelButton": "Cancel",
+        "reportType": {
+          "select": "Select Report Type",
+          "incident": "Incident Report",
+          "citation": "Citation Report",
+          "arrest": "Arrest Report"
+        }
+      }
+    },
+    "notifications": {
+      "createPageAlreadyOpen": "Only one report can be created at a time.",
+      "invalidPedName": "A ped with this name doesn't exist.",
+      "invalidVehicleLicensePlate": "A vehicle with this license plate doesn't exist.",
+      "saveSuccess": "Report saved successfully.",
+      "saveError": "An error occurred while trying to save the report.",
+      "invalidTimeStamp": "Invalid date or time.",
+      "invalidTime": "Invalid time.",
+      "invalidDate": "Invalid date.",
+      "noCharges": "Empty charges list.",
+      "noOffender": "No offender specified."
+    },
+    "sections": {
+      "notes": "Notes",
+      "fine": "Fine",
+      "incarceration": "Incarceration",
+      "generalInformation": {
+        "title": "General Information",
+        "date": "Date",
+        "time": "Time",
+        "reportId": "Report ID",
+        "status": "Status"
+      },
+      "location": {
+        "title": "Location",
+        "area": "Area",
+        "street": "Street",
+        "county": "County",
+        "postal": "Postal Code"
+      },
+      "officerInformation": {
+        "title": "Officer Information",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "rank": "Rank",
+        "callSign": "Call Sign",
+        "agency": "Agency",
+        "badgeNumber": "Badge Number"
+      },
+      "incident": {
+        "titleOffenders": "Offenders",
+        "titleWitnesses": "Witnesses & Victims",
+        "labelOffenders": "Full Name Of Offender",
+        "labelWitnesses": "Full Name Of Witness",
+        "addOffender": "Add Offender",
+        "addWitness": "Add Witness",
+        "removeOffender": "Remove Offender",
+        "removeWitness": "Remove Witness"
+      },
+      "offender": {
+        "title": "Offender Information",
+        "pedName": "Offender's Full Name",
+        "vehicleLicensePlate": "License Plate Of Offender's Vehicle"
+      },
+      "citation": {
+        "title": "Citation Charges",
+        "searchChargesPlaceholder": "Search citations"
+      },
+      "arrest": {
+        "title": "Arrest Charges",
+        "searchChargesPlaceholder": "Search charges"
+      }
+    },
+    "idTypeMap": {
+      "incident": "I",
+      "citation": "C",
+      "arrest": "A"
+    },
+    "list": {
+      "viewButton": "View",
+      "editButton": "Edit",
+      "empty": "No reports of this type found.",
+      "reportId": "Report ID",
+      "date": "Date",
+      "location": "Location",
+      "involvedParties": "Involved Parties",
+      "offender": "Offender",
+      "vehicle": "Vehicle",
+      "filter": {
+        "title": "Filter",
+        "searchPlaceholder": "Search"
+      }
+    }
+  },
+  "units": {
+    "year": "y",
+    "month": "mo",
+    "day": "d",
+    "hour": "h",
+    "minute": "m",
+    "second": "s",
+    "currencySymbol": "$",
+    "life": "Life"
+  },
+  "shiftHistory": {
+    "empty": "No shifts found.",
+    "reports": "Reports",
+    "static": {
+      "title": "Shift History"
+    }
+  },
+  "court": {
+    "empty": "No court cases found.",
+    "charges": "Charges",
+    "number": "Case Number",
+    "pedName": "Offender Name",
+    "report": "Report",
+    "totalFine": "Total Fine",
+    "fine": "Fine",
+    "totalIncarceration": "Total Incarceration",
+    "incarceration": "Incarceration",
+    "static": {
+      "title": "Court Cases"
+    }
+  }
+}

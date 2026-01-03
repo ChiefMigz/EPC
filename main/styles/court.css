@@ -1,0 +1,46 @@
+body {
+  background: #0a1f3d;
+  margin: 0;
+  overflow: hidden;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+  height: calc(100vh - 40px);
+  overflow: auto;
+  color: var(--color-text-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.listItem {
+  padding: 0 20px;
+  border: 2px solid rgba(46, 139, 192, 0.3);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #0d2440 0%, #0a1f3d 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.listItem:hover {
+  border-color: rgba(46, 139, 192, 0.5);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.chargesWrapper .inputWrapper > div label {
+  color: var(--color-text-primary) !important;
+  font-weight: 600 !important;
+}
+
+.chargesWrapper .inputWrapper > div input {
+  color: var(--color-text-primary-half) !important;
+  font-weight: 400 !important;
+}
+
+.chargesWrapper .searchResponseSectionTitle {
+  font-size: 16px !important;
+}

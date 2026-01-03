@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <!-- Background -->
+  <rect width="800" height="500" fill="#0a1929"/>
+  
+  <!-- Browser Client Box -->
+  <g id="browser-client">
+    <rect x="50" y="80" width="280" height="120" rx="8" fill="#1e2a3a" stroke="#2e8bc0" stroke-width="2"/>
+    <text x="190" y="115" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">Browser Client</text>
+    <text x="190" y="140" text-anchor="middle" fill="#2e8bc0" font-family="Arial, sans-serif" font-size="14">(MDT Interface)</text>
+    <text x="190" y="165" text-anchor="middle" fill="#4caf50" font-family="Arial, sans-serif" font-size="12" font-weight="bold">THIS REPO ✓</text>
+  </g>
+  
+  <!-- Local Server Box -->
+  <g id="local-server">
+    <rect x="470" y="80" width="280" height="120" rx="8" fill="#1e2a3a" stroke="#2e8bc0" stroke-width="2"/>
+    <text x="610" y="115" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="18" font-weight="bold">Local Server</text>
+    <text x="610" y="140" text-anchor="middle" fill="#2e8bc0" font-family="Arial, sans-serif" font-size="14">(C# Plugin)</text>
+    <text x="610" y="165" text-anchor="middle" fill="#f44336" font-family="Arial, sans-serif" font-size="12" font-weight="bold">NOT INCLUDED ✗</text>
+  </g>
+  
+  <!-- WebSocket Arrow (top) -->
+  <g id="websocket">
+    <!-- Arrow line -->
+    <path d="M 330 110 L 470 110" stroke="#FDB913" stroke-width="2" fill="none" marker-end="url(#arrowhead-gold)"/>
+    <path d="M 470 110 L 330 110" stroke="#FDB913" stroke-width="2" fill="none" marker-end="url(#arrowhead-gold)"/>
+    <!-- Label -->
+    <text x="400" y="100" text-anchor="middle" fill="#FDB913" font-family="Arial, sans-serif" font-size="14" font-weight="bold">WebSocket</text>
+  </g>
+  
+  <!-- HTTP Arrow (bottom of boxes) -->
+  <g id="http">
+    <!-- Arrow line -->
+    <path d="M 330 160 L 470 160" stroke="#FDB913" stroke-width="2" fill="none" marker-end="url(#arrowhead-gold)"/>
+    <path d="M 470 160 L 330 160" stroke="#FDB913" stroke-width="2" fill="none" marker-end="url(#arrowhead-gold)"/>
+    <!-- Label -->
+    <text x="400" y="185" text-anchor="middle" fill="#FDB913" font-family="Arial, sans-serif" font-size="14" font-weight="bold">HTTP</text>
+  </g>
+  
+  <!-- Vertical connector lines -->
+  <line x1="190" y1="200" x2="190" y2="250" stroke="#2e8bc0" stroke-width="2"/>
+  <line x1="610" y1="200" x2="610" y2="250" stroke="#2e8bc0" stroke-width="2"/>
+  
+  <!-- LocalStorage Box -->
+  <g id="localstorage">
+    <rect x="50" y="260" width="280" height="180" rx="8" fill="#253a5a" stroke="#2e8bc0" stroke-width="2"/>
+    <text x="190" y="285" text-anchor="middle" fill="#FDB913" font-family="Arial, sans-serif" font-size="16" font-weight="bold">LocalStorage</text>
+    <text x="70" y="315" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">• Officer Database</text>
+    <text x="70" y="345" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">• Session Data</text>
+    <text x="70" y="375" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">• Form Cache</text>
+    <text x="70" y="405" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">• UI State</text>
+  </g>
+  
+  <!-- JSON Files Box -->
+  <g id="json-files">
+    <rect x="470" y="260" width="280" height="180" rx="8" fill="#253a5a" stroke="#2e8bc0" stroke-width="2"/>
+    <text x="610" y="285" text-anchor="middle" fill="#FDB913" font-family="Arial, sans-serif" font-size="16" font-weight="bold">JSON Files</text>
+    <text x="490" y="315" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">• Reports (Incident/Citation/Arrest)</text>
+    <text x="490" y="345" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">• Vehicle Database</text>
+    <text x="490" y="375" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">• Ped Database</text>
+    <text x="490" y="405" fill="#ffffff" font-family="Arial, sans-serif" font-size="14">• Court Cases &amp; Shift History</text>
+  </g>
+  
+  <!-- Arrow markers -->
+  <defs>
+    <marker id="arrowhead-gold" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#FDB913"/>
+    </marker>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="40" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="20" font-weight="bold">System Architecture - Client-Server Model</text>
+</svg>

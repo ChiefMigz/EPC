@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-language="title">LAPD MDT - Mobile Data Terminal</title>
+    <link rel="icon" href="/favicon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style/root.css" />
+    <link rel="stylesheet" href="/style/index.css" />
+    <link rel="stylesheet" href="/style/windows.css" />
+    <link rel="stylesheet" href="/style/settings.css" />
+  </head>
+  <body class="windows-desktop">
+    <!-- Windows Desktop Environment -->
+    <div class="desktop-background">
+      <!-- Desktop Icons -->
+      <div class="desktop-icons">
+        <div class="desktop-icon" ondblclick="openMdtWindow()">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Seal_of_the_Los_Angeles_Police_Department.png/1033px-Seal_of_the_Los_Angeles_Police_Department.png" alt="LAPD Logo" class="icon-image" style="width: 48px; height: 48px; object-fit: contain;">
+          <span class="icon-label">LAPD MDT</span>
+        </div>
+        
+        <div class="desktop-icon">
+          <svg viewBox="0 0 48 48" class="icon-image">
+            <rect x="8" y="8" width="32" height="32" rx="2" fill="#2b579a"/>
+            <text x="24" y="28" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">W</text>
+          </svg>
+          <span class="icon-label">Word 2016</span>
+        </div>
+        
+        <div class="desktop-icon">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg" alt="Chrome" class="icon-image" style="width: 48px; height: 48px; object-fit: contain;">
+          <span class="icon-label">Chrome</span>
+        </div>
+        
+        <div class="desktop-icon">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Windows_Explorer.svg" alt="Documents" class="icon-image" style="width: 48px; height: 48px; object-fit: contain;">
+          <span class="icon-label">Documents</span>
+        </div>
+        
+        <div class="desktop-icon">
+          <svg viewBox="0 0 48 48" class="icon-image">
+            <rect x="8" y="8" width="32" height="32" rx="2" fill="#217346"/>
+            <text x="24" y="28" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">X</text>
+          </svg>
+          <span class="icon-label">Excel 2016</span>
+        </div>
+        
+        <div class="desktop-icon">
+          <svg viewBox="0 0 48 48" class="icon-image">
+            <path fill="#fff" d="M8 8h12v12H8z"/>
+            <path fill="#d4d4d4" d="M8 22h12v18H8z"/>
+            <path fill="#d4d4d4" d="M22 8h18v32H22z"/>
+          </svg>
+          <span class="icon-label">Recycle Bin</span>
+        </div>
+      </div>
+
+      <!-- LAPD MDT Application Window (hidden by default) -->
+      <div class="window-container login-mode" id="mdtWindow" style="display: none;">
+        <div class="window-titlebar" id="mdtTitlebar">
+          <div class="window-title">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Seal_of_the_Los_Angeles_Police_Department.png/1033px-Seal_of_the_Los_Angeles_Police_Department.png" alt="" class="window-icon" />
+            <span>LAPD MDT - Mobile Data Terminal</span>
+          </div>
+          <div class="window-controls">
+            <button class="window-btn minimize" onclick="minimizeWindow()" title="Minimize">−</button>
+            <button class="window-btn maximize" onclick="maximizeWindow()" title="Maximize">□</button>
+            <button class="window-btn close" id="mdtCloseButton" title="Close">×</button>
+          </div>
+        </div>
+        <div class="window-content">
+          <!-- Login Screen Inside Window -->
+          <div id="loginScreen" class="window-login-screen">
+            <div class="window-login-container">
+              <div class="login-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Seal_of_the_Los_Angeles_Police_Department.png/1033px-Seal_of_the_Los_Angeles_Police_Department.png" alt="LAPD Logo" class="login-logo">
+                <h1>LAPD Mobile Data Terminal</h1>
+                <p>Los Angeles Police Department</p>
+              </div>
+              <form id="loginForm" class="login-form">
+                <div class="login-field">
+                  <label for="badgeNumber">Badge Number</label>
+                  <input type="text" id="badgeNumber" name="badgeNumber" placeholder="Enter badge number" autocomplete="off" required>
+                </div>
+                <div class="login-field">
+                  <label for="password">Password</label>
+                  <input type="password" id="password" name="password" placeholder="Enter password" required>
+                </div>
+                <div id="loginError" class="login-error" style="display: none;"></div>
+                <button type="submit" class="login-button">
+                  <span>LOG IN</span>
+                </button>
+              </form>
+              <div class="login-footer">
+                <p>Authorized Personnel Only</p>
+                <p class="login-warning">⚠️ Unauthorized access is prohibited and will be prosecuted</p>
+                <p class="login-legal">California Penal Code § 502(c) - Unauthorized Computer Access<br>
+                Punishable by imprisonment up to 3 years and/or fines up to $10,000</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- MDT Content (hidden until login) -->
+          <div id="mdtContent" style="display: none;">
+          
+          <!-- LAPD MDT Header -->
+          <div class="mdt-header">
+            <div class="mdt-header-left">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Seal_of_the_Los_Angeles_Police_Department.png/1033px-Seal_of_the_Los_Angeles_Police_Department.png" alt="LAPD" class="mdt-header-logo">
+            </div>
+            <div class="mdt-header-center">
+              <div class="mdt-title-main">LOS ANGELES POLICE DEPARTMENT</div>
+              <div class="mdt-title-sub">Mobile Data Terminal</div>
+            </div>
+            <div class="mdt-header-right">
+              <div class="mdt-header-info">
+                <div class="mdt-header-unit">
+                  <span id="headerCallSign">Callsign: 1-LINCOLN-18</span>
+                </div>
+                <div class="mdt-header-datetime">
+                  <span id="headerDate">01/02/2026</span>
+                  <span id="headerTime">14:18:54</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- User Profile Dropdown (Positioned Absolutely) -->
+            <div class="user-profile-dropdown">
+              <button class="user-profile-button" id="userProfileButton" onclick="toggleUserMenu()">
+                <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right: 6px;">
+                  <path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                <span id="userProfileName">OFFICER</span>
+                <svg viewBox="0 0 24 24" width="16" height="16" style="margin-left: 4px;">
+                  <path fill="currentColor" d="M7 10l5 5 5-5z"/>
+                </svg>
+              </button>
+              <div class="user-profile-menu" id="userProfileMenu" style="display: none;">
+                <button class="user-menu-item" onclick="openOfficerProfile(); toggleUserMenu();">
+                  <svg viewBox="0 0 24 24" width="16" height="16">
+                    <path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                  </svg>
+                  Manage Profile
+                </button>
+                <button class="user-menu-item logout-item" onclick="performLogout(); toggleUserMenu();">
+                  <svg viewBox="0 0 24 24" width="16" height="16">
+                    <path fill="currentColor" d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                  </svg>
+                  Log Out
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Quick Access Buttons -->
+          <div class="quick-actions">
+            <div class="quick-actions-header">
+              <h3>QUICK ACCESS</h3>
+            </div>
+            <div class="action-grid">
+              <button class="mdt-button primary" data-name="pedSearch">
+                <div class="icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 35.5 35.5">
+                    <g>
+                      <path d="M33,8.812h-4.16V5.938c0-1.381-1.117-2.5-2.5-2.5h-1.93c-1.381,0-2.5,1.119-2.5,2.5v2.875h-8.32V5.938
+                c0-1.381-1.118-2.5-2.5-2.5H9.16c-1.381,0-2.5,1.119-2.5,2.5v2.875H2.5c-1.381,0-2.5,1.119-2.5,2.5v18.25
+                c0,1.381,1.119,2.5,2.5,2.5H33c1.381,0,2.5-1.119,2.5-2.5v-18.25C35.5,9.934,34.381,8.812,33,8.812z M16.551,26.362
+                c0,0.519-0.42,0.937-0.938,0.937H4.369c-0.521,0-0.938-0.418-0.938-0.937v-1.434c0-0.41,0.269-0.771,0.655-0.895l3.959-1.236
+                C7.191,21.776,6.67,20.164,6.67,18.65c0-2.285,1.304-3.762,3.318-3.762c2.018,0,3.32,1.477,3.32,3.762
+                c0,1.512-0.52,3.126-1.377,4.146l3.959,1.236c0.391,0.12,0.658,0.482,0.658,0.895v1.435H16.551z M32.068,27.312H18.625v-1.969
+                h13.443V27.312L32.068,27.312z M32.068,23.83H18.625v-1.969h13.443V23.83L32.068,23.83z M32.068,20.349H18.625v-1.97h13.443V20.349
+                L32.068,20.349z M32.068,16.866H18.625v-1.968h13.443V16.866L32.068,16.866z"/>
+                    </g>
+                  </svg>
+                </div>
+                <div class="label">
+                  <div class="title" data-language="desktop.pedSearch">PERSON SEARCH</div>
+                  <div class="subtitle">Criminal History Database</div>
+                </div>
+              </button>
+              <button class="mdt-button primary" data-name="vehicleSearch">
+                <div class="icon">
+                  <svg viewBox="-4 0 32 32" xmlns="http://www.w3.org/2000/svg" style="transform: scale(1.1)">
+                    <path d="M19.938 7.188l3.563 7.156c0.063 0.094 0.094 0.219 0.125 0.313 0.219 0.563 0.375 1.344 0.375 1.844v3.406c0 1.063-0.719 1.938-1.719 2.188v2c0 0.969-0.781 1.719-1.719 1.719-0.969 0-1.719-0.75-1.719-1.719v-1.938h-13.688v1.938c0 0.969-0.75 1.719-1.719 1.719-0.938 0-1.719-0.75-1.719-1.719v-2c-1-0.25-1.719-1.125-1.719-2.188v-3.406c0-0.5 0.156-1.281 0.375-1.844 0.031-0.094 0.063-0.219 0.125-0.313l3.563-7.156c0.281-0.531 1.031-1.031 1.656-1.031h12.563c0.625 0 1.375 0.5 1.656 1.031zM5.531 9.344l-1.906 4.344c-0.094 0.156-0.094 0.344-0.094 0.469h16.938c0-0.125 0-0.313-0.094-0.469l-1.906-4.344c-0.25-0.563-1-1.063-1.594-1.063h-9.75c-0.594 0-1.344 0.5-1.594 1.063zM4.688 19.906c1 0 1.781-0.813 1.781-1.844 0-1-0.781-1.781-1.781-1.781s-1.844 0.781-1.844 1.781c0 1.031 0.844 1.844 1.844 1.844zM19.313 19.906c1 0 1.844-0.813 1.844-1.844 0-1-0.844-1.781-1.844-1.781s-1.781 0.781-1.781 1.781c0 1.031 0.781 1.844 1.781 1.844z"></path>
+                  </svg>
+                </div>
+                <div class="label">
+                  <div class="title" data-language="desktop.vehicleSearch">VEHICLE SEARCH</div>
+                  <div class="subtitle">DMV & Registration Records</div>
+                </div>
+              </button>
+              <button class="mdt-button secondary" data-name="reports">
+                <div class="icon">
+                  <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="18" width="8" height="2" />
+                    <rect x="10" y="13" width="12" height="2" />
+                    <rect x="10" y="23" width="5" height="2" />
+                    <path d="M25,5H22V4a2,2,0,0,0-2-2H12a2,2,0,0,0-2,2V5H7A2,2,0,0,0,5,7V28a2,2,0,0,0,2,2H25a2,2,0,0,0,2-2V7A2,2,0,0,0,25,5ZM12,4h8V8H12ZM25,28H7V7h3v3H22V7h3Z"/>
+                  </svg>
+                </div>
+                <div class="label">
+                  <div class="title" data-language="desktop.reports">INCIDENT REPORTS</div>
+                  <div class="subtitle">Case Documentation</div>
+                </div>
+              </button>
+              <button class="mdt-button secondary" data-name="shiftHistory">
+                <div class="icon stroke">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3.0156 10H6.99999M3.0156 10V6M3.0156 10L6.34315 6.34315C9.46734 3.21895 14.5327 3.21895 17.6569 6.34315C20.781 9.46734 20.781 14.5327 17.6569 17.6569C14.5327 20.781 9.46734 20.781 6.34315 17.6569C5.55928 16.873 4.97209 15.9669 4.58158 15M12 9V13L15 14.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+                <div class="label">
+                  <div class="title" data-language="desktop.shiftHistory">ACTIVITY LOG</div>
+                  <div class="subtitle">Shift & Call History</div>
+                </div>
+              </button>
+              <button class="mdt-button tertiary" data-name="court">
+                <div class="icon">
+                  <svg viewBox="-2 0 19 19" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.316 14.722a.477.477 0 0 1-.475.475H1.433a.477.477 0 0 1-.475-.475v-.863a.477.477 0 0 1 .475-.475h7.408a.476.476 0 0 1 .475.475zm-2.767-2.587a.552.552 0 0 1-.392-.163L2.96 8.776a.554.554 0 0 1 .784-.784L6.94 11.19a.554.554 0 0 1-.392.946zm7.33.992L9.435 8.682l1.085-1.084-3.173-3.173-2.97 2.97 3.173 3.172 1.102-1.101 4.445 4.445a.554.554 0 1 0 .784-.784zm-2.33-5.993a.552.552 0 0 1-.391-.162L7.96 3.775a.554.554 0 1 1 .784-.784l3.196 3.197a.554.554 0 0 1-.391.946z"/>
+                  </svg>
+                </div>
+                <div class="label">
+                  <div class="title" data-language="desktop.court">COURT SYSTEM</div>
+                  <div class="subtitle">Case Scheduling & Status</div>
+                </div>
+              </button>
+              <button class="mdt-button admin" id="officerManagementBtn" onclick="openOfficerManagement()" style="display: none;">
+                <div class="icon">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    <path d="M19 13h-2v2h-2v2h2v2h2v-2h2v-2h-2z" fill="currentColor"/>
+                  </svg>
+                </div>
+                <div class="label">
+                  <div class="title">OFFICER MANAGEMENT</div>
+                  <div class="subtitle">Personnel Administration</div>
+                </div>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Alerts Panel -->
+          <div class="alerts-panel">
+            <div class="officer-info-section">
+              <h4>OFFICER STATUS</h4>
+              <div class="officer-details">
+                <div class="officer-detail">
+                  <span class="detail-label">Badge:</span>
+                  <span class="detail-value" id="officerBadgeDisplay">-</span>
+                </div>
+                <div class="officer-detail">
+                  <span class="detail-label">Department:</span>
+                  <span class="detail-value" id="department">-</span>
+                </div>
+                <div class="officer-detail">
+                  <span class="detail-label">Division:</span>
+                  <span class="detail-value" id="division">-</span>
+                </div>
+                <div class="officer-detail">
+                  <span class="detail-label">Unit:</span>
+                  <span class="detail-value" id="unit">-</span>
+                </div>
+                <div class="officer-detail">
+                  <span class="detail-label">Duty Status:</span>
+                  <span class="detail-value duty-status off-duty" id="dutyStatusText">OFF DUTY</span>
+                </div>
+              </div>
+              
+              <!-- Duty Status Controls -->
+              <div class="duty-status-controls">
+                <button class="duty-btn duty-btn-on-duty" data-status="on-duty" onclick="goOnDuty()">
+                  <svg viewBox="0 0 24 24" width="16" height="16">
+                    <path fill="currentColor" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                  </svg>
+                  On Duty
+                </button>
+                <button class="duty-btn duty-btn-status disabled" data-status="available" onclick="changeDutyStatus('available')" disabled>
+                  <svg viewBox="0 0 24 24" width="16" height="16">
+                    <circle cx="12" cy="12" r="8" fill="currentColor"/>
+                  </svg>
+                  Available
+                </button>
+                <button class="duty-btn" data-status="busy" onclick="changeDutyStatus('busy')">
+                  <svg viewBox="0 0 24 24" width="16" height="16">
+                    <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                  </svg>
+                  Busy
+                </button>
+                <button class="duty-btn duty-btn-status disabled" data-status="code7" onclick="changeDutyStatus('code7')" disabled>
+                  <svg viewBox="0 0 24 24" width="16" height="16">
+                    <path fill="currentColor" d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97V22h2.5v-9.03C11.34 12.84 13 11.12 13 9V2h-2v7zm5-3v8h2.5v8H21V2c-2.76 0-5 2.24-5 4z"/>
+                  </svg>
+                  Code 7
+                </button>
+                <button class="duty-btn duty-btn-status disabled" data-status="unavailable" onclick="changeDutyStatus('unavailable')" disabled>
+                  <svg viewBox="0 0 24 24" width="16" height="16">
+                    <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L16.9 18.31C15.55 19.37 13.85 20 12 20zm6.31-3.1L7.1 5.69C8.45 4.63 10.15 4 12 4c4.42 0 8 3.58 8 8 0 1.85-.63 3.55-1.69 4.9z"/>
+                  </svg>
+                  Unavailable
+                </button>
+                <button class="duty-btn active" data-status="off-duty" onclick="changeDutyStatus('off-duty')">
+                  <svg viewBox="0 0 24 24" width="16" height="16">
+                    <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                  </svg>
+                  Off Duty
+                </button>
+              </div>
+            </div>
+            
+            <h3>SYSTEM ALERTS</h3>
+            <div id="systemAlertsContainer">
+              <!-- Alerts will be dynamically generated -->
+            </div>
+          </div>
+        </div>
+        </div>
+        <!-- End MDT Content -->
+        
+        <!-- Resize handles -->
+        <div class="resize-handle resize-top"></div>
+        <div class="resize-handle resize-right"></div>
+        <div class="resize-handle resize-bottom"></div>
+        <div class="resize-handle resize-left"></div>
+        <div class="resize-handle resize-top-left"></div>
+        <div class="resize-handle resize-top-right"></div>
+        <div class="resize-handle resize-bottom-left"></div>
+        <div class="resize-handle resize-bottom-right"></div>
+      </div>
+      <!-- End mdtWindow -->
+
+      <!-- Start Menu -->
+      <div class="start-menu" id="startMenu" style="display: none;">
+        <div class="start-menu-search">
+          <div style="position: relative;">
+            <svg viewBox="0 0 24 24" width="18" height="18" style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); opacity: 0.5; pointer-events: none;">
+              <path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <input type="text" id="startMenuSearch" placeholder="Search apps, settings..." style="width: 100%; padding: 12px 12px 12px 45px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: #fff; font-size: 14px;">
+          </div>
+        </div>
+        
+        <div class="start-menu-section">
+          <div class="start-menu-section-header">
+            <span>Pinned</span>
+          </div>
+          <div class="start-menu-grid">
+            <button class="start-menu-tile" onclick="openMdtWindow(); toggleStartMenu();">
+              <div class="tile-icon" style="padding: 0; overflow: hidden; background: transparent;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Seal_of_the_Los_Angeles_Police_Department.png/1033px-Seal_of_the_Los_Angeles_Police_Department.png" alt="LAPD MDT" style="width: 100%; height: 100%; object-fit: contain;">
+              </div>
+              <span class="tile-label">LAPD MDT</span>
+            </button>
+            
+            <button class="start-menu-tile" onclick="toggleStartMenu();">
+              <div class="tile-icon" style="background: #2b579a; display: flex; align-items: center; justify-content: center;">
+                <span style="color: #fff; font-size: 20px; font-weight: bold; font-family: 'Segoe UI', sans-serif;">W</span>
+              </div>
+              <span class="tile-label">Word 2016</span>
+            </button>
+            
+            <button class="start-menu-tile" onclick="toggleStartMenu();">
+              <div class="tile-icon" style="padding: 0; overflow: hidden; background: transparent;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg" alt="Chrome" style="width: 100%; height: 100%; object-fit: contain;">
+              </div>
+              <span class="tile-label">Chrome</span>
+            </button>
+            
+            <button class="start-menu-tile" onclick="toggleStartMenu();">
+              <div class="tile-icon" style="background: #217346; display: flex; align-items: center; justify-content: center;">
+                <span style="color: #fff; font-size: 20px; font-weight: bold; font-family: 'Segoe UI', sans-serif;">X</span>
+              </div>
+              <span class="tile-label">Excel 2016</span>
+            </button>
+            
+            <button class="start-menu-tile" onclick="toggleStartMenu();">
+              <div class="tile-icon" style="padding: 0; overflow: hidden; background: transparent;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Windows_Explorer.svg" alt="File Explorer" style="width: 100%; height: 100%; object-fit: contain;">
+              </div>
+              <span class="tile-label">File Explorer</span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="start-menu-footer">
+          <div class="start-menu-user-profile">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Seal_of_the_Los_Angeles_Police_Department.png/1033px-Seal_of_the_Los_Angeles_Police_Department.png" alt="LAPD" style="width: 32px; height: 32px; border-radius: 50%;">
+            <span id="startMenuUser">05-220</span>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <button class="start-menu-icon-btn" onclick="openPlayerSettings(); toggleStartMenu();" title="Player Settings">
+              <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="currentColor" d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+              </svg>
+            </button>
+            <button class="start-menu-power-btn" onclick="performLogout(); toggleStartMenu();" title="Log Out">
+              <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="currentColor" d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Windows Taskbar -->
+      <div class="windows-taskbar">
+        <button class="start-button" onclick="toggleStartMenu()">
+          <svg viewBox="0 0 24 24" width="20" height="20">
+            <path fill="currentColor" d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/>
+          </svg>
+          <span>Start</span>
+        </button>
+        <div class="taskbar-apps">
+          <!-- Taskbar app will be added dynamically when window opens -->
+        </div>
+        <div class="taskbar-tray">
+          <span class="taskbar-time" id="taskbarTime">11:03:13 A.M.</span>
+          <span class="taskbar-date">12/31/2025</span>
+        </div>
+      </div>
+
+      <!-- Confirmation Dialog -->
+      <div id="confirmDialog" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 10001; align-items: center; justify-content: center;">
+        <div style="background: linear-gradient(135deg, #1e3a5f 0%, #0d1f3d 100%); border: 1px solid #2E8BC0; border-radius: 8px; padding: 0; width: 400px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);">
+          <div style="background: linear-gradient(135deg, #2E8BC0 0%, #1a5a8a 100%); padding: 12px 20px; border-radius: 8px 8px 0 0; display: flex; align-items: center; gap: 10px;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Seal_of_the_Los_Angeles_Police_Department.png/1033px-Seal_of_the_Los_Angeles_Police_Department.png" alt="" style="width: 20px; height: 20px;">
+            <span style="color: #fff; font-weight: 600; font-size: 14px;">LAPD MDT</span>
+          </div>
+          <div style="padding: 30px 20px;">
+            <div style="display: flex; gap: 15px; align-items: flex-start; margin-bottom: 25px;">
+              <svg viewBox="0 0 24 24" width="32" height="32" style="flex-shrink: 0; color: #FDB913;">
+                <path fill="currentColor" d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+              </svg>
+              <div style="flex: 1;">
+                <p style="color: #fff; font-size: 14px; margin: 0; line-height: 1.5;">Are you sure you want to close LAPD MDT?</p>
+                <p style="color: #8da9c4; font-size: 12px; margin: 8px 0 0 0;">This will log you out of the system.</p>
+              </div>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+              <button onclick="cancelCloseWindow()" style="padding: 8px 24px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: #fff; font-weight: 600; cursor: pointer; font-size: 13px;">Cancel</button>
+              <button onclick="confirmCloseWindow()" style="padding: 8px 24px; background: linear-gradient(135deg, #2E8BC0 0%, #145DA0 100%); border: none; border-radius: 4px; color: #fff; font-weight: 600; cursor: pointer; font-size: 13px;">OK</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Window drag and resize functionality -->
+    <script>
+      // Function to open MDT window
+      function openMdtWindow() {
+        const mdtWindow = document.getElementById('mdtWindow');
+        const taskbarApps = document.querySelector('.taskbar-apps');
+        const loggedInOfficer = sessionStorage.getItem('loggedInOfficer');
+        const loginScreen = document.getElementById('loginScreen');
+        const mdtContent = document.getElementById('mdtContent');
+        const windowContent = document.querySelector('#mdtWindow .window-content');
+        
+        if (mdtWindow.style.display === 'none' || mdtWindow.style.display === '') {
+          // Show window first
+          mdtWindow.style.display = 'flex';
+          
+          // Clear any residual animation styles
+          if (loginScreen) {
+            loginScreen.style.animation = '';
+          }
+          if (mdtContent) {
+            mdtContent.style.animation = '';
+          }
+          
+          // Check if user is logged in and show appropriate content
+          if (loggedInOfficer) {
+            // User is logged in, show MDT content
+            mdtWindow.classList.remove('login-mode');
+            if (windowContent) {
+              windowContent.style.removeProperty('visibility');
+              windowContent.style.removeProperty('opacity');
+              windowContent.style.overflowY = 'auto';
+            }
+            if (loginScreen) {
+              loginScreen.style.display = 'none';
+            }
+            if (mdtContent) {
+              mdtContent.style.display = 'block';
+            }
+          } else {
+            // User is not logged in, show login screen
+            mdtWindow.classList.add('login-mode');
+            if (windowContent) {
+              windowContent.style.removeProperty('visibility');
+              windowContent.style.removeProperty('opacity');
+              windowContent.style.overflowY = 'hidden';
+            }
+            if (mdtContent) {
+              mdtContent.style.display = 'none';
+            }
+            if (loginScreen) {
+              loginScreen.style.display = 'flex';
+            }
+          }
+          
+          focusWindow('mdtWindow');
+          
+          // Add taskbar button if not already present
+          if (!document.querySelector('.taskbar-app[data-window="mdtWindow"]')) {
+            const taskbarButton = document.createElement('button');
+            taskbarButton.className = 'taskbar-app active';
+            taskbarButton.setAttribute('data-window', 'mdtWindow');
+            taskbarButton.onclick = () => toggleWindow('mdtWindow');
+            taskbarButton.innerHTML = `
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Seal_of_the_Los_Angeles_Police_Department.png/1033px-Seal_of_the_Los_Angeles_Police_Department.png" alt="" class="taskbar-icon" />
+              <span>LAPD MDT</span>
+            `;
+            taskbarApps.appendChild(taskbarButton);
+          }
+        } else {
+          focusWindow('mdtWindow');
+        }
+      }
+      
+      // Function to toggle window visibility from taskbar
+      function toggleWindow(windowId) {
+        const window = document.getElementById(windowId);
+        if (window.style.display === 'none' || window.style.display === '') {
+          window.style.display = 'flex';
+          focusWindow(windowId);
+          
+          // If it's the MDT window, check login state and show appropriate content
+          if (windowId === 'mdtWindow') {
+            const mdtWindow = document.getElementById('mdtWindow');
+            const loggedInOfficer = sessionStorage.getItem('loggedInOfficer');
+            const loginScreen = document.getElementById('loginScreen');
+            const mdtContent = document.getElementById('mdtContent');
+            const windowContent = document.querySelector('#mdtWindow .window-content');
+            
+            // Clear any residual animation styles
+            if (loginScreen) {
+              loginScreen.style.animation = '';
+            }
+            if (mdtContent) {
+              mdtContent.style.animation = '';
+            }
+            
+            if (loggedInOfficer) {
+              // User is logged in, show MDT content
+              mdtWindow.classList.remove('login-mode');
+              if (windowContent) {
+                windowContent.style.removeProperty('visibility');
+                windowContent.style.removeProperty('opacity');
+                windowContent.style.overflowY = 'auto';
+              }
+              if (loginScreen) {
+                loginScreen.style.display = 'none';
+              }
+              if (mdtContent) {
+                mdtContent.style.display = 'block';
+              }
+            } else {
+              // User is not logged in, show login screen
+              mdtWindow.classList.add('login-mode');
+              if (windowContent) {
+                windowContent.style.removeProperty('visibility');
+                windowContent.style.removeProperty('opacity');
+                windowContent.style.overflowY = 'hidden';
+              }
+              if (mdtContent) {
+                mdtContent.style.display = 'none';
+              }
+              if (loginScreen) {
+                loginScreen.style.display = 'flex';
+              }
+            }
+          }
+        } else {
+          minimizeWindow();
+        }
+      }
+      
+      // Function to focus window
+      function focusWindow(windowId) {
+        const window = document.getElementById(windowId);
+        const taskbarButton = document.querySelector(`.taskbar-app[data-window="${windowId}"]`);
+        
+        // Remove active from all taskbar buttons
+        document.querySelectorAll('.taskbar-app').forEach(btn => btn.classList.remove('active'));
+        
+        if (taskbarButton) {
+          taskbarButton.classList.add('active');
+        }
+        
+        window.style.zIndex = '100';
+      }
+      
+      let isDragging = false;
+      let dragStartX, dragStartY;
+      let windowStartX, windowStartY;
+      
+      const mdtWindow = document.getElementById('mdtWindow');
+      const titlebar = document.getElementById('mdtTitlebar');
+      
+      titlebar.addEventListener('mousedown', dragStart);
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('mouseup', dragEnd);
+      
+      function dragStart(e) {
+        if (e.target.closest('.window-controls')) return;
+        if (mdtWindow.classList.contains('maximized')) return;
+        
+        isDragging = true;
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        
+        const rect = mdtWindow.getBoundingClientRect();
+        windowStartX = rect.left;
+        windowStartY = rect.top;
+        
+        mdtWindow.style.transition = 'none';
+        e.preventDefault();
+      }
+      
+      function drag(e) {
+        if (isDragging) {
+          e.preventDefault();
+          
+          const dx = e.clientX - dragStartX;
+          const dy = e.clientY - dragStartY;
+          
+          const newX = windowStartX + dx;
+          const newY = Math.max(0, windowStartY + dy); // Don't allow dragging above screen
+          
+          mdtWindow.style.left = newX + 'px';
+          mdtWindow.style.top = newY + 'px';
+          mdtWindow.style.transform = 'none';
+        }
+      }
+      
+      function dragEnd(e) {
+        if (isDragging) {
+          isDragging = false;
+          mdtWindow.style.transition = 'all 0.3s ease';
+        }
+      }
+      
+      function minimizeWindow() {
+        mdtWindow.style.display = 'none';
+      }
+      
+      function maximizeWindow() {
+        const isMaximized = mdtWindow.classList.toggle('maximized');
+        if (isMaximized) {
+          // Store current state before maximizing
+          mdtWindow.dataset.prevLeft = mdtWindow.style.left;
+          mdtWindow.dataset.prevTop = mdtWindow.style.top;
+          mdtWindow.dataset.prevWidth = mdtWindow.style.width;
+          mdtWindow.dataset.prevHeight = mdtWindow.style.height;
+        } else {
+          // Restore previous state
+          if (mdtWindow.dataset.prevLeft) {
+            mdtWindow.style.left = mdtWindow.dataset.prevLeft;
+            mdtWindow.style.top = mdtWindow.dataset.prevTop;
+            mdtWindow.style.width = mdtWindow.dataset.prevWidth;
+            mdtWindow.style.height = mdtWindow.dataset.prevHeight;
+          }
+        }
+      }
+      
+      // Close window function is now handled by event listener in index.js
+      
+      // Note: focusWindow is already defined above
+      
+      function toggleStartMenu() {
+        const startMenu = document.getElementById('startMenu');
+        const loggedInOfficer = JSON.parse(sessionStorage.getItem('loggedInOfficer'));
+        
+        if (startMenu.style.display === 'none' || startMenu.style.display === '') {
+          startMenu.style.display = 'block';
+          
+          // Update user name in start menu
+          if (loggedInOfficer) {
+            const userNameEl = document.getElementById('startMenuUser');
+            if (userNameEl) {
+              userNameEl.textContent = `${loggedInOfficer.firstName} ${loggedInOfficer.lastName}`;
+            }
+          }
+          
+          // Clear and focus search on open
+          const searchInput = document.getElementById('startMenuSearch');
+          if (searchInput) {
+            searchInput.value = '';
+            setTimeout(() => searchInput.focus(), 100);
+          }
+          
+          // Reset tile visibility
+          document.querySelectorAll('.start-menu-tile').forEach(tile => {
+            tile.style.display = 'flex';
+          });
+        } else {
+          startMenu.style.display = 'none';
+        }
+      }
+      
+      // Start menu search functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('startMenuSearch');
+        if (searchInput) {
+          searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            const tiles = document.querySelectorAll('.start-menu-tile');
+            
+            tiles.forEach(tile => {
+              const label = tile.querySelector('.tile-label');
+              if (label) {
+                const tileText = label.textContent.toLowerCase();
+                if (tileText.includes(searchTerm)) {
+                  tile.style.display = 'flex';
+                } else {
+                  tile.style.display = 'none';
+                }
+              }
+            });
+          });
+        }
+      });
+      
+      // Toggle user profile menu
+      function toggleUserMenu() {
+        const menu = document.getElementById('userProfileMenu');
+        if (menu) {
+          menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+      }
+      
+      // Close user menu when clicking outside
+      document.addEventListener('click', function(event) {
+        const dropdown = document.querySelector('.user-profile-dropdown');
+        const menu = document.getElementById('userProfileMenu');
+        
+        if (dropdown && menu && !dropdown.contains(event.target)) {
+          menu.style.display = 'none';
+        }
+      });
+      
+      // Update user profile name on load
+      document.addEventListener('DOMContentLoaded', function() {
+        const loggedInOfficer = JSON.parse(sessionStorage.getItem('loggedInOfficer'));
+        const userProfileName = document.getElementById('userProfileName');
+        
+        if (loggedInOfficer && userProfileName) {
+          userProfileName.textContent = `${loggedInOfficer.lastName}, ${loggedInOfficer.badgeNumber}`;
+        }
+      });
+      
+      // Close start menu when clicking outside
+      document.addEventListener('click', function(event) {
+        const startMenu = document.getElementById('startMenu');
+        const startButton = document.querySelector('.start-button');
+        
+        if (startMenu && startButton) {
+          if (!startMenu.contains(event.target) && !startButton.contains(event.target)) {
+            startMenu.style.display = 'none';
+          }
+        }
+      });
+      
+      // Duty Status Management
+      // Function to go on duty (enables duty status buttons and sets to Unavailable)
+      function goOnDuty() {
+        // Enable all on-duty status buttons
+        const statusBtns = document.querySelectorAll('.duty-btn-status');
+        statusBtns.forEach(btn => {
+          btn.disabled = false;
+          btn.classList.remove('disabled');
+        });
+        
+        // Activate the On Duty button
+        const onDutyBtn = document.querySelector('.duty-btn-on-duty');
+        if (onDutyBtn) {
+          onDutyBtn.classList.add('active');
+        }
+        
+        // Deactivate Off Duty button
+        const offDutyBtn = document.querySelector('.duty-btn[data-status="off-duty"]');
+        if (offDutyBtn) {
+          offDutyBtn.classList.remove('active');
+        }
+        
+        // Set status to Unavailable by default
+        changeDutyStatus('unavailable', true);
+      }
+      
+      function changeDutyStatus(status, fromOnDuty = false) {
+        const dutyStatusText = document.getElementById('dutyStatusText');
+        const headerDutyStatus = document.getElementById('headerDutyStatus');
+        
+        // If going off duty, disable all on-duty status buttons
+        if (status === 'off-duty') {
+          const statusBtns = document.querySelectorAll('.duty-btn-status');
+          statusBtns.forEach(btn => {
+            btn.disabled = true;
+            btn.classList.add('disabled');
+            btn.classList.remove('active');
+          });
+          
+          // Deactivate On Duty button
+          const onDutyBtn = document.querySelector('.duty-btn-on-duty');
+          if (onDutyBtn) {
+            onDutyBtn.classList.remove('active');
+          }
+        }
+        
+        // Remove active class from all status buttons (not on duty button)
+        const statusBtns = document.querySelectorAll('.duty-btn-status');
+        statusBtns.forEach(btn => btn.classList.remove('active'));
+        
+        // Add active class to clicked button
+        const clickedBtn = document.querySelector(`.duty-btn[data-status="${status}"]`);
+        if (clickedBtn) clickedBtn.classList.add('active');
+        
+        // Update status display
+        dutyStatusText.className = 'detail-value duty-status ' + status;
+        
+        // Update header status indicator
+        if (headerDutyStatus) {
+          headerDutyStatus.className = 'status-indicator ' + status;
+        }
+        
+        // Update status text
+        const statusTexts = {
+          'available': 'AVAILABLE',
+          'busy': 'BUSY',
+          'code7': 'CODE 7',
+          'unavailable': 'UNAVAILABLE',
+          'off-duty': 'OFF DUTY'
+        };
+        
+        const statusText = statusTexts[status] || status.toUpperCase();
+        dutyStatusText.textContent = statusText;
+        
+        // Update header status text
+        if (headerDutyStatus) {
+          headerDutyStatus.textContent = statusText;
+        }
+        
+        // Store status in session
+        sessionStorage.setItem('officerDutyStatus', status);
+        
+        // Show notification
+        console.log(`Duty status changed to: ${statusText}`);
+      }
+      
+      // Initialize duty status on login
+      function initializeDutyStatus() {
+        const savedStatus = sessionStorage.getItem('officerDutyStatus') || 'off-duty';
+        changeDutyStatus(savedStatus);
+      }
+      
+      // Resize functionality
+      let isResizing = false;
+      let resizeDirection = '';
+      let resizeStartX, resizeStartY, resizeStartWidth, resizeStartHeight, resizeStartLeft, resizeStartTop;
+      
+      // Function to attach resize handlers to a window
+      window.attachResizeHandlers = function(windowElement) {
+        const resizeHandles = windowElement.querySelectorAll('.resize-handle');
+        resizeHandles.forEach(handle => {
+          handle.addEventListener('mousedown', startResize);
+        });
+        console.log('Attached resize handlers to window:', windowElement.id || windowElement.className);
+      };
+      
+      // Initialize resize handlers for existing windows after a short delay
+      setTimeout(function() {
+        const allWindows = document.querySelectorAll('.window-container');
+        allWindows.forEach(win => {
+          window.attachResizeHandlers(win);
+        });
+        console.log('Initialized resize for', allWindows.length, 'windows');
+      }, 100);
+      
+      let currentResizeWindow = null; // Track which window is being resized
+      
+      function startResize(e) {
+        // Find the parent window-container of this resize handle
+        currentResizeWindow = e.target.closest('.window-container');
+        
+        if (!currentResizeWindow) {
+          console.log('No parent window-container found');
+          return;
+        }
+        
+        console.log('Starting resize for window:', currentResizeWindow.id || currentResizeWindow.className);
+        
+        if (currentResizeWindow.classList.contains('maximized')) return;
+        if (currentResizeWindow.classList.contains('login-mode')) return;
+        
+        isResizing = true;
+        resizeDirection = e.target.className.split(' ')[1].replace('resize-', '');
+        resizeStartX = e.clientX;
+        resizeStartY = e.clientY;
+        
+        const rect = currentResizeWindow.getBoundingClientRect();
+        resizeStartWidth = rect.width;
+        resizeStartHeight = rect.height;
+        resizeStartLeft = rect.left;
+        resizeStartTop = rect.top;
+        
+        currentResizeWindow.style.transition = 'none';
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      
+      document.addEventListener('mousemove', (e) => {
+        if (isResizing && currentResizeWindow) {
+          e.preventDefault();
+          const dx = e.clientX - resizeStartX;
+          const dy = e.clientY - resizeStartY;
+          
+          let newWidth = resizeStartWidth;
+          let newHeight = resizeStartHeight;
+          let newLeft = resizeStartLeft;
+          let newTop = resizeStartTop;
+          
+          // Minimum and maximum dimensions based on screen
+          const minWidth = 500;
+          const minHeight = 400;
+          const maxWidth = window.innerWidth;
+          const maxHeight = window.innerHeight - 48; // Account for taskbar
+          
+          if (resizeDirection.includes('right')) {
+            newWidth = Math.max(minWidth, Math.min(maxWidth, resizeStartWidth + dx));
+            // Make sure window doesn't go off right edge
+            const rightEdge = newLeft + newWidth;
+            if (rightEdge > maxWidth) {
+              newWidth = maxWidth - newLeft;
+            }
+          }
+          if (resizeDirection.includes('left')) {
+            const potentialWidth = resizeStartWidth - dx;
+            const potentialLeft = resizeStartLeft + dx;
+            if (potentialWidth >= minWidth && potentialLeft >= 0) {
+              newWidth = Math.min(maxWidth, potentialWidth);
+              newLeft = Math.max(0, potentialLeft);
+            }
+          }
+          if (resizeDirection.includes('bottom')) {
+            newHeight = Math.max(minHeight, Math.min(maxHeight, resizeStartHeight + dy));
+            // Make sure window doesn't go below taskbar
+            const bottomEdge = newTop + newHeight;
+            if (bottomEdge > maxHeight) {
+              newHeight = maxHeight - newTop;
+            }
+          }
+          if (resizeDirection.includes('top')) {
+            const potentialHeight = resizeStartHeight - dy;
+            const potentialTop = resizeStartTop + dy;
+            if (potentialHeight >= minHeight && potentialTop >= 0) {
+              newHeight = Math.min(maxHeight, potentialHeight);
+              newTop = Math.max(0, potentialTop);
+            }
+          }
+          
+          currentResizeWindow.style.width = newWidth + 'px';
+          currentResizeWindow.style.height = newHeight + 'px';
+          currentResizeWindow.style.left = newLeft + 'px';
+          currentResizeWindow.style.top = newTop + 'px';
+          currentResizeWindow.style.transform = 'none';
+        }
+      });
+      
+      document.addEventListener('mouseup', () => {
+        if (isResizing && currentResizeWindow) {
+          isResizing = false;
+          resizeDirection = '';
+          currentResizeWindow.style.transition = 'all 0.3s ease';
+          currentResizeWindow = null;
+        }
+      });
+      
+      // Time is now updated via WebSocket in index.js (timeWS.onmessage)
+      // This ensures sync with in-game time based on config.useInGameTime setting
+    </script>
+    <div class="taskbar">
+      <div class="location"></div>
+      <div class="status-bar">
+        <span class="status-indicator online">ONLINE</span>
+        <span class="timestamp"></span>
+      </div>
+      <div class="icons">
+        <button
+          class="settings"
+          onclick="document.querySelector('.overlay .settings').classList.toggle('hide'); this.blur()"
+          title="System Settings"
+          data-language-title="taskbar.settings"
+        >
+          <!-- Bold silhouette-style gear icon -->
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .11-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.028 7.028 0 0 0-1.62-.94l-.36-2.54A.5.5 0 0 0 13.57 2h-3.14a.5.5 0 0 0-.49.42l-.36 2.54c-.58.23-1.12.53-1.62.94l-2.39-.96a.5.5 0 0 0-.61.22L2.72 8.86a.5.5 0 0 0 .11.64l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94L2.83 15.6a.5.5 0 0 0-.11.64l1.92 3.32c.14.24.43.34.68.24l2.39-.96c.5.41 1.04.71 1.62.94l.36 2.54c.05.27.28.46.54.46h3.14c.27 0 .5-.19.54-.46l.36-2.54c.58-.23 1.12-.53 1.62-.94l2.39.96c.25.1.54 0 .68-.24l1.92-3.32a.5.5 0 0 0-.11-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/>
+          </svg>
+        </button>
+      </div>
+      <div class="time"></div>
+    </div>
+    <div class="overlay">
+      <div class="windows"></div>
+      <div class="notifications"></div>
+    </div>
+    <div class="iconAccess hidden">
+      <div class="vehicleSearch">
+        <svg viewBox="-4 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M19.938 7.188l3.563 7.156c0.063 0.094 0.094 0.219 0.125 0.313 0.219 0.563 0.375 1.344 0.375 1.844v3.406c0 1.063-0.719 1.938-1.719 2.188v2c0 0.969-0.781 1.719-1.719 1.719-0.969 0-1.719-0.75-1.719-1.719v-1.938h-13.688v1.938c0 0.969-0.75 1.719-1.719 1.719-0.938 0-1.719-0.75-1.719-1.719v-2c-1-0.25-1.719-1.125-1.719-2.188v-3.406c0-0.5 0.156-1.281 0.375-1.844 0.031-0.094 0.063-0.219 0.125-0.313l3.563-7.156c0.281-0.531 1.031-1.031 1.656-1.031h12.563c0.625 0 1.375 0.5 1.656 1.031zM5.531 9.344l-1.906 4.344c-0.094 0.156-0.094 0.344-0.094 0.469h16.938c0-0.125 0-0.313-0.094-0.469l-1.906-4.344c-0.25-0.563-1-1.063-1.594-1.063h-9.75c-0.594 0-1.344 0.5-1.594 1.063zM4.688 19.906c1 0 1.781-0.813 1.781-1.844 0-1-0.781-1.781-1.781-1.781s-1.844 0.781-1.844 1.781c0 1.031 0.844 1.844 1.844 1.844zM19.313 19.906c1 0 1.844-0.813 1.844-1.844 0-1-0.844-1.781-1.844-1.781s-1.781 0.781-1.781 1.781c0 1.031 0.781 1.844 1.781 1.844z"
+          ></path>
+        </svg>
+      </div>
+      <div class="pedSearch">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          viewBox="0 0 35.5 35.5"
+        >
+          <g>
+            <path
+              d="M33,8.812h-4.16V5.938c0-1.381-1.117-2.5-2.5-2.5h-1.93c-1.381,0-2.5,1.119-2.5,2.5v2.875h-8.32V5.938
+		c0-1.381-1.118-2.5-2.5-2.5H9.16c-1.381,0-2.5,1.119-2.5,2.5v2.875H2.5c-1.381,0-2.5,1.119-2.5,2.5v18.25
+		c0,1.381,1.119,2.5,2.5,2.5H33c1.381,0,2.5-1.119,2.5-2.5v-18.25C35.5,9.934,34.381,8.812,33,8.812z M16.551,26.362
+		c0,0.519-0.42,0.937-0.938,0.937H4.369c-0.521,0-0.938-0.418-0.938-0.937v-1.434c0-0.41,0.269-0.771,0.655-0.895l3.959-1.236
+		C7.191,21.776,6.67,20.164,6.67,18.65c0-2.285,1.304-3.762,3.318-3.762c2.018,0,3.32,1.477,3.32,3.762
+		c0,1.512-0.52,3.126-1.377,4.146l3.959,1.236c0.391,0.12,0.658,0.482,0.658,0.895v1.435H16.551z M32.068,27.312H18.625v-1.969
+		h13.443V27.312L32.068,27.312z M32.068,23.83H18.625v-1.969h13.443V23.83L32.068,23.83z M32.068,20.349H18.625v-1.97h13.443V20.349
+		L32.068,20.349z M32.068,16.866H18.625v-1.968h13.443V16.866L32.068,16.866z"
+            />
+          </g>
+        </svg>
+      </div>
+      <div class="EPC">
+        <img src="/favicon" />
+      </div>
+      <div class="location">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          viewBox="0 0 64 64"
+        >
+          <path
+            d="M32,0C18.746,0,8,10.746,8,24c0,5.219,1.711,10.008,4.555,13.93c0.051,0.094,0.059,0.199,0.117,0.289l16,24
+	C29.414,63.332,30.664,64,32,64s2.586-0.668,3.328-1.781l16-24c0.059-0.09,0.066-0.195,0.117-0.289C54.289,34.008,56,29.219,56,24
+	C56,10.746,45.254,0,32,0z M32,32c-4.418,0-8-3.582-8-8s3.582-8,8-8s8,3.582,8,8S36.418,32,32,32z"
+          />
+        </svg>
+      </div>
+      <div class="minimizeWindow">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          viewBox="0 0 800 800"
+          xml:space="preserve"
+        >
+          <rect x="25" y="360" width="750" height="80" rx="40" />
+        </svg>
+      </div>
+      <div class="maximizeWindow">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          viewBox="0 0 800 800"
+          xml:space="preserve"
+        >
+          <path
+            d="M670 25C727.99 25 775 72.0101 775 130V670C775 727.99 727.99 775 670 775H130C72.0101 775 25 727.99 25 670V130C25 72.0101 72.0101 25 130 25H670ZM165 105C131.863 105 105 131.863 105 165V635C105 668.137 131.863 695 165 695H635C668.137 695 695 668.137 695 635V165C695 131.863 668.137 105 635 105H165Z"
+          />
+        </svg>
+      </div>
+      <div class="restoreWindow">
+        <svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M520 175C577.99 175 625 222.01 625 280V670C625 727.99 577.99 775 520 775H130C72.0101 775 25 727.99 25 670V280C25 222.01 72.0101 175 130 175H520ZM175 255C136.34 255 105 286.34 105 325V625C105 663.66 136.34 695 175 695H475C513.66 695 545 663.66 545 625V325C545 286.34 513.66 255 475 255H175Z"
+          />
+          <path
+            d="M598 25C695.754 25 775 104.246 775 202V545C775 594.375 740.92 635.789 695 647.005V247C695 168.576 631.424 105 553 105H152.994C164.21 59.0799 205.625 25 255 25H598Z"
+          />
+        </svg>
+      </div>
+      <div class="closeWindow">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          viewBox="0 0 800 800"
+          xml:space="preserve"
+        >
+          <rect
+            x="98"
+            y="646.008"
+            width="775"
+            height="80"
+            rx="40"
+            transform="rotate(-45 98 646.008)"
+          />
+          <rect
+            x="646.008"
+            y="702.576"
+            width="775"
+            height="80"
+            rx="40"
+            transform="rotate(-135 646.008 702.576)"
+          />
+        </svg>
+      </div>
+      <div class="notificationIcons">
+        <div class="warning">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M9.82664 2.22902C10.7938 0.590326 13.2063 0.590325 14.1735 2.22902L23.6599 18.3024C24.6578 19.9933 23.3638 22 21.4865 22H2.51362C0.63634 22 -0.657696 19.9933 0.340215 18.3024L9.82664 2.22902ZM10.0586 7.05547C10.0268 6.48227 10.483 6 11.0571 6H12.9429C13.517 6 13.9732 6.48227 13.9414 7.05547L13.5525 14.0555C13.523 14.5854 13.0847 15 12.554 15H11.446C10.9153 15 10.477 14.5854 10.4475 14.0555L10.0586 7.05547ZM14 18C14 19.1046 13.1046 20 12 20C10.8954 20 10 19.1046 10 18C10 16.8954 10.8954 16 12 16C13.1046 16 14 16.8954 14 18Z"
+            />
+          </svg>
+        </div>
+        <div class="info">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12ZM10.25 11C10.25 10.4477 10.6977 10 11.25 10H12.75C13.3023 10 13.75 10.4477 13.75 11V18C13.75 18.5523 13.3023 19 12.75 19H11.25C10.6977 19 10.25 18.5523 10.25 18V11ZM14 7C14 5.89543 13.1046 5 12 5C10.8954 5 10 5.89543 10 7C10 8.10457 10.8954 9 12 9C13.1046 9 14 8.10457 14 7Z"
+            />
+          </svg>
+        </div>
+        <div class="error">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12ZM7.75736 7.05025C8.14788 6.65973 8.78105 6.65973 9.17157 7.05025L12 9.87868L14.8284 7.05025C15.219 6.65973 15.8521 6.65973 16.2426 7.05025L16.9497 7.75736C17.3403 8.14788 17.3403 8.78105 16.9497 9.17157L14.1213 12L16.9497 14.8284C17.3403 15.219 17.3403 15.8521 16.9497 16.2426L16.2426 16.9497C15.8521 17.3403 15.219 17.3403 14.8284 16.9497L12 14.1213L9.17157 16.9497C8.78105 17.3403 8.14788 17.3403 7.75736 16.9497L7.05025 16.2426C6.65973 15.8521 6.65973 15.219 7.05025 14.8284L9.87868 12L7.05025 9.17157C6.65973 8.78105 6.65973 8.14788 7.05025 7.75736L7.75736 7.05025Z"
+            />
+          </svg>
+        </div>
+        <div class="question">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12ZM10.3027 13.3942C10.2316 13.7147 10.5038 14 10.8479 14H13.0406C13.2979 14 13.5151 13.8351 13.6064 13.6061C13.697 13.3789 14.0117 12.9674 14.254 12.7518C14.4827 12.5112 14.7213 12.2848 14.9563 12.0618C15.8824 11.183 16.754 10.356 16.754 8.91047C16.754 6.40301 14.582 5 12.2707 5C10.5038 5 8.06416 5.80604 7.58396 8.50363C7.48716 9.04737 7.94773 9.5 8.50002 9.5H9.91229C10.4388 9.5 10.8312 9.07642 11.0121 8.582C11.1863 8.10604 11.5379 7.7551 12.2707 7.7551C13.6066 7.7551 13.6064 9.22371 12.8346 10.1843C12.5434 10.5467 12.2023 10.8677 11.8648 11.1853C11.1798 11.8298 10.5098 12.4602 10.3027 13.3942ZM13.9999 17C13.9999 18.1046 13.1045 19 11.9999 19C10.8954 19 9.99994 18.1046 9.99994 17C9.99994 15.8954 10.8954 15 11.9999 15C13.1045 15 13.9999 15.8954 13.9999 17Z"
+            />
+          </svg>
+        </div>
+        <div class="checkMark">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12ZM18.4158 9.70405C18.8055 9.31268 18.8041 8.67952 18.4127 8.28984L17.7041 7.58426C17.3127 7.19458 16.6796 7.19594 16.2899 7.58731L10.5183 13.3838L7.19723 10.1089C6.80398 9.72117 6.17083 9.7256 5.78305 10.1189L5.08092 10.8309C4.69314 11.2241 4.69758 11.8573 5.09083 12.2451L9.82912 16.9174C10.221 17.3039 10.8515 17.301 11.2399 16.911L18.4158 9.70405Z"
+            />
+          </svg>
+        </div>
+        <div class="minus">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M1 12C1 5.92487 5.92487 1 12 1C18.0751 1 23 5.92487 23 12C23 18.0751 18.0751 23 12 23C5.92487 23 1 18.0751 1 12ZM6.5 10.5C5.94772 10.5 5.5 10.9477 5.5 11.5V12.5C5.5 13.0523 5.94772 13.5 6.5 13.5H17.5C18.0523 13.5 18.5 13.0523 18.5 12.5V11.5C18.5 10.9477 18.0523 10.5 17.5 10.5H6.5Z"
+            />
+          </svg>
+        </div>
+      </div>
+      <div class="reports">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="18" width="8" height="2" />
+          <rect x="10" y="13" width="12" height="2" />
+          <rect x="10" y="23" width="5" height="2" />
+          <path
+            d="M25,5H22V4a2,2,0,0,0-2-2H12a2,2,0,0,0-2,2V5H7A2,2,0,0,0,5,7V28a2,2,0,0,0,2,2H25a2,2,0,0,0,2-2V7A2,2,0,0,0,25,5ZM12,4h8V8H12ZM25,28H7V7h3v3H22V7h3Z"
+          />
+        </svg>
+      </div>
+      <div class="trash">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M8 1.5V2.5H3C2.44772 2.5 2 2.94772 2 3.5V4.5C2 5.05228 2.44772 5.5 3 5.5H21C21.5523 5.5 22 5.05228 22 4.5V3.5C22 2.94772 21.5523 2.5 21 2.5H16V1.5C16 0.947715 15.5523 0.5 15 0.5H9C8.44772 0.5 8 0.947715 8 1.5Z"
+          />
+          <path
+            d="M3.9231 7.5H20.0767L19.1344 20.2216C19.0183 21.7882 17.7135 23 16.1426 23H7.85724C6.28636 23 4.98148 21.7882 4.86544 20.2216L3.9231 7.5Z"
+          />
+        </svg>
+      </div>
+      <div class="shiftHistory">
+        <svg
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          class="stroke"
+        >
+          <path
+            d="M3.0156 10H6.99999M3.0156 10V6M3.0156 10L6.34315 6.34315C9.46734 3.21895 14.5327 3.21895 17.6569 6.34315C20.781 9.46734 20.781 14.5327 17.6569 17.6569C14.5327 20.781 9.46734 20.781 6.34315 17.6569C5.55928 16.873 4.97209 15.9669 4.58158 15M12 9V13L15 14.5"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+      <div class="court">
+        <svg viewBox="-2 0 19 19" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M9.316 14.722a.477.477 0 0 1-.475.475H1.433a.477.477 0 0 1-.475-.475v-.863a.477.477 0 0 1 .475-.475h7.408a.476.476 0 0 1 .475.475zm-2.767-2.587a.552.552 0 0 1-.392-.163L2.96 8.776a.554.554 0 0 1 .784-.784L6.94 11.19a.554.554 0 0 1-.392.946zm7.33.992L9.435 8.682l1.085-1.084-3.173-3.173-2.97 2.97 3.173 3.172 1.102-1.101 4.445 4.445a.554.554 0 1 0 .784-.784zm-2.33-5.993a.552.552 0 0 1-.391-.162L7.96 3.775a.554.554 0 1 1 .784-.784l3.196 3.197a.554.554 0 0 1-.391.946z"
+          />
+        </svg>
+      </div>
+    </div>
+    <ul class="duty-status-list">
+          <li class="on-duty">On Duty</li>
+          <li class="off-duty">Off Duty</li>
+          <li class="busy">Busy</li>
+          <li class="unavailable">Unavailable</li>
+          <li class="code7">Code 7 (Meal Break)</li>
+          <li class="emergency">Emergency</li>
+        </ul>
+
+    <!-- Officer Management Window (hidden by default) -->
+    <div class="window-container" id="officerMgmtWindow" style="display: none; width: 900px; height: 600px; top: 5%; left: 50%; transform: translateX(-50%);">
+      <div class="window-titlebar" id="officerMgmtTitlebar">
+        <div class="window-title">
+          <svg viewBox="0 0 24 24" width="16" height="16" style="margin-right: 8px;">
+            <path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            <path fill="currentColor" d="M19 13h-2v2h-2v2h2v2h2v-2h2v-2h-2z"/>
+          </svg>
+          <span>LAPD Officer Management System</span>
+        </div>
+        <div class="window-controls">
+          <button class="window-btn minimize" onclick="minimizeOfficerMgmtWindow()" title="Minimize">−</button>
+          <button class="window-btn maximize" onclick="maximizeOfficerMgmtWindow()" title="Maximize">□</button>
+          <button class="window-btn close" onclick="closeOfficerMgmtWindow()" title="Close">×</button>
+        </div>
+      </div>
+      <div class="window-content" style="padding: 30px; overflow-y: auto;">
+        <h2 style="color: #FDB913; margin-top: 0; margin-bottom: 20px; border-bottom: 2px solid #2E8BC0; padding-bottom: 10px;">Personnel Administration</h2>
+        
+        <!-- Officer Management Tabs -->
+        <div class="mgmt-tabs" style="display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid #2a4a6c;">
+          <button class="mgmt-tab active" onclick="showMgmtTab('officers-list')" data-tab="officers-list">Officers List</button>
+          <button class="mgmt-tab" onclick="showMgmtTab('add-officer')" data-tab="add-officer" id="addOfficerTabBtn">Add New Officer</button>
+        </div>
+
+        <!-- Officers List Tab -->
+        <div id="officers-list-tab" class="mgmt-tab-content">
+          <div style="display: flex; gap: 15px; margin-bottom: 20px; align-items: center;">
+            <input type="text" id="officerSearchInput" placeholder="Search by badge, name, or rank..." style="flex: 1; padding: 10px; background: #0a1f3d; border: 1px solid #2E8BC0; border-radius: 4px; color: #fff; font-size: 14px;">
+            <button onclick="loadOfficersList()" style="padding: 10px 20px; background: linear-gradient(135deg, #2E8BC0 0%, #145DA0 100%); border: none; border-radius: 4px; color: #fff; cursor: pointer; font-weight: 600;">
+              <svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align: middle; margin-right: 5px;">
+                <path fill="currentColor" d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/>
+              </svg>
+              REFRESH
+            </button>
+          </div>
+          
+          <div id="officersListContainer" style="background: rgba(13, 36, 64, 0.4); border: 1px solid #2a4a6c; border-radius: 6px; padding: 20px; min-height: 300px;">
+            <p style="color: #8da9c4; text-align: center; padding: 40px 0;">Click REFRESH to load officers list</p>
+          </div>
+        </div>
+
+        <!-- Add New Officer Tab -->
+        <div id="add-officer-tab" class="mgmt-tab-content" style="display: none;">
+          <div class="officer-form-container">
+            <form id="addOfficerForm" class="officer-form">
+              <!-- Personal Information Section -->
+              <div class="form-section">
+                <h3 class="form-section-title">
+                  <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right: 8px;">
+                    <path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                  </svg>
+                  Personal Information
+                </h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">
+                      First Name <span class="required">*</span>
+                    </label>
+                    <input type="text" name="firstName" class="form-input" required placeholder="Enter first name">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">
+                      Last Name <span class="required">*</span>
+                    </label>
+                    <input type="text" name="lastName" class="form-input" required placeholder="Enter last name">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Credentials Section -->
+              <div class="form-section">
+                <h3 class="form-section-title">
+                  <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right: 8px;">
+                    <path fill="currentColor" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>
+                  </svg>
+                  Credentials & Security
+                </h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">
+                      Badge Number <span class="required">*</span>
+                    </label>
+                    <input type="number" name="badgeNumber" class="form-input" required placeholder="Enter badge number">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">
+                      Password <span class="required">*</span>
+                    </label>
+                    <input type="text" name="password" class="form-input" required placeholder="Enter password">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Department Information Section -->
+              <div class="form-section">
+                <h3 class="form-section-title">
+                  <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right: 8px;">
+                    <path fill="currentColor" d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm0 4c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm6 12H6v-1.4c0-2 4-3.1 6-3.1s6 1.1 6 3.1V19z"/>
+                  </svg>
+                  Department Information
+                </h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">
+                      Rank <span class="required">*</span>
+                    </label>
+                    <select name="rank" class="form-select" required>
+                      <option value="">-- Select Rank --</option>
+                      <option value="Chief of Police">Chief of Police</option>
+                      <option value="Police Lieutenant I">Police Lieutenant I</option>
+                      <option value="Police Sergeant II">Police Sergeant II</option>
+                      <option value="Police Officer III+1 (FTO)">Police Officer III+1 (FTO)</option>
+                      <option value="Police Officer III">Police Officer III</option>
+                      <option value="Police Officer II">Police Officer II</option>
+                      <option value="Police Officer I">Police Officer I</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">
+                      Call Sign <span class="required">*</span>
+                    </label>
+                    <input type="text" name="callSign" class="form-input" required placeholder="e.g., 1-ADAM-12">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Assignment Section -->
+              <div class="form-section">
+                <h3 class="form-section-title">
+                  <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right: 8px;">
+                    <path fill="currentColor" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                  </svg>
+                  Assignment & Duty Station
+                </h3>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">
+                      Division <span class="required">*</span>
+                    </label>
+                    <select name="division" class="form-select" required>
+                      <option value="">-- Select Division --</option>
+                      <option value="Office of the Chief of Police">Office of the Chief of Police</option>
+                      <option value="Metro Division">Metro Division</option>
+                      <option value="Central Bureau">Central Bureau</option>
+                      <option value="West Bureau">West Bureau</option>
+                      <option value="South Bureau">South Bureau</option>
+                      <option value="Valley Bureau">Valley Bureau</option>
+                      <option value="Hollywood Division">Hollywood Division</option>
+                      <option value="Mission Row Police Station">Mission Row Police Station</option>
+                      <option value="Vespucci Police Station">Vespucci Police Station</option>
+                      <option value="La Mesa Police Station">La Mesa Police Station</option>
+                      <option value="Davis Police Station">Davis Police Station</option>
+                      <option value="Vinewood Police Station">Vinewood Police Station</option>
+                      <option value="Rockford Hills Police Station">Rockford Hills Police Station</option>
+                      <option value="Del Perro Police Station">Del Perro Police Station</option>
+                      <option value="Sandy Shores Sheriff Station">Sandy Shores Sheriff Station</option>
+                      <option value="Paleto Bay Sheriff Station">Paleto Bay Sheriff Station</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">
+                      Unit <span class="required">*</span>
+                    </label>
+                    <select name="unit" class="form-select" required>
+                      <option value="">-- Select Unit --</option>
+                      <option value="Executive Command">Executive Command</option>
+                      <option value="Patrol Unit">Patrol Unit</option>
+                      <option value="Patrol">Patrol</option>
+                      <option value="Traffic Division">Traffic Division</option>
+                      <option value="Gang Enforcement">Gang Enforcement</option>
+                      <option value="Detective Bureau">Detective Bureau</option>
+                      <option value="SWAT">SWAT (Special Weapons and Tactics)</option>
+                      <option value="K-9 Unit">K-9 Unit</option>
+                      <option value="Air Support">Air Support</option>
+                      <option value="Motorcycle Unit">Motorcycle Unit</option>
+                      <option value="Field Supervisor">Field Supervisor</option>
+                      <option value="Watch Commander">Watch Commander</option>
+                      <option value="Training Officer">Training Officer</option>
+                      <option value="Community Relations">Community Relations</option>
+                      <option value="Narcotics Division">Narcotics Division</option>
+                      <option value="Vice Squad">Vice Squad</option>
+                      <option value="Homicide">Homicide</option>
+                      <option value="Robbery">Robbery</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Form Actions -->
+              <div class="form-actions">
+                <button type="submit" class="form-btn form-btn-primary">
+                  <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right: 6px;">
+                    <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                  </svg>
+                  Add Officer
+                </button>
+                <button type="reset" class="form-btn form-btn-secondary">
+                  <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right: 6px;">
+                    <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                  </svg>
+                  Clear Form
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resize handles for Officer Management window -->
+      <div class="resize-handle resize-top"></div>
+      <div class="resize-handle resize-right"></div>
+      <div class="resize-handle resize-bottom"></div>
+      <div class="resize-handle resize-left"></div>
+      <div class="resize-handle resize-top-left"></div>
+      <div class="resize-handle resize-top-right"></div>
+      <div class="resize-handle resize-bottom-left"></div>
+      <div class="resize-handle resize-bottom-right"></div>
+    </div>
+
+    <!-- Settings Window (hidden by default) -->
+    <div class="window-container settings-window" id="playerSettingsWindow" style="display: none; width: 900px; height: 700px; top: 5%; left: 50%; transform: translateX(-50%);">
+      <!-- Resize Handles -->
+      <div class="resize-handle resize-top"></div>
+      <div class="resize-handle resize-bottom"></div>
+      <div class="resize-handle resize-left"></div>
+      <div class="resize-handle resize-right"></div>
+      <div class="resize-handle resize-top-left"></div>
+      <div class="resize-handle resize-top-right"></div>
+      <div class="resize-handle resize-bottom-left"></div>
+      <div class="resize-handle resize-bottom-right"></div>
+      
+      <div class="window-titlebar" id="playerSettingsTitlebar">
+        <div class="window-title">
+          <svg viewBox="0 0 24 24" width="16" height="16" style="margin-right: 8px;">
+            <path fill="currentColor" d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+          </svg>
+          <span>Settings</span>
+        </div>
+        <div class="window-controls">
+          <button class="window-btn minimize" onclick="minimizePlayerSettingsWindow()" title="Minimize">−</button>
+          <button class="window-btn maximize" onclick="toggleMaximizePlayerSettingsWindow()" title="Maximize">□</button>
+          <button class="window-btn close" onclick="closePlayerSettingsWindow()" title="Close">×</button>
+        </div>
+      </div>
+      
+      <div class="settings-container" style="display: flex; flex: 1; overflow: hidden;">
+        <!-- Sidebar Navigation -->
+        <div class="settings-sidebar" style="width: 280px; background: #1a1a1a; border-right: 1px solid #2a2a2a; overflow-y: auto;">
+          <div class="settings-user-profile" style="padding: 30px 20px; border-bottom: 1px solid #2a2a2a;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+              <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; font-weight: 700;">
+                <svg viewBox="0 0 24 24" width="32" height="32">
+                  <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                </svg>
+              </div>
+              <div>
+                <div id="settingsSidebarName" style="color: #8da9c4; font-size: 13px; margin-bottom: 0;">Unit #</div>
+                <div id="settingsSidebarUnit" style="display: none;"></div>
+              </div>
+            </div>
+          </div>
+          
+          <nav class="settings-nav" style="padding: 10px 0;">
+            <a href="#" class="settings-nav-item active" onclick="switchSettingsSection('system'); return false;" style="display: flex; align-items: center; gap: 15px; padding: 12px 20px; color: #fff; text-decoration: none; transition: background 0.2s; border-left: 3px solid transparent;">
+              <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="currentColor" d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+              </svg>
+              <span style="font-size: 14px;">System</span>
+            </a>
+            
+            <a href="#" class="settings-nav-item" onclick="switchSettingsSection('personalization'); return false;" style="display: flex; align-items: center; gap: 15px; padding: 12px 20px; color: #8da9c4; text-decoration: none; transition: background 0.2s; border-left: 3px solid transparent;">
+              <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="currentColor" d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+              </svg>
+              <span style="font-size: 14px;">Personalization</span>
+            </a>
+            
+            <a href="#" class="settings-nav-item" onclick="switchSettingsSection('time'); return false;" style="display: flex; align-items: center; gap: 15px; padding: 12px 20px; color: #8da9c4; text-decoration: none; transition: background 0.2s; border-left: 3px solid transparent;">
+              <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="currentColor" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+              </svg>
+              <span style="font-size: 14px;">Time & Display</span>
+            </a>
+            
+            <div style="height: 1px; background: #2a2a2a; margin: 10px 0;"></div>
+            
+            <a href="#" class="settings-nav-item" onclick="switchSettingsSection('reset'); return false;" style="display: flex; align-items: center; gap: 15px; padding: 12px 20px; color: #8da9c4; text-decoration: none; transition: background 0.2s; border-left: 3px solid transparent;">
+              <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="currentColor" d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+              </svg>
+              <span style="font-size: 14px;">Reset Options</span>
+            </a>
+          </nav>
+        </div>
+        
+        <!-- Content Area -->
+        <div class="settings-content" style="flex: 1; background: #242424; overflow-y: auto;">
+          <div id="systemSection" class="settings-section" style="padding: 40px; display: block;">
+            <h1 style="color: #fff; font-size: 28px; font-weight: 300; margin: 0 0 10px 0;">System</h1>
+            <p style="color: #8da9c4; font-size: 14px; margin: 0 0 30px 0;">Manage your MDT system preferences</p>
+            
+            <div style="color: #8da9c4; font-size: 12px; padding: 15px; background: rgba(46, 139, 192, 0.1); border-left: 3px solid #0078d4; border-radius: 4px;">
+              <svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align: middle; margin-right: 8px;">
+                <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+              </svg>
+              <strong style="color: #fff;">About:</strong> System settings apply to all users and affect the overall MDT functionality.
+            </div>
+          </div>
+          
+          <div id="personalizationSection" class="settings-section" style="padding: 40px; display: none;">
+            <h1 style="color: #fff; font-size: 28px; font-weight: 300; margin: 0 0 10px 0;">Personalization</h1>
+            <p style="color: #8da9c4; font-size: 14px; margin: 0 0 30px 0;">Customize your department branding and interface appearance</p>
+        
+            <!-- Interface Customization Section -->
+            <div style="background: linear-gradient(135deg, rgba(13, 36, 64, 0.6) 0%, rgba(10, 31, 61, 0.6) 100%); border: 1px solid rgba(46, 139, 192, 0.3); border-radius: 10px; padding: 25px; margin-bottom: 20px;">
+          <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+            <svg viewBox="0 0 24 24" width="32" height="32" style="color: #9c27b0;">
+              <path fill="currentColor" d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5S16.67 9 17.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
+            </svg>
+            <div style="flex: 1;">
+              <h3 style="margin: 0; color: #FDB913; font-size: 16px;">Interface Customization</h3>
+              <p style="margin: 5px 0 0 0; color: #8da9c4; font-size: 13px;">Personalize your MDT interface</p>
+            </div>
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 15px;">
+            <!-- Department Name -->
+            <div>
+              <label style="display: block; color: #FDB913; font-size: 13px; font-weight: 600; margin-bottom: 6px;">Department Name</label>
+              <input type="text" id="customDeptName" placeholder="LOS ANGELES POLICE DEPARTMENT" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(46, 139, 192, 0.5); border-radius: 4px; color: #fff; font-size: 13px;">
+            </div>
+            
+            <!-- Department Logo URL -->
+            <div>
+              <label style="display: block; color: #FDB913; font-size: 13px; font-weight: 600; margin-bottom: 6px;">Department Logo URL</label>
+              <div style="display: flex; gap: 8px; align-items: stretch;">
+                <input type="text" id="customDeptLogo" placeholder="https://example.com/logo.png" style="flex: 1; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(46, 139, 192, 0.5); border-radius: 4px; color: #fff; font-size: 13px; box-sizing: border-box;">
+                <button onclick="document.getElementById('deptLogoFile').click()" type="button" style="padding: 10px 16px; background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%); border: none; border-radius: 4px; color: #fff; cursor: pointer; font-weight: 600; font-size: 12px; white-space: nowrap;">
+                  <svg viewBox="0 0 24 24" width="14" height="14" style="vertical-align: middle; margin-right: 4px;">
+                    <path fill="currentColor" d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
+                  </svg>
+                  Choose File
+                </button>
+              </div>
+              <input type="file" id="deptLogoFile" accept="image/*" style="display: none;" onchange="handleLogoFileSelect(event)">
+              <small style="color: #8da9c4; font-size: 11px; margin-top: 4px; display: block;">Enter URL or choose a file • Leave empty to use default LAPD badge</small>
+            </div>
+            
+            <!-- Desktop Wallpaper -->
+            <div>
+              <label style="display: block; color: #FDB913; font-size: 13px; font-weight: 600; margin-bottom: 6px;">Desktop Wallpaper URL</label>
+              <div style="display: flex; gap: 8px; align-items: stretch;">
+                <input type="text" id="customWallpaper" placeholder="https://example.com/wallpaper.jpg" style="flex: 1; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(46, 139, 192, 0.5); border-radius: 4px; color: #fff; font-size: 13px; box-sizing: border-box;">
+                <button onclick="document.getElementById('wallpaperFile').click()" type="button" style="padding: 10px 16px; background: linear-gradient(135deg, #0078d4 0%, #005a9e 100%); border: none; border-radius: 4px; color: #fff; cursor: pointer; font-weight: 600; font-size: 12px; white-space: nowrap;">
+                  <svg viewBox="0 0 24 24" width="14" height="14" style="vertical-align: middle; margin-right: 4px;">
+                    <path fill="currentColor" d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
+                  </svg>
+                  Choose File
+                </button>
+              </div>
+              <input type="file" id="wallpaperFile" accept="image/*" style="display: none;" onchange="handleWallpaperFileSelect(event)">
+              <small style="color: #8da9c4; font-size: 11px; margin-top: 4px; display: block;">Enter URL or choose a file • Leave empty to use default blue gradient</small>
+            </div>
+            
+            <!-- Primary Color -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+              <div>
+                <label style="display: block; color: #FDB913; font-size: 13px; font-weight: 600; margin-bottom: 6px;">Primary Color (Accent)</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <input type="color" id="customPrimaryColor" value="#FDB913" style="width: 50px; height: 40px; border: none; border-radius: 4px; cursor: pointer; background: transparent;">
+                  <input type="text" id="customPrimaryColorHex" value="#FDB913" placeholder="#FDB913" style="flex: 1; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(46, 139, 192, 0.5); border-radius: 4px; color: #fff; font-size: 13px;">
+                </div>
+              </div>
+              
+              <div>
+                <label style="display: block; color: #FDB913; font-size: 13px; font-weight: 600; margin-bottom: 6px;">Secondary Color (Borders)</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <input type="color" id="customSecondaryColor" value="#2E8BC0" style="width: 50px; height: 40px; border: none; border-radius: 4px; cursor: pointer; background: transparent; flex-shrink: 0;">
+                  <input type="text" id="customSecondaryColorHex" value="#2E8BC0" placeholder="#2E8BC0" style="flex: 1; min-width: 0; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(46, 139, 192, 0.5); border-radius: 4px; color: #fff; font-size: 13px; box-sizing: border-box;">
+                </div>
+              </div>
+            </div>
+            
+            <!-- Buttons -->
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+              <button onclick="applyInterfaceCustomization()" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%); border: none; border-radius: 6px; color: #fff; cursor: pointer; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.3s ease;">
+                <svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align: middle; margin-right: 6px;">
+                  <path fill="currentColor" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                </svg>
+                Apply Changes
+              </button>
+              <button onclick="resetInterfaceCustomization()" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #757575 0%, #424242 100%); border: none; border-radius: 6px; color: #fff; cursor: pointer; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.3s ease;">
+                <svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align: middle; margin-right: 6px;">
+                  <path fill="currentColor" d="M13,3A9,9 0 0,0 4,12H1L4.89,15.89L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z"/>
+                </svg>
+                Reset to Defaults
+              </button>
+            </div>
+          </div>
+        </div>
+          </div>
+          
+          <div id="timeSection" class="settings-section" style="padding: 40px; display: none;">
+            <h1 style="color: #fff; font-size: 28px; font-weight: 300; margin: 0 0 10px 0;">Time & Display</h1>
+            <p style="color: #8da9c4; font-size: 14px; margin: 0 0 30px 0;">Configure time display preferences for your MDT</p>
+        
+            <div style="background: linear-gradient(135deg, rgba(13, 36, 64, 0.6) 0%, rgba(10, 31, 61, 0.6) 100%); border: 1px solid rgba(46, 139, 192, 0.3); border-radius: 10px; padding: 25px; margin-bottom: 20px;">
+          <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+            <svg viewBox="0 0 24 24" width="32" height="32" style="color: #2196f3;">
+              <path fill="currentColor" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/>
+            </svg>
+            <div style="flex: 1;">
+              <h3 style="margin: 0; color: #FDB913; font-size: 16px;">Time Display Mode</h3>
+              <p style="margin: 5px 0 0 0; color: #8da9c4; font-size: 13px;">Choose between real-time or in-game time display</p>
+            </div>
+          </div>
+          
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px; background: rgba(0, 0, 0, 0.2); border-radius: 6px; border: 2px solid transparent; transition: all 0.2s ease;" onclick="setTimeDisplayMode(false)">
+              <input type="radio" name="timeDisplayMode" value="realtime" checked style="width: 20px; height: 20px; cursor: pointer;">
+              <div>
+                <div style="color: #fff; font-weight: 600; font-size: 14px;">Real-Time</div>
+                <div style="color: #8da9c4; font-size: 12px;">Display your computer's system time</div>
+              </div>
+            </label>
+            
+            <label style="display: flex; align-items: center; gap: 12px; cursor: pointer; padding: 12px; background: rgba(0, 0, 0, 0.2); border-radius: 6px; border: 2px solid transparent; transition: all 0.2s ease;" onclick="setTimeDisplayMode(true)">
+              <input type="radio" name="timeDisplayMode" value="ingame" style="width: 20px; height: 20px; cursor: pointer;">
+              <div>
+                <div style="color: #fff; font-weight: 600; font-size: 14px;">In-Game Time</div>
+                <div style="color: #8da9c4; font-size: 12px;">Display time from GTA V game world</div>
+              </div>
+            </label>
+          </div>
+        </div>
+          </div>
+          
+          <div id="resetSection" class="settings-section" style="padding: 40px; display: none;">
+            <h1 style="color: #fff; font-size: 28px; font-weight: 300; margin: 0 0 10px 0;">Reset Options</h1>
+            <p style="color: #8da9c4; font-size: 14px; margin: 0 0 30px 0;">Restore your MDT to factory defaults</p>
+        
+            <div style="background: linear-gradient(135deg, rgba(13, 36, 64, 0.6) 0%, rgba(10, 31, 61, 0.6) 100%); border: 1px solid rgba(46, 139, 192, 0.3); border-radius: 10px; padding: 25px;">
+          <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 20px;">
+            <svg viewBox="0 0 24 24" width="32" height="32" style="color: #ff9800;">
+              <path fill="currentColor" d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+            </svg>
+            <div>
+              <h3 style="margin: 0; color: #FDB913; font-size: 16px;">Reset officer database</h3>
+              <p style="margin: 5px 0 0 0; color: #8da9c4; font-size: 13px;">This will delete all custom officers and replace them with placeholder officers./p>
+            </div>
+          </div>
+          
+          <button id="playerSettingsResetBtn" onclick="resetOfficersToDefaultFromSettings()" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #f44336 0%, #c62828 100%); border: none; border-radius: 6px; color: #fff; cursor: pointer; font-weight: 700; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);">
+            <svg viewBox="0 0 24 24" width="18" height="18" style="vertical-align: middle; margin-right: 8px;">
+              <path fill="currentColor" d="M13,3A9,9 0 0,0 4,12H1L4.89,15.89L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z"/>
+            </svg>
+            Reset to Defaults
+          </button>
+        </div>
+        
+        <div style="color: #8da9c4; font-size: 12px; text-align: center; padding: 10px; background: rgba(255, 152, 0, 0.1); border-radius: 6px; border: 1px solid rgba(255, 152, 0, 0.3); margin-top: 20px;">
+          <svg viewBox="0 0 24 24" width="16" height="16" style="vertical-align: middle; margin-right: 5px;">
+            <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+          </svg>
+          <strong>Warning:</strong> Resetting to defaults cannot be undone. All custom officers will be permanently removed.
+        </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Dialog Overlay -->
+    <div id="customDialogOverlay" class="custom-dialog-overlay" style="display: none;">
+      <div class="custom-dialog">
+        <div class="custom-dialog-header">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Seal_of_the_Los_Angeles_Police_Department.png/1033px-Seal_of_the_Los_Angeles_Police_Department.png" alt="LAPD Logo" class="dialog-logo">
+          <span id="customDialogTitle" class="dialog-title">LAPD MDT</span>
+        </div>
+        <div class="custom-dialog-body">
+          <div class="dialog-icon">⚠️</div>
+          <div id="customDialogMessage" class="dialog-message"></div>
+        </div>
+        <div class="custom-dialog-footer">
+          <button id="customDialogOk" class="dialog-btn dialog-btn-ok">OK</button>
+          <button id="customDialogCancel" class="dialog-btn dialog-btn-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Officer Profile Window -->
+    <div class="window-container officer-profile-window" id="officerProfileWindow" data-window="officerProfileWindow" style="display: none; width: 800px; height: 600px; top: 10%; left: 50%; transform: translateX(-50%);">
+      <!-- Resize Handles -->
+      <div class="resize-handle resize-top"></div>
+      <div class="resize-handle resize-bottom"></div>
+      <div class="resize-handle resize-left"></div>
+      <div class="resize-handle resize-right"></div>
+      <div class="resize-handle resize-top-left"></div>
+      <div class="resize-handle resize-top-right"></div>
+      <div class="resize-handle resize-bottom-left"></div>
+      <div class="resize-handle resize-bottom-right"></div>
+      
+      <div class="window-titlebar" id="officerProfileTitlebar">
+        <div class="window-title">
+          <svg viewBox="0 0 24 24" width="16" height="16" style="margin-right: 8px;">
+            <path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+          </svg>
+          <span>Officer Profile</span>
+        </div>
+        <div class="window-controls">
+          <button class="window-btn minimize" onclick="minimizeOfficerProfileWindow()" title="Minimize">−</button>
+          <button class="window-btn maximize" onclick="toggleMaximizeOfficerProfileWindow()" title="Maximize">□</button>
+          <button class="window-btn close" onclick="closeOfficerProfile()" title="Close">×</button>
+        </div>
+      </div>
+      
+      <div class="officer-profile-content" style="flex: 1; overflow-y: auto; padding: 30px;">
+        <div class="profile-form-container">
+          <form id="officerProfileForm" onsubmit="updateOfficerPassword(event)">
+            
+            <!-- Personal Information Section -->
+            <div class="profile-section">
+              <div class="profile-section-header">PERSONAL INFORMATION</div>
+              <div class="profile-form-grid">
+                <div class="profile-form-group">
+                  <label for="profileFirstName">First Name</label>
+                  <input type="text" id="profileFirstName" class="profile-input" readonly>
+                </div>
+                <div class="profile-form-group">
+                  <label for="profileLastName">Last Name</label>
+                  <input type="text" id="profileLastName" class="profile-input" readonly>
+                </div>
+              </div>
+            </div>
+
+            <!-- Credentials & Security Section -->
+            <div class="profile-section">
+              <div class="profile-section-header">CREDENTIALS & SECURITY</div>
+              <div class="profile-form-grid">
+                <div class="profile-form-group">
+                  <label for="profileBadgeNumber">Badge Number</label>
+                  <input type="text" id="profileBadgeNumber" class="profile-input" readonly>
+                </div>
+                <div class="profile-form-group">
+                  <label for="profileOldPassword">Current Password</label>
+                  <input type="password" id="profileOldPassword" class="profile-input" placeholder="Enter current password">
+                </div>
+                <div class="profile-form-group">
+                  <label for="profileNewPassword">New Password</label>
+                  <input type="password" id="profileNewPassword" class="profile-input" placeholder="Enter new password">
+                </div>
+                <div class="profile-form-group">
+                  <label for="profileConfirmPassword">Confirm New Password</label>
+                  <input type="password" id="profileConfirmPassword" class="profile-input" placeholder="Confirm new password">
+                </div>
+              </div>
+            </div>
+
+            <!-- Department Information Section -->
+            <div class="profile-section">
+              <div class="profile-section-header">DEPARTMENT INFORMATION</div>
+              <div class="profile-form-grid">
+                <div class="profile-form-group">
+                  <label for="profileRank">Rank</label>
+                  <input type="text" id="profileRank" class="profile-input" readonly>
+                </div>
+                <div class="profile-form-group">
+                  <label for="profileCallSign">Call Sign</label>
+                  <input type="text" id="profileCallSign" class="profile-input" readonly>
+                </div>
+              </div>
+            </div>
+
+            <!-- Assignment & Duty Station Section -->
+            <div class="profile-section">
+              <div class="profile-section-header">ASSIGNMENT & DUTY STATION</div>
+              <div class="profile-form-grid">
+                <div class="profile-form-group">
+                  <label for="profileDivision">Division</label>
+                  <input type="text" id="profileDivision" class="profile-input" readonly>
+                </div>
+                <div class="profile-form-group">
+                  <label for="profileUnit">Unit</label>
+                  <input type="text" id="profileUnit" class="profile-input" readonly>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="profile-actions">
+              <button type="submit" class="profile-btn profile-btn-update">UPDATE PASSWORD</button>
+              <button type="button" class="profile-btn profile-btn-cancel" onclick="closeOfficerProfile()">CANCEL</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </body>
+  <script src="/script/root.js"></script>
+  <script src="/script/index.js"></script>
+</html>

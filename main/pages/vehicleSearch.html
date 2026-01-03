@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-language="title">LAPD Vehicle Database Lookup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style/root.css" />
+    <link rel="stylesheet" href="/style/vehicleSearch.css" />
+  </head>
+  <body>
+    <div class="lapd-header">
+      <div class="lapd-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Seal_of_the_Los_Angeles_Police_Department.png/1033px-Seal_of_the_Los_Angeles_Police_Department.png" alt="LAPD Badge" class="lapd-badge-icon" />
+        <div class="lapd-badge">LAPD</div>
+      </div>
+      <div class="header-title">
+        <h1>VEHICLE DATABASE LOOKUP</h1>
+        <h2>Los Angeles Police Department - Motor Vehicle Division</h2>
+      </div>
+      <div class="header-right">
+        <div class="dmv-logo-header">
+          <img src="https://is3-ssl.mzstatic.com/image/thumb/Purple122/v4/6f/5d/ae/6f5dae89-6553-9329-aecf-ecd5bc53d163/AppIcon-1x_U007emarketing-0-10-0-85-220.png/512x512bb.jpg" alt="DMV Logo" width="60" height="60" style="border-radius: 12px;">
+        </div>
+      </div>
+    </div>
+
+    <div class="search-container">
+      <div class="search-header">
+        <div class="search-icon">
+          <svg width="64" height="64" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="white">
+            <!-- Your car SVG -->
+            <path d="M37.84 12.02A3.007 3.007 0 0 0 35 10H13c-1.31 0-2.43.84-2.84 2.02L6 24v16c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2v-2h24v2c0 1.1.9 2 2 2h2a2 2 0 0 0 2-2V24l-4.16-11.98zM13 32c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm22 0c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zM10 22l3-9h22l3 9H10z"/>
+            <!-- Magnifying glass on top right edge -->
+            <circle cx="36" cy="12" r="6" fill="none" stroke="white" stroke-width="2.5"/>
+            <line x1="40.5" y1="16.5" x2="43" y2="19" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="search-info">
+          <h3>VEHICLE IDENTIFICATION SEARCH</h3>
+          <p>Enter license plate number or VIN for comprehensive vehicle record lookup</p>
+        </div>
+      </div>
+      
+      <div class="searchInputWrapper">
+        <div class="input-group">
+          <label for="vehicleSearchInput">License Plate / VIN Number</label>
+          <input
+            type="text"
+            id="vehicleSearchInput"
+            data-language-placeholder="searchInput"
+            placeholder="Enter license plate (e.g., 8ABC123) or VIN number"
+            autocomplete="off"
+            maxlength="17"
+          />
+          <div class="input-helper">
+            <span class="format-hint">Format: ABC1234 or 17-digit VIN</span>
+          </div>
+        </div>
+        <button class="search-btn" data-language="search">
+          <span class="btn-icon" aria-hidden="true">
+            <!-- simple magnifying glass SVG -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+              <path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="btn-text">SEARCH DATABASE</span>
+        </button>
+      </div>
+    </div>
+    <div class="searchResponseWrapper hidden">
+      <div class="response-header">
+        <div class="status-indicator">
+          <span class="status-dot online"></span>
+          <span class="status-text">DATABASE RESULT FOUND</span>
+        </div>
+        <div class="record-id">
+          <span>Record ID: <span id="recordId">--</span></span>
+        </div>
+      </div>
+
+      <div class="results-container">
+        <div class="section vehicle-identification">
+          <div class="section-header">
+            <div class="section-icon">
+              <svg width="32" height="24" viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="4" width="28" height="16" rx="3" fill="#1e293b" stroke="#fff" stroke-width="2"/>
+                <text x="8" y="16" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#fff" font-weight="bold">ID</text>
+                <rect x="22" y="10" width="6" height="6" rx="2" fill="#fff" opacity="0.5"/>
+              </svg>
+            </div>
+            <h3 class="section-title" data-language="basicInfoTitle">VEHICLE IDENTIFICATION</h3>
+          </div>
+          <div class="data-grid">
+            <div class="data-field">
+              <label for="licensePlateInput" data-language="labels.licensePlate">License Plate Number</label>
+              <input type="text" id="licensePlateInput" disabled data-property="LicensePlate" class="official-field" />
+            </div>
+            <div class="data-field">
+              <label for="modelDisplayNameInput" data-language="labels.modelDisplayName">Vehicle Make/Model</label>
+              <input type="text" id="modelDisplayNameInput" disabled data-property="ModelDisplayName" class="official-field" />
+            </div>
+            <div class="data-field">
+              <label for="ownerInput" data-language="labels.owner">Registered Owner</label>
+              <input type="text" id="ownerInput" disabled data-property="Owner" class="official-field" />
+            </div>
+            <div class="data-field status-field">
+              <label for="isStolenInput" data-language="labels.isStolen">Stolen</label>
+              <input type="text" id="isStolenInput" disabled data-property="IsStolen" class="status-indicator-field" />
+            </div>
+            <div class="data-field color-field">
+              <label data-language="labels.color">Vehicle Color</label>
+              <div class="color-display" data-property="Color">
+                <span class="color-text">--</span>
+              </div>
+            </div>
+          </div>
+          <!-- Right-side vehicle photo panel -->
+          <div class="photo-panel">
+            <div class="photo-wrap">
+              <img id="vehiclePhoto" alt="Vehicle Photo" />
+              <div class="photo-caption">Vehicle Photo</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section documentation">
+          <div class="section-header">
+            <div class="section-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <line x1="16" y1="13" x2="8" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <line x1="16" y1="17" x2="8" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <polyline points="10,9 9,9 8,9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h3 class="section-title" data-language="documentsTitle">REGISTRATION & INSURANCE</h3>
+          </div>
+          <div class="data-grid">
+            <div class="data-field">
+              <label for="registrationStatusInput" data-language="labels.registrationStatus">Registration Status</label>
+              <input type="text" id="registrationStatusInput" disabled data-property="RegistrationStatus" class="status-field" />
+            </div>
+            <div class="data-field">
+              <label for="registrationExpirationInput" data-language="labels.registrationExpiration">Registration Expires</label>
+              <input type="text" id="registrationExpirationInput" disabled data-property="RegistrationExpiration" class="date-field" />
+            </div>
+            <div class="data-field">
+              <label for="insuranceStatusInput" data-language="labels.insuranceStatus">Insurance Status</label>
+              <input type="text" id="insuranceStatusInput" disabled data-property="InsuranceStatus" class="status-field" />
+            </div>
+            <div class="data-field">
+              <label for="insuranceExpirationInput" data-language="labels.insuranceExpiration">Insurance Expires</label>
+              <input type="text" id="insuranceExpirationInput" disabled data-property="InsuranceExpiration" class="date-field" />
+            </div>
+          </div>
+        </div>
+
+        <div class="section alerts-section">
+          <div class="section-header">
+            <div class="section-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <line x1="12" y1="9" x2="12" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="17" r="1" fill="currentColor"/>
+              </svg>
+            </div>
+            <h3 class="section-title">ALERTS & NOTIFICATIONS</h3>
+          </div>
+          <div class="alerts-container">
+            <div class="alert-message">
+              <span class="alert-level info">INFO</span>
+              <span class="alert-text">No active alerts for this vehicle</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="action-btn secondary">PRINT RECORD</button>
+        <button class="action-btn primary">NEW SEARCH</button>
+        <button class="action-btn tertiary">ADD TO WATCHLIST</button>
+      </div>
+    </div>
+  </body>
+  <script src="/script/root.js"></script>
+  <script src="/script/vehicleSearch.js"></script>
+</html>

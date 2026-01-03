@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-language="title">Ped Lookup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style/root.css" />
+    <link rel="stylesheet" href="/style/pedSearch.css" />
+  </head>
+  <body>
+    <div class="search-container">
+      <div class="search-header">
+        <div class="search-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+            <!-- Person silhouette -->
+            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            <!-- Magnifying glass on top right -->
+            <circle cx="18" cy="6" r="3" fill="none" stroke="currentColor" stroke-width="1.2"/>
+            <line x1="20.2" y1="8.2" x2="21.5" y2="9.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+  <!-- Report Modal (hidden by default) -->
+        <div class="search-info">
+          <h3>PEDESTRIAN DATABASE SEARCH</h3>
+          <p>Enter full name or partial name for comprehensive person record lookup</p>
+        </div>
+      </div>
+      
+      <div class="searchInputWrapper">
+        <div class="input-group">
+          <label for="pedSearchInput">Full Name</label>
+          <input
+            type="text"
+            id="pedSearchInput"
+            data-language-placeholder="searchInput"
+            placeholder="Enter first and last name (e.g., John Smith)"
+            autocomplete="off"
+          />
+          <div class="input-helper">
+            <span class="format-hint">Format: First Last or partial name</span>
+          </div>
+        </div>
+        <button class="search-btn" data-language="search">
+          <span class="btn-icon" aria-hidden="true">
+            <!-- magnifying glass SVG -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false">
+              <path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span class="btn-text">SEARCH DATABASE</span>
+        </button>
+      </div>
+    </div>
+    <div class="searchResponseWrapper hidden">
+      <div class="section-header">
+          <div class="section-icon">
+            <svg width="32" height="24" viewBox="0 0 32 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="4" width="28" height="16" rx="3" fill="#1e293b" stroke="#fff" stroke-width="2"/>
+              <text x="8" y="16" font-family="Arial, Helvetica, sans-serif" font-size="10" fill="#fff" font-weight="bold">ID</text>
+              <rect x="22" y="10" width="6" height="6" rx="2" fill="#fff" opacity="0.5"/>
+            </svg>
+          </div>
+          <h3 class="section-title" data-language="basicInfoTitle">Basic Information</h3>
+        </div>
+      <!-- Action buttons for incident, citation, arrest -->
+      <div class="inputWrapper grid basicInfo">
+        <div>
+          <label for="firstNameInput" data-language="labels.firstName"
+            >First Name</label
+          >
+          <input
+            type="text"
+            id="firstNameInput"
+            disabled
+            data-property="FirstName"
+          />
+        </div>
+        <div>
+          <label for="lastNameInput" data-language="labels.lastName"
+            >Last Name</label
+          >
+          <input
+            type="text"
+            id="lastNameInput"
+            disabled
+            data-property="LastName"
+          />
+        </div>
+        <div>
+          <label for="genderInput" data-language="labels.gender">Gender</label>
+          <input type="text" id="genderInput" disabled data-property="Gender" />
+        </div>
+        <div>
+          <label for="birthdayInput" data-language="labels.birthday"
+            >Date Of Birth</label
+          >
+          <input
+            type="text"
+            id="birthdayInput"
+            disabled
+            data-property="Birthday"
+          />
+        </div>
+        <div>
+          <label for="ageInput" data-language="labels.age">Age</label>
+          <input type="number" id="ageInput" disabled data-property="Age" />
+        </div>
+        <div>
+          <label for="addressInput" data-language="labels.address"
+            >Address</label
+          >
+          <input
+            type="text"
+            id="addressInput"
+            disabled
+            data-property="Address"
+          />
+        </div>
+      </div>
+      <div class="searchResponseSectionTitle" data-language="legalInfoTitle">
+        Legal Information
+      </div>
+      <div class="inputWrapper grid legalInfo">
+        <div>
+          <label for="timesStoppedInput" data-language="labels.timesStopped"
+            >Times Stopped</label
+          >
+          <input
+            type="number"
+            id="timesStoppedInput"
+            disabled
+            data-property="TimesStopped"
+          />
+        </div>
+        <div>
+          <label for="wantedStatusInput" data-language="labels.wantedStatus"
+            >Wanted Status</label
+          >
+          <input
+            type="text"
+            id="wantedStatusInput"
+            disabled
+            data-property="IsWanted"
+          />
+        </div>
+        <div>
+          <label
+            for="probationStatusInput"
+            data-language="labels.probationStatus"
+            >Probation Status</label
+          >
+          <input
+            type="text"
+            id="probationStatusInput"
+            disabled
+            data-property="IsOnProbation"
+          />
+        </div>
+        <div>
+          <label for="paroleStatusInput" data-language="labels.paroleStatus"
+            >Parole Status</label
+          >
+          <input
+            type="text"
+            id="paroleStatusInput"
+            disabled
+            data-property="IsOnParole"
+          />
+        </div>
+        <div>
+          <label
+            for="gangAffiliationInput"
+            data-language="labels.gangAffiliation"
+            >Gang Affiliation</label
+          >
+          <input
+            type="text"
+            id="gangAffiliationInput"
+            disabled
+            data-property="IsInGang"
+          />
+        </div>
+        <div>
+          <label for="advisoryInput" data-language="labels.advisory"
+            >Advisory</label
+          >
+          <input
+            type="text"
+            id="advisoryInput"
+            disabled
+            data-property="AdvisoryText"
+          />
+        </div>
+      </div>
+      <div class="searchResponseSectionTitle" data-language="licensesTitle">
+        Licenses & Permits
+      </div>
+      <div class="inputWrapper grid licenses">
+        <div>
+          <label for="licenseStatusInput" data-language="labels.licenseStatus"
+            >License Status</label
+          >
+          <input
+            type="text"
+            id="licenseStatusInput"
+            disabled
+            data-property="LicenseStatus"
+          />
+        </div>
+        <div>
+          <label
+            for="licenseExpirationInput"
+            data-language="labels.licenseExpiration"
+            >License Expiration</label
+          >
+          <input
+            type="text"
+            id="licenseExpirationInput"
+            disabled
+            data-property="LicenseExpiration"
+          />
+        </div>
+        <div>
+          <label
+            for="weaponPermitStatusInput"
+            data-language="labels.weaponPermitStatus"
+            >Weapon Permit Status</label
+          >
+          <input
+            type="text"
+            id="weaponPermitStatusInput"
+            disabled
+            data-property="WeaponPermitStatus"
+          />
+        </div>
+        <div>
+          <label
+            for="weaponPermitTypeInput"
+            data-language="labels.weaponPermitType"
+            >Weapon Permit Type</label
+          >
+          <input
+            type="text"
+            id="weaponPermitTypeInput"
+            disabled
+            data-property="WeaponPermitType"
+          />
+        </div>
+        <div>
+          <label
+            for="weaponPermitExpirationInput"
+            data-language="labels.weaponPermitExpiration"
+            >Weapon Permit Expiration</label
+          >
+          <input
+            type="text"
+            id="weaponPermitExpirationInput"
+            disabled
+            data-property="WeaponPermitExpiration"
+          />
+        </div>
+        <div>
+          <label
+            for="huntingPermitStatusInput"
+            data-language="labels.huntingPermitStatus"
+            >Hunting Permit Status</label
+          >
+          <input
+            type="text"
+            id="huntingPermitStatusInput"
+            disabled
+            data-property="HuntingPermitStatus"
+          />
+        </div>
+        <div>
+          <label
+            for="huntingPermitExpirationInput"
+            data-language="labels.huntingPermitExpiration"
+            >Hunting Permit Expiration</label
+          >
+          <input
+            type="text"
+            id="huntingPermitExpirationInput"
+            disabled
+            data-property="HuntingPermitExpiration"
+          />
+        </div>
+        <div>
+          <label
+            for="fishingPermitStatusInput"
+            data-language="labels.fishingPermitStatus"
+            >Fishing Permit Status</label
+          >
+          <input
+            type="text"
+            id="fishingPermitStatusInput"
+            disabled
+            data-property="FishingPermitStatus"
+          />
+        </div>
+        <div>
+          <label
+            for="fishingPermitExpirationInput"
+            data-language="labels.fishingPermitExpiration"
+            >Fishing Permit Expiration</label
+          >
+          <input
+            type="text"
+            id="fishingPermitExpirationInput"
+            disabled
+            data-property="FishingPermitExpiration"
+          />
+        </div>
+      </div>
+      <div class="searchResponseSectionTitle" data-language="historyTitle">
+        History
+      </div>
+      <div class="inputWrapper grid history">
+        <div>
+          <label data-language="labels.citations">Citations</label>
+          <ul data-property="Citations"></ul>
+        </div>
+        <div>
+          <label data-language="labels.arrests">Arrests</label>
+          <ul data-property="Arrests"></ul>
+        </div>
+      </div>
+      <!-- Next Step Action Buttons -->
+      <div style="margin-top:32px; margin-bottom:24px; text-align:center;">
+        <div style="font-size:1.15em; font-weight:700; color:#fff; margin-bottom:12px; letter-spacing:0.5px;">Officer Next Steps:</div>
+        <div class="ped-action-buttons" style="display:flex; flex-direction:column; gap:18px; align-items:center;">
+          <button class="ped-btn citation-btn" id="issueCitationBtn" style="width:260px;">CREATE CITATION</button>
+          <button class="ped-btn arrest-btn" id="createArrestBtn" style="width:260px;">CREATE ARREST RECORD</button>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="/script/root.js"></script>
+  <script src="/script/pedSearch.js"></script>
+</html>

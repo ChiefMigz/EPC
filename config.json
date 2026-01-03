@@ -1,0 +1,22 @@
+{
+  "port": 8080,
+  "maxNumberOfNearbyPedsOrVehicles": 15,
+  "databaseLimitMultiplier": 10,
+  "webSocketUpdateInterval": 1000,
+  "databaseUpdateInterval": 15000,
+  "updateDomWithLanguageOnLoad": false,
+  "useInGameTime": true,
+  "initialWindowWidth": 600,
+  "initialWindowHeight": 400,
+  "hasPriorCitationsProbability": 0.8,
+  "hasPriorArrestsProbability": 0.2,
+  "hasPriorArrestsWithWarrantProbability": 0.8,
+  "maxNumberOfPriorCitations": 5,
+  "maxNumberOfPriorArrests": 3,
+  "maxNumberOfPriorArrestsWithWarrant": 8,
+  "reportIdFormat": "{type}-{shortYear}-{index}",
+  "reportIdIndexPad": 6,
+  "courtCaseNumberFormat": "{shortYear}-{index}",
+  "courtCaseNumberIndexPad": 6,
+  "displayCurrencySymbolBeforeNumber": true
+}

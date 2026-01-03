@@ -1,0 +1,67 @@
+body {
+  background: #0a1f3d;
+  margin: 0;
+  overflow: hidden;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+  height: calc(100vh - 40px);
+  overflow: auto;
+  color: var(--color-text-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.listItem {
+  padding: 0 20px;
+  border: 2px solid rgba(46, 139, 192, 0.3);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #0d2440 0%, #0a1f3d 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.listItem:hover {
+  border-color: rgba(46, 139, 192, 0.5);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+
+.listItem .timeWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 5px;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.listItem .timeWrapper span {
+  min-width: fit-content;
+}
+
+.listItem .timeWrapper span.half {
+  font-weight: 400;
+  color: var(--color-text-primary-half);
+}
+
+.listItem .reportsWrapper {
+  margin: 5px 0 10px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.listItem .reportsWrapper button {
+  flex: 1 1 0;
+  min-width: fit-content;
+  border-radius: 3px;
+}
+
+.listItem .reportsTitle {
+  border-top: 1px solid var(--color-border);
+  padding-top: 10px;
+}

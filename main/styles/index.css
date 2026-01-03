@@ -1,0 +1,1580 @@
+:root {
+  --tb-height: 45px;
+  --header-height: 180px;
+}
+
+/* Keep blue background for main MDT window */
+#mdtWindow {
+  background: #0a1f3d !important;
+}
+
+/* LAPD MDT Header */
+.mdt-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: linear-gradient(90deg, #003d5c 0%, #1a5278 50%, #2d6a94 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  border-bottom: 4px solid #FDB913;
+  margin: 0;
+  z-index: 10;
+  min-height: 100px;
+}
+
+#mdtWindow .window-content {
+  padding: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+#mdtWindow .window-content::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+#mdtWindow .resize-handle {
+  z-index: 1000 !important;
+  pointer-events: auto !important;
+}
+
+#mdtWindow.login-mode .resize-handle {
+  pointer-events: none !important;
+  display: none !important;
+}
+
+/* Hide blue hover background on ALL resize handles */
+.resize-handle:hover {
+  background: transparent !important;
+}
+
+#mdtContent {
+  position: relative;
+  padding: 115px 20px 20px 20px;
+  z-index: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+}
+
+#mdtContent::-webkit-scrollbar {
+  width: 8px;
+}
+
+#mdtContent::-webkit-scrollbar-track {
+  background: rgba(10, 31, 61, 0.5);
+}
+
+#mdtContent::-webkit-scrollbar-thumb {
+  background: rgba(46, 139, 192, 0.5);
+  border-radius: 4px;
+}
+
+#mdtContent::-webkit-scrollbar-thumb:hover {
+  background: rgba(46, 139, 192, 0.8);
+}
+
+.mdt-header-left {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.mdt-header-logo {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 4px;
+  object-fit: contain;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.mdt-header-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  text-align: center;
+}
+
+.mdt-title-main {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.mdt-title-sub {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  opacity: 0.95;
+  margin-top: 4px;
+  color: #ffffff;
+}
+
+.mdt-header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  justify-content: flex-end;
+  padding-right: 220px; /* Reserve space for officer dropdown button */
+}
+
+.mdt-header-info {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mdt-header-unit {
+  font-size: 14px;
+  font-weight: 700;
+  color: #FDB913;
+  letter-spacing: 0.5px;
+}
+
+.mdt-header-datetime {
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  color: #FDB913;
+  letter-spacing: 0.5px;
+}
+
+.mdt-header-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.status-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.status-indicator {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.status-indicator.off-duty {
+  background: #757575;
+  color: #ffffff;
+}
+
+.status-indicator.on-duty {
+  background: #4caf50;
+  color: #ffffff;
+}
+
+.status-indicator.available {
+  background: #2196f3;
+  color: #ffffff;
+}
+
+.status-indicator.busy {
+  background: #ff9800 !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  text-shadow: none !important;
+  position: relative;
+  z-index: 999;
+  opacity: 1 !important;
+  display: inline-block !important;
+}
+
+.status-indicator.code7 {
+  background: #9c27b0;
+  color: #ffffff;
+}
+
+.status-indicator.unavailable {
+  background: #dc3545;
+  color: #ffffff;
+}
+
+.lapd-logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.lapd-badge-icon {
+  width: 85px;
+  height: 85px;
+  border-radius: 50%;
+  border: 3px solid var(--color-text-primary);
+  object-fit: contain;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.95);
+  padding: 4px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.lapd-badge {
+  background: transparent;
+  color: var(--color-text-primary);
+  font-weight: 900;
+  font-size: 32px;
+  padding: 15px 20px;
+  border: none;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  letter-spacing: 3px;
+}
+
+.mdt-title {
+  text-align: center;
+  flex-grow: 1;
+}
+
+.mdt-title h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.mdt-title h2 {
+  margin: 5px 0 0 0;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  opacity: 0.9;
+}
+
+.officer-header {
+  text-align: right;
+  font-family: var(--font-family);
+  font-size: 18px;
+  line-height: 1.4;
+  min-width: 200px;
+  flex-shrink: 0;
+}
+
+.officer-name {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.officer-name span {
+  color: var(--color-lapd-gold);
+  font-weight: 700;
+}
+
+/* Desktop/Main Interface */
+.mdt-desktop {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  width: 100%;
+  height: calc(100% - var(--header-height) - var(--tb-height));
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.quick-actions {
+  flex: 2;
+  padding: 0;
+  margin-right: 10px;
+}
+
+.quick-actions-header {
+  display: block;
+  margin-bottom: 20px;
+}
+
+.quick-actions h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  text-shadow: none;
+  border-bottom: 3px solid var(--color-lapd-gold);
+  padding-bottom: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  flex: 1;
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+/* MDT Buttons */
+.mdt-button {
+  background: rgba(19, 41, 61, 0.6);
+  border: 2px solid rgba(46, 139, 192, 0.8);
+  border-radius: 8px;
+  padding: 18px 20px;
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-align: left;
+  min-height: 85px;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(5px);
+}
+
+.mdt-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.mdt-button:hover::before {
+  left: 100%;
+}
+
+.mdt-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(46, 139, 192, 0.4), 0 8px 25px rgba(0, 0, 0, 0.3);
+  border-color: rgba(46, 139, 192, 1);
+  background: rgba(19, 41, 61, 0.8);
+}
+
+.mdt-button.primary {
+  border-left: 4px solid rgba(46, 139, 192, 1);
+}
+
+.mdt-button.secondary {
+  border-left: 4px solid rgba(46, 139, 192, 1);
+}
+
+.mdt-button.tertiary {
+  border-left: 4px solid var(--color-lapd-gold);
+}
+
+.mdt-button.admin {
+  border-left: 4px solid var(--color-lapd-gold);
+}
+
+.mdt-button .icon {
+  width: 48px;
+  height: 48px;
+  fill: rgba(255, 255, 255, 0.9);
+  flex-shrink: 0;
+}
+
+.mdt-button .icon.stroke {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.9);
+  stroke-width: 2;
+}
+
+.mdt-button:hover .icon.stroke {
+  fill: none;
+  stroke: rgba(255, 255, 255, 1);
+}
+
+.mdt-button .label {
+  flex-grow: 1;
+}
+
+.mdt-button .title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.mdt-button .subtitle {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+  font-weight: 400;
+  text-transform: capitalize;
+}
+
+/* Alerts Panel */
+.alerts-panel {
+  flex: 1;
+  background: rgba(10, 31, 61, 0.6);
+  border-radius: 8px;
+  padding: 24px;
+  border: 2px solid rgba(46, 139, 192, 0.5);
+  max-height: fit-content;
+  margin-left: 10px;
+  backdrop-filter: blur(5px);
+}
+
+.officer-info-section {
+  margin-bottom: 25px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid rgba(253, 185, 19, 0.3);
+}
+
+.officer-info-section h4 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-lapd-gold);
+  text-shadow: none;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--color-lapd-gold);
+  padding-bottom: 8px;
+}
+
+.officer-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.officer-detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-family-mono);
+  font-size: 14px;
+}
+
+.detail-label {
+  color: var(--color-text-disabled);
+  font-weight: 500;
+}
+
+.detail-value {
+  color: var(--color-text-primary);
+  font-weight: 700;
+  background: var(--color-surface-elevated);
+  padding: 4px 12px 4px 12px; /* more left padding so bar doesn't touch text */
+  border-radius: 4px;
+  border-left: 3px solid var(--color-lapd-gold);
+}
+
+.alerts-panel h3 {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-lapd-gold);
+  text-shadow: none;
+  border-bottom: 2px solid var(--color-lapd-gold);
+  padding-bottom: 8px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.alert-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  background: rgba(19, 41, 61, 0.6);
+  border-radius: 4px;
+  border-left: 3px solid var(--color-text-disabled);
+  font-family: var(--font-family-mono);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.alert-item:nth-child(2) { border-left-color: var(--color-error); }
+.alert-item:nth-child(3) { border-left-color: var(--color-warning); }
+.alert-item:nth-child(4) { border-left-color: var(--color-info); }
+
+.alert-priority {
+  background: var(--color-border);
+  color: var(--color-text-primary);
+  padding: 4px 10px;
+  border-radius: 3px;
+  font-weight: 700;
+  font-size: 10px;
+  min-width: 45px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.alert-priority.high {
+  background: #dc3545;
+}
+
+.alert-priority.medium {
+  background: #ff9800;
+  color: #000;
+}
+
+.alert-priority.low {
+  background: #17a2b8;
+}
+
+.alert-text {
+  flex-grow: 1;
+  line-height: 1.3;
+}
+
+.alert-time {
+  color: var(--color-text-disabled);
+  font-size: 11px;
+}
+
+/* Taskbar Updates */
+.taskbar {
+  --border-width: 1px;
+  height: calc(var(--tb-height) - var(--border-width));
+  width: 100%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  color: var(--color-text-primary);
+  background: linear-gradient(135deg, var(--color-lapd-blue-dark) 0%, var(--color-lapd-blue) 100%);
+  border-top: var(--border-width) solid var(--color-lapd-gold);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 4;
+  font-family: var(--font-family-mono);
+}
+
+.taskbar > * {
+  white-space: nowrap;
+}
+
+.taskbar .time {
+  text-align: right;
+  padding-right: 15px;
+  color: var(--color-lapd-gold);
+}
+
+.taskbar .location {
+  padding-left: 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.taskbar .location svg {
+  width: 25px;
+  height: 25px;
+  fill: var(--color-accent);
+}
+
+.taskbar .location svg.stroke {
+  fill: none;
+  stroke: var(--color-accent);
+}
+
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.status-indicator {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.status-indicator.online {
+  background: var(--color-success);
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.timestamp {
+  color: var(--color-text-disabled);
+  font-size: 12px;
+}
+
+.taskbar .icons {
+  display: flex;
+  gap: 5px;
+  transition: var(--transition-time-long) ease;
+}
+
+.taskbar .icons button {
+  outline: none;
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 5px;
+  padding: unset;
+  cursor: pointer;
+  transition: background-color var(--transition-time-short) ease;
+  transition: opacity var(--transition-time-long) ease;
+}
+
+.taskbar .icons button:hover,
+.taskbar .icons button:focus,
+.taskbar .icons button.focused {
+  background-color: var(--color-surface-elevated);
+}
+
+.taskbar .settings {
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all var(--transition-time-short) ease;
+}
+
+.taskbar .settings:hover {
+  background: var(--color-surface);
+  border-color: var(--color-lapd-gold);
+}
+
+.taskbar .settings img {
+  width: 20px;
+  height: 20px;
+  gap: 5px;
+}
+
+.taskbar .location svg {
+  width: 25px;
+  height: 25px;
+  fill: var(--color-accent);
+}
+
+.taskbar .location svg.stroke {
+  fill: none;
+  stroke: var(--color-accent);
+}
+
+.taskbar .icons button {
+  outline: none;
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 5px;
+  padding: unset;
+  cursor: pointer;
+  transition: background-color var(--transition-time-short) ease;
+  transition: opacity var(--transition-time-long) ease;
+}
+
+.taskbar .icons button:hover,
+.taskbar .icons button:focus,
+.taskbar .icons button.focused {
+  background-color: var(--color-surface-elevated);
+}
+
+.taskbar .icons button::after {
+  transition: var(--transition-time-long) ease-in-out;
+}
+
+.taskbar .icons button.open::after {
+  content: '';
+  position: absolute;
+  transform: translateY(17px);
+  width: 7px;
+  height: 3px;
+  border-radius: 10px;
+  background-color: var(--color-border);
+}
+
+.taskbar .icons button.focused::after {
+  content: '';
+  position: absolute;
+  transform: translateY(17px);
+  width: 15px;
+  height: 3px;
+  border-radius: 10px;
+  background-color: var(--color-accent-secondary);
+}
+
+.taskbar .icons button > * {
+  width: 25px;
+  height: 25px;
+  fill: var(--color-accent);
+}
+
+.taskbar .icons button svg.stroke {
+  fill: none;
+  stroke: var(--color-accent);
+}
+
+/* Keep existing overlay functionality */
+.overlay .windows {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.overlay .windows .window {
+  --window-header-height: 30px;
+  --window-control-width: 40px;
+  pointer-events: all;
+  position: fixed;
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  resize: both;
+  overflow: hidden;
+  border-radius: 5px;
+  box-shadow: 0 0 8px var(--color-shadow);
+  min-height: 150px;
+  transition: var(--transition-time-long) ease-in-out;
+}
+
+.overlay .windows .window.maximized {
+  top: var(--header-height);
+  left: 0;
+  width: calc(100% - 2px);
+  height: calc(100% - var(--tb-height) - var(--header-height));
+  resize: none;
+  border-radius: 0;
+}
+
+.overlay .windows .window.minimized {
+  transform: translateY(100%) scale(0);
+}
+
+.overlay .windows .window .windowHeader {
+  height: var(--window-header-height);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface-dimmed);
+  backdrop-filter: var(--liquid-ass);
+  -webkit-backdrop-filter: var(--liquid-ass);
+}
+
+.overlay .windows .window.maximized .windowHeader {
+  background-color: var(--color-surface);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.overlay .windows .window .windowHeader .iconTitleWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.overlay .windows .window .windowHeader .icon {
+  width: 25px;
+  height: 25px;
+  fill: var(--color-accent);
+  margin-left: 10px;
+}
+
+.overlay .windows .window .windowHeader .icon svg.stroke {
+  fill: none;
+  stroke: var(--color-accent);
+}
+
+.overlay .windows .window .windowHeader .title {
+  pointer-events: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  padding-left: 10px;
+  text-wrap: nowrap;
+}
+
+.overlay .windows .window .windowHeader .windowControls {
+  display: flex;
+  width: calc(var(--window-control-width) * 3);
+}
+
+.overlay .windows .window .windowHeader .closeButton,
+.overlay .windows .window .windowHeader .minimizeButton,
+.overlay .windows .window .windowHeader .maximizeButton {
+  width: var(--window-control-width);
+  height: var(--window-header-height);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  fill: var(--color-text-primary);
+  transition: background-color var(--transition-time-short) ease;
+}
+
+.overlay .windows .window .windowHeader .closeButton svg,
+.overlay .windows .window .windowHeader .minimizeButton svg,
+.overlay .windows .window .windowHeader .maximizeButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.overlay .windows .window .windowHeader .minimizeButton:hover,
+.overlay .windows .window .windowHeader .maximizeButton:hover {
+  background-color: var(--color-text-primary-half);
+}
+
+.overlay .windows .window .windowHeader .closeButton:hover {
+  background-color: var(--color-error);
+}
+
+.overlay .windows .window iframe {
+  width: 100%;
+  height: calc(100% - var(--window-header-height));
+  border: none;
+}
+
+.overlay .settings {
+  position: fixed;
+  width: 500px;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(var(--tb-height) + 10px);
+  background-color: var(--color-surface-dimmed);
+  backdrop-filter: var(--liquid-ass);
+  -webkit-backdrop-filter: var(--liquid-ass);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  box-shadow: 0 0 8px var(--color-shadow);
+  transition: transform var(--transition-time-long) ease-in-out;
+  pointer-events: all;
+  color: var(--color-text-primary);
+}
+
+.overlay .settings.hide {
+  transform: translateY(600px) translateX(-50%);
+}
+
+.overlay .settings .version {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 10px;
+}
+
+.overlay .settings .officerInformation {
+  margin: 10px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.overlay .settings .officerInformation .title {
+  width: 100%;
+  font-size: 20px;
+  font-weight: 600;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.overlay .settings .currentShift {
+  margin: 10px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.overlay .settings .currentShift .timeWrapper {
+  display: flex;
+}
+
+.overlay .settings .currentShift .timeWrapper div {
+  flex: 1 1 0;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 5px 0;
+}
+
+.overlay .notifications {
+  position: fixed;
+  top: calc(var(--header-height) + 5px);
+  right: 5px;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.overlay .notifications .notification {
+  width: 250px;
+  backdrop-filter: var(--liquid-ass);
+  -webkit-backdrop-filter: var(--liquid-ass);
+  border-radius: 5px;
+  padding: 10px;
+  color: var(--color-text-primary);
+  fill: var(--color-text-primary);
+  box-shadow: 0 2px 4px var(--color-shadow);
+  animation: notification-fly-in var(--transition-time-long) ease-in-out
+    forwards;
+}
+
+@keyframes notification-fly-in {
+  from {
+    transform: translateX(calc(100% + 10px));
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes notification-fly-out {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(calc(100% + 10px));
+    opacity: 0;
+  }
+}
+
+.overlay .notifications .notification .iconTitleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-right: 20px;
+}
+
+.overlay .notifications .notification .iconTitleWrapper .icon,
+.overlay .notifications .notification .iconTitleWrapper .icon svg {
+  width: 25px;
+  height: 25px;
+}
+
+.overlay .notifications .notification .iconTitleWrapper .title {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.overlay .notifications .notification .timerBar {
+  height: 4px;
+  background-color: var(--color-info);
+  border-radius: 2px;
+  width: 100%;
+}
+
+.overlay .notifications .notification .close {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 5px;
+  cursor: pointer;
+  fill: var(--color-text-primary);
+  transition: background-color var(--transition-time-short) ease;
+  border-radius: 0 5px 0 5px;
+  pointer-events: all;
+}
+
+.overlay .notifications .notification .close:hover {
+  background-color: var(--color-error);
+}
+
+/* Color coding for duty status list */
+.duty-status-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1em 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.duty-status-list li {
+  font-weight: 700;
+  font-size: 1.1em;
+  padding: 2px 10px;
+  border-radius: 6px;
+  width: fit-content;
+}
+.duty-status-list .on-duty {
+  color: #22c55e;
+}
+.duty-status-list .off-duty {
+  color: #ef4444;
+}
+.duty-status-list .busy {
+  color: #f59e0b;
+}
+.duty-status-list .unavailable {
+  color: #f59e0b;
+}
+.duty-status-list .code7 {
+  color: #f59e0b;
+}
+.duty-status-list .emergency {
+  color: #ef4444;
+  animation: pulse-text 1.5s infinite;
+}
+@keyframes pulse-text {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* Responsive Design for Vertical Screens */
+@media (max-aspect-ratio: 4/3) {
+  .mdt-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 8px 15px;
+    gap: 6px;
+    height: auto;
+    min-height: auto;
+  }
+  
+  .mdt-header-left {
+    margin-bottom: 0px;
+  }
+  
+  .mdt-header-logo {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .mdt-header-center {
+    margin-bottom: 0px;
+  }
+  
+  .mdt-title-main {
+    font-size: 16px;
+    letter-spacing: 1.5px;
+    line-height: 1.1;
+  }
+  
+  .mdt-title-sub {
+    font-size: 11px;
+    margin-top: 2px;
+  }
+  
+  .mdt-header-right {
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+    width: 100%;
+    padding-right: 0; /* Remove padding in vertical view */
+  }
+  
+  .mdt-header-info {
+    text-align: center;
+    gap: 2px;
+    align-self: center;
+  }
+  
+  .mdt-header-unit {
+    font-size: 12px;
+  }
+  
+  .mdt-header-datetime {
+    justify-content: center;
+    font-size: 12px;
+    gap: 8px;
+  }
+  
+  .user-profile-dropdown {
+    position: relative; /* Change from absolute to relative in vertical view */
+    right: auto;
+    top: auto;
+    transform: none;
+    margin-left: 0;
+    width: auto;
+    align-self: center; /* Center the dropdown button */
+  }
+  
+  .user-profile-button {
+    padding: 8px 14px;
+    font-size: 10px;
+  }
+  
+  .user-profile-menu {
+    right: 0;
+  }
+  
+  .lapd-logo {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .officer-header {
+    text-align: center;
+    font-size: 16px;
+  }
+  
+  .mdt-desktop {
+    position: fixed;
+    top: 0;
+    padding-top: 300px;
+    height: 100%;
+    flex-direction: column;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  
+  .quick-actions {
+    margin-top: 4vh;
+  }
+  
+  .action-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .mdt-header {
+    padding: 10px 15px;
+  }
+  
+  .lapd-badge-icon {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .lapd-badge {
+    font-size: 24px;
+    padding: 10px 15px;
+  }
+  
+  .mdt-title h1 {
+    font-size: 20px;
+  }
+}
+
+/* Add color coding for detail-value badges in Officer Status panel */
+.detail-value.on-duty { color: #22c55e !important; }
+.detail-value.off-duty { color: #ef4444 !important; }
+.detail-value.busy { color: #f59e0b !important; }
+.detail-value.unavailable { color: #f59e0b !important; }
+.detail-value.code7, .detail-value.code-7 { color: #f59e0b !important; }
+.detail-value.emergency { color: #ef4444 !important; }
+
+/* Officer Management Admin Button */
+.mdt-button.admin {
+  border-left: 5px solid #FDB913;
+  background: linear-gradient(145deg, rgba(253, 185, 19, 0.1) 0%, rgba(253, 185, 19, 0.05) 100%);
+}
+
+.mdt-button.admin:hover {
+  background: linear-gradient(145deg, rgba(253, 185, 19, 0.2) 0%, rgba(253, 185, 19, 0.1) 100%);
+  border-color: #FDB913;
+}
+
+.mdt-button.admin .icon {
+  fill: #FDB913;
+}
+
+/* Officer Management Tabs */
+.mgmt-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #2a4a6c;
+}
+
+.mgmt-tab {
+  padding: 12px 24px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #8da9c4;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mgmt-tab:hover {
+  color: #fff;
+  background: rgba(46, 139, 192, 0.1);
+}
+
+.mgmt-tab.active {
+  color: #FDB913;
+  border-bottom-color: #FDB913;
+}
+
+.mgmt-tab-content {
+  animation: fadeIn 0.3s ease;
+}
+
+/* Officer Cards in List */
+.officer-card {
+  background: linear-gradient(135deg, #0d2440 0%, #0a1f3d 100%);
+  border: 1px solid #2E8BC0;
+  border-left: 4px solid #FDB913;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  gap: 20px;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.officer-card:hover {
+  transform: translateX(5px);
+  border-color: #4da8da;
+  box-shadow: 0 4px 12px rgba(46, 139, 192, 0.3);
+}
+
+.officer-badge {
+  background: linear-gradient(135deg, #2E8BC0 0%, #145DA0 100%);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 700;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #FDB913;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.officer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.officer-info h3 {
+  margin: 0;
+  color: #FDB913;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.officer-info-row {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  color: #8da9c4;
+}
+
+.officer-info-row span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.officer-info-row strong {
+  color: #fff;
+}
+
+.officer-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.officer-action-btn {
+  padding: 8px 16px;
+  border: 1px solid #2E8BC0;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #1a3a5c 0%, #0d2440 100%);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.officer-action-btn:hover {
+  background: linear-gradient(135deg, #2E8BC0 0%, #145DA0 100%);
+  transform: translateY(-2px);
+}
+
+.officer-action-btn.delete {
+  border-color: #e74c3c;
+  color: #fff;
+}
+
+.officer-action-btn.delete:hover {
+  background: linear-gradient(135deg, #e74c3c 0%, #811003 100%);
+  color: #fff;
+  border-color: #ef5350;
+}
+
+/* Officer Form Styling */
+.officer-form-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.officer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.form-section {
+  background: linear-gradient(135deg, rgba(13, 36, 64, 0.6) 0%, rgba(10, 31, 61, 0.6) 100%);
+  border: 1px solid rgba(46, 139, 192, 0.3);
+  border-radius: 10px;
+  padding: 25px;
+  transition: all 0.3s ease;
+}
+
+.form-section:hover {
+  border-color: rgba(46, 139, 192, 0.5);
+  box-shadow: 0 4px 15px rgba(46, 139, 192, 0.15);
+}
+
+.form-section-title {
+  color: #FDB913;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 20px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(253, 185, 19, 0.3);
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-section-title svg {
+  flex-shrink: 0;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  color: #c5d9ed;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  letter-spacing: 0.3px;
+}
+
+.form-label .required {
+  color: #ff5555;
+  font-weight: 700;
+}
+
+.form-input,
+.form-select {
+  width: 100%;
+  padding: 12px 14px;
+  background: linear-gradient(135deg, rgba(10, 31, 61, 0.8) 0%, rgba(7, 22, 43, 0.8) 100%);
+  border: 1.5px solid #2E8BC0;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 14px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.form-input::placeholder {
+  color: rgba(141, 169, 196, 0.5);
+  font-style: italic;
+}
+
+.form-input:focus,
+.form-select:focus {
+  border-color: #4da8da;
+  box-shadow: 0 0 0 3px rgba(46, 139, 192, 0.15);
+  background: linear-gradient(135deg, rgba(10, 31, 61, 1) 0%, rgba(7, 22, 43, 1) 100%);
+}
+
+.form-input:hover,
+.form-select:hover {
+  border-color: #3a9ac5;
+}
+
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23FDB913' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 40px;
+}
+
+.form-select option {
+  background: #0a1f3d;
+  color: #ffffff;
+  padding: 10px;
+}
+
+.form-input:invalid:not(:placeholder-shown) {
+  border-color: #ff5555;
+}
+
+.form-input:valid:not(:placeholder-shown) {
+  border-color: #4caf50;
+}
+
+/* Form Actions */
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(46, 139, 192, 0.2);
+}
+
+.form-btn {
+  flex: 1;
+  padding: 14px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.form-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.form-btn:hover::before {
+  left: 100%;
+}
+
+.form-btn svg {
+  flex-shrink: 0;
+}
+
+.form-btn-primary {
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  color: #ffffff;
+}
+
+.form-btn-primary:hover {
+  background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.form-btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
+}
+
+.form-btn-secondary {
+  background: linear-gradient(135deg, #616161 0%, #424242 100%);
+  color: #ffffff;
+}
+
+.form-btn-secondary:hover {
+  background: linear-gradient(135deg, #757575 0%, #616161 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(97, 97, 97, 0.4);
+}
+
+.form-btn-secondary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(97, 97, 97, 0.4);
+}
+
+/* Player Settings Reset Button */
+#playerSettingsResetBtn:hover {
+  background: linear-gradient(135deg, #ff5252 0%, #e53935 100%) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(244, 67, 54, 0.5) !important;
+}
+
+#playerSettingsResetBtn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(244, 67, 54, 0.4) !important;
+}
+
+@media (max-width: 600px) {
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .form-btn {
+    width: 100%;
+  }
+}

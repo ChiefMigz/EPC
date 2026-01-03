@@ -1,0 +1,35 @@
+# User-specific data files
+EPC.log
+ipAddresses.txt
+officerloginbackup.json
+
+# User data directories
+data/
+!data/.gitkeep
+
+# Report files (user-generated content)
+data/reports/
+!data/reports/.gitkeep
+
+# Backup files
+*.backup
+*~
+
+# OS-specific files
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Editor-specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Node modules (if any)
+node_modules/
+
+# Logs
+*.log
+logs/
