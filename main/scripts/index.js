@@ -2984,7 +2984,13 @@ function applyInterfaceCustomization() {
     deptLogo: document.getElementById('customDeptLogo').value.trim(),
     wallpaper: document.getElementById('customWallpaper').value.trim(),
     primaryColor: document.getElementById('customPrimaryColor').value,
-    secondaryColor: document.getElementById('customSecondaryColor').value
+    secondaryColor: document.getElementById('customSecondaryColor').value,
+    loginTitle: document.getElementById('customLoginTitle').value.trim(),
+    loginSubtitle: document.getElementById('customLoginSubtitle').value.trim(),
+    badgeLabel: document.getElementById('customBadgeLabel').value.trim(),
+    passwordLabel: document.getElementById('customPasswordLabel').value.trim(),
+    loginButton: document.getElementById('customLoginButton').value.trim(),
+    loginFooter: document.getElementById('customLoginFooter').value.trim()
   };
   
   localStorage.setItem('interfaceCustomization', JSON.stringify(customization));
@@ -2995,6 +3001,8 @@ function applyInterfaceCustomization() {
   
   if (customization.deptLogo) {
     document.querySelectorAll('.mdt-header-logo').forEach(el => el.src = customization.deptLogo);
+    const loginLogo = document.querySelector('.login-logo');
+    if (loginLogo) loginLogo.src = customization.deptLogo;
   }
   
   if (customization.wallpaper) {
@@ -3002,6 +3010,37 @@ function applyInterfaceCustomization() {
     bg.style.backgroundImage = `url('${customization.wallpaper}')`;
     bg.style.backgroundSize = 'cover';
     bg.style.backgroundPosition = 'center';
+  }
+  
+  // Apply login screen customization
+  if (customization.loginTitle) {
+    const loginTitle = document.getElementById('loginTitle');
+    if (loginTitle) loginTitle.textContent = customization.loginTitle;
+  }
+  
+  if (customization.loginSubtitle) {
+    const loginSubtitle = document.getElementById('loginSubtitle');
+    if (loginSubtitle) loginSubtitle.textContent = customization.loginSubtitle;
+  }
+  
+  if (customization.badgeLabel) {
+    const badgeLabel = document.getElementById('badgeLabel');
+    if (badgeLabel) badgeLabel.textContent = customization.badgeLabel;
+  }
+  
+  if (customization.passwordLabel) {
+    const passwordLabel = document.getElementById('passwordLabel');
+    if (passwordLabel) passwordLabel.textContent = customization.passwordLabel;
+  }
+  
+  if (customization.loginButton) {
+    const loginButtonText = document.getElementById('loginButtonText');
+    if (loginButtonText) loginButtonText.textContent = customization.loginButton;
+  }
+  
+  if (customization.loginFooter) {
+    const loginFooterText = document.getElementById('loginFooterText');
+    if (loginFooterText) loginFooterText.textContent = customization.loginFooter;
   }
   
   document.documentElement.style.setProperty('--color-lapd-gold', customization.primaryColor);
@@ -3053,9 +3092,36 @@ function resetInterfaceCustomization() {
   document.getElementById('customPrimaryColorHex').value = '#FDB913';
   document.getElementById('customSecondaryColor').value = '#2E8BC0';
   document.getElementById('customSecondaryColorHex').value = '#2E8BC0';
+  document.getElementById('customLoginTitle').value = '';
+  document.getElementById('customLoginSubtitle').value = '';
+  document.getElementById('customBadgeLabel').value = '';
+  document.getElementById('customPasswordLabel').value = '';
+  document.getElementById('customLoginButton').value = '';
+  document.getElementById('customLoginFooter').value = '';
   
   document.querySelectorAll('.mdt-title-main').forEach(el => el.textContent = 'LOS ANGELES POLICE DEPARTMENT');
   document.querySelectorAll('.mdt-header-logo').forEach(el => el.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Seal_of_the_Los_Angeles_Police_Department.png/1033px-Seal_of_the_Los_Angeles_Police_Department.png');
+  
+  const loginLogo = document.querySelector('.login-logo');
+  if (loginLogo) loginLogo.src = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Seal_of_the_Los_Angeles_Police_Department.png/1033px-Seal_of_the_Los_Angeles_Police_Department.png';
+  
+  const loginTitle = document.getElementById('loginTitle');
+  if (loginTitle) loginTitle.textContent = 'LAPD Mobile Data Terminal';
+  
+  const loginSubtitle = document.getElementById('loginSubtitle');
+  if (loginSubtitle) loginSubtitle.textContent = 'Los Angeles Police Department';
+  
+  const badgeLabel = document.getElementById('badgeLabel');
+  if (badgeLabel) badgeLabel.textContent = 'Badge Number';
+  
+  const passwordLabel = document.getElementById('passwordLabel');
+  if (passwordLabel) passwordLabel.textContent = 'Password';
+  
+  const loginButtonText = document.getElementById('loginButtonText');
+  if (loginButtonText) loginButtonText.textContent = 'LOG IN';
+  
+  const loginFooterText = document.getElementById('loginFooterText');
+  if (loginFooterText) loginFooterText.textContent = 'Authorized Personnel Only';
   
   const bg = document.querySelector('.desktop-background');
   bg.style.backgroundImage = '';
@@ -3078,6 +3144,8 @@ window.addEventListener('DOMContentLoaded', function() {
     
     if (customization.deptLogo) {
       document.querySelectorAll('.mdt-header-logo').forEach(el => el.src = customization.deptLogo);
+      const loginLogo = document.querySelector('.login-logo');
+      if (loginLogo) loginLogo.src = customization.deptLogo;
     }
     
     if (customization.wallpaper) {
@@ -3095,8 +3163,847 @@ window.addEventListener('DOMContentLoaded', function() {
       document.documentElement.style.setProperty('--color-border', customization.secondaryColor);
       document.documentElement.style.setProperty('--color-border-light', customization.secondaryColor);
     }
+    
+    // Apply login screen customization
+    if (customization.loginTitle) {
+      const loginTitle = document.getElementById('loginTitle');
+      if (loginTitle) loginTitle.textContent = customization.loginTitle;
+    }
+    
+    if (customization.loginSubtitle) {
+      const loginSubtitle = document.getElementById('loginSubtitle');
+      if (loginSubtitle) loginSubtitle.textContent = customization.loginSubtitle;
+    }
+    
+    if (customization.badgeLabel) {
+      const badgeLabel = document.getElementById('badgeLabel');
+      if (badgeLabel) badgeLabel.textContent = customization.badgeLabel;
+    }
+    
+    if (customization.passwordLabel) {
+      const passwordLabel = document.getElementById('passwordLabel');
+      if (passwordLabel) passwordLabel.textContent = customization.passwordLabel;
+    }
+    
+    if (customization.loginButton) {
+      const loginButtonText = document.getElementById('loginButtonText');
+      if (loginButtonText) loginButtonText.textContent = customization.loginButton;
+    }
+    
+    if (customization.loginFooter) {
+      const loginFooterText = document.getElementById('loginFooterText');
+      if (loginFooterText) loginFooterText.textContent = customization.loginFooter;
+    }
+  }
+  
+  // Load saved values into settings form
+  document.getElementById('customDeptName').value = customization.deptName || '';
+  document.getElementById('customDeptLogo').value = customization.deptLogo || '';
+  document.getElementById('customWallpaper').value = customization.wallpaper || '';
+  document.getElementById('customPrimaryColor').value = customization.primaryColor || '#FDB913';
+  document.getElementById('customPrimaryColorHex').value = customization.primaryColor || '#FDB913';
+  document.getElementById('customSecondaryColor').value = customization.secondaryColor || '#2E8BC0';
+  document.getElementById('customSecondaryColorHex').value = customization.secondaryColor || '#2E8BC0';
+  document.getElementById('customLoginTitle').value = customization.loginTitle || '';
+  document.getElementById('customLoginSubtitle').value = customization.loginSubtitle || '';
+  document.getElementById('customBadgeLabel').value = customization.badgeLabel || '';
+  document.getElementById('customPasswordLabel').value = customization.passwordLabel || '';
+  document.getElementById('customLoginButton').value = customization.loginButton || '';
+  document.getElementById('customLoginFooter').value = customization.loginFooter || '';
+  
+  // Initialize desktop notes
+  updateDesktopNotes();
+  
+  // Setup drag and drop functionality
+  setupNoteDragAndDrop();
+  setupStartMenuDragAndDrop();
+  setupDesktopIconsDragAndDrop();
+  
+  // Make documents window draggable
+  const documentsWindow = document.getElementById('documentsWindow');
+  const documentsTitlebar = documentsWindow?.querySelector('.titlebar');
+  if (documentsWindow && documentsTitlebar) {
+    makeWindowDraggable(documentsWindow, documentsTitlebar);
   }
 });
+
+// =====================================================
+// NOTEPAD FUNCTIONALITY
+// =====================================================
+
+let currentNoteId = null;
+let notepadHasUnsavedChanges = false;
+
+// Open Notepad Window
+function openNotepadWindow() {
+  const notepadWindow = document.getElementById('notepadWindow');
+  const taskbarApps = document.querySelector('.taskbar-apps');
+  
+  if (notepadWindow.style.display === 'none' || notepadWindow.style.display === '') {
+    notepadWindow.style.display = 'flex';
+    focusWindow('notepadWindow');
+    
+    // Add taskbar button if not already present
+    if (!document.querySelector('.taskbar-app[data-window="notepadWindow"]')) {
+      const taskbarButton = document.createElement('button');
+      taskbarButton.className = 'taskbar-app active';
+      taskbarButton.setAttribute('data-window', 'notepadWindow');
+      taskbarButton.onclick = () => toggleWindow('notepadWindow');
+      taskbarButton.innerHTML = `
+        <svg viewBox="0 0 24 24" width="20" height="20" style="fill: currentColor;">
+          <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+        </svg>
+        <span>Notepad</span>
+      `;
+      taskbarApps.appendChild(taskbarButton);
+    }
+  } else {
+    focusWindow('notepadWindow');
+  }
+  
+  // Initialize character/word count
+  updateNotepadCounts();
+}
+
+// Close Notepad Window
+function closeNotepadWindow() {
+  if (notepadHasUnsavedChanges) {
+    if (!confirm('You have unsaved changes. Are you sure you want to close?')) {
+      return;
+    }
+  }
+  
+  const notepadWindow = document.getElementById('notepadWindow');
+  notepadWindow.style.display = 'none';
+  
+  const taskbarButton = document.querySelector('.taskbar-app[data-window="notepadWindow"]');
+  if (taskbarButton) {
+    taskbarButton.remove();
+  }
+}
+
+// Minimize Notepad Window
+function minimizeNotepadWindow() {
+  const notepadWindow = document.getElementById('notepadWindow');
+  notepadWindow.style.display = 'none';
+}
+
+// Maximize Notepad Window
+function maximizeNotepadWindow() {
+  const notepadWindow = document.getElementById('notepadWindow');
+  const isMaximized = notepadWindow.classList.toggle('maximized');
+  
+  if (isMaximized) {
+    notepadWindow.dataset.prevLeft = notepadWindow.style.left;
+    notepadWindow.dataset.prevTop = notepadWindow.style.top;
+    notepadWindow.dataset.prevWidth = notepadWindow.style.width;
+    notepadWindow.dataset.prevHeight = notepadWindow.style.height;
+  } else {
+    if (notepadWindow.dataset.prevLeft) {
+      notepadWindow.style.left = notepadWindow.dataset.prevLeft;
+      notepadWindow.style.top = notepadWindow.dataset.prevTop;
+      notepadWindow.style.width = notepadWindow.dataset.prevWidth;
+      notepadWindow.style.height = notepadWindow.dataset.prevHeight;
+    }
+  }
+}
+
+// New Note
+function newNote() {
+  if (notepadHasUnsavedChanges) {
+    if (!confirm('You have unsaved changes. Create a new note anyway?')) {
+      return;
+    }
+  }
+  
+  currentNoteId = null;
+  document.getElementById('notepadTextarea').value = '';
+  document.getElementById('notepadTitle').textContent = 'Notepad - Untitled';
+  notepadHasUnsavedChanges = false;
+  updateNotepadCounts();
+  showNotificationMDT('New note created', 'success');
+}
+
+// Save Note
+function saveNote() {
+  const content = document.getElementById('notepadTextarea').value;
+  
+  if (!content.trim()) {
+    showNotificationMDT('⚠️ Cannot save empty note', 'warning');
+    return;
+  }
+  
+  // Show save dialog
+  showSaveNoteDialog();
+}
+
+// Show Save Note Dialog
+function showSaveNoteDialog() {
+  const dialog = document.getElementById('saveNoteDialog');
+  const input = document.getElementById('saveNoteNameInput');
+  
+  // Pre-fill with current note name or suggest default
+  input.value = currentNoteId || '';
+  
+  dialog.style.display = 'flex';
+  setTimeout(() => input.focus(), 100);
+  
+  // Setup location selection highlighting
+  document.querySelectorAll('.save-location-option').forEach(option => {
+    option.onclick = () => {
+      document.querySelectorAll('.save-location-option').forEach(o => {
+        o.style.borderColor = 'rgba(46, 139, 192, 0.3)';
+        o.style.background = 'rgba(37, 58, 90, 0.6)';
+      });
+      option.style.borderColor = '#2e8bc0';
+      option.style.background = 'rgba(46, 139, 192, 0.2)';
+      
+      const radio = option.parentElement.querySelector('input[type="radio"]');
+      if (radio) radio.checked = true;
+    };
+  });
+  
+  // Allow Enter key to save
+  input.onkeypress = (e) => {
+    if (e.key === 'Enter') {
+      confirmSaveNote();
+    }
+  };
+}
+
+// Close Save Note Dialog
+function closeSaveNoteDialog() {
+  const dialog = document.getElementById('saveNoteDialog');
+  dialog.style.display = 'none';
+}
+
+// Confirm Save Note
+function confirmSaveNote() {
+  const filename = document.getElementById('saveNoteNameInput').value.trim();
+  const location = document.querySelector('input[name="saveLocation"]:checked').value;
+  const content = document.getElementById('notepadTextarea').value;
+  
+  if (!filename) {
+    showNotificationMDT('⚠️ Please enter a valid filename', 'warning');
+    return;
+  }
+  
+  // Get existing notes from localStorage
+  const notesKey = location === 'desktop' ? 'desktopNotes' : 'documentNotes';
+  const notes = JSON.parse(localStorage.getItem(notesKey) || '{}');
+  
+  // Save or update note
+  notes[filename] = {
+    content: content,
+    lastModified: new Date().toISOString(),
+    created: notes[filename]?.created || new Date().toISOString()
+  };
+  
+  localStorage.setItem(notesKey, JSON.stringify(notes));
+  
+  currentNoteId = filename;
+  document.getElementById('notepadTitle').textContent = `Notepad - ${filename}`;
+  notepadHasUnsavedChanges = false;
+  
+  closeSaveNoteDialog();
+  showNotificationMDT(`✓ Note "${filename}" saved to ${location === 'desktop' ? 'Desktop' : 'Documents'}`, 'success');
+  
+  // Update desktop/documents view
+  if (location === 'desktop') {
+    updateDesktopNotes();
+  } else {
+    refreshDocuments();
+  }
+}
+
+// Show Notes Library
+function showNotesLibrary() {
+  const modal = document.getElementById('notesLibraryModal');
+  const content = document.getElementById('notesLibraryContent');
+  
+  // Combine notes from both locations
+  const desktopNotes = JSON.parse(localStorage.getItem('desktopNotes') || '{}');
+  const documentNotes = JSON.parse(localStorage.getItem('documentNotes') || '{}');
+  
+  const allNotes = [];
+  
+  Object.keys(desktopNotes).forEach(key => {
+    allNotes.push({ name: key, ...desktopNotes[key], location: 'Desktop' });
+  });
+  
+  Object.keys(documentNotes).forEach(key => {
+    allNotes.push({ name: key, ...documentNotes[key], location: 'Documents' });
+  });
+  
+  if (allNotes.length === 0) {
+    content.innerHTML = `
+      <div style="text-align: center; padding: 60px 20px; color: #8da9c4;">
+        <svg viewBox="0 0 24 24" width="64" height="64" style="opacity: 0.3; margin-bottom: 20px;">
+          <path fill="currentColor" d="M19,4H5A2,2 0 0,0 3,6V20A2,2 0 0,0 5,22H19A2,2 0 0,0 21,20V6A2,2 0 0,0 19,4M9,18H7V6H9V18M13,18H11V6H13V18M17,18H15V6H17V18Z"/>
+        </svg>
+        <p style="font-size: 16px; margin: 0;">No saved notes yet</p>
+        <p style="font-size: 13px; margin: 10px 0 0 0; opacity: 0.7;">Create and save notes to see them here</p>
+      </div>
+    `;
+  } else {
+    let html = '<div style="display: flex; flex-direction: column; gap: 12px;">';
+    
+    allNotes.sort((a, b) => {
+      const dateA = new Date(a.lastModified);
+      const dateB = new Date(b.lastModified);
+      return dateB - dateA; // Most recent first
+    });
+    
+    allNotes.forEach(note => {
+      const date = new Date(note.lastModified);
+      const dateStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+      const preview = note.content.substring(0, 80) + (note.content.length > 80 ? '...' : '');
+      
+      html += `
+        <div style="background: rgba(13, 36, 64, 0.6); border: 1px solid rgba(46, 139, 192, 0.3); border-radius: 8px; padding: 15px; cursor: pointer; transition: all 0.2s ease;" 
+             onmouseover="this.style.borderColor='rgba(46, 139, 192, 0.6)'; this.style.background='rgba(13, 36, 64, 0.8)';" 
+             onmouseout="this.style.borderColor='rgba(46, 139, 192, 0.3)'; this.style.background='rgba(13, 36, 64, 0.6)';">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+            <div style="flex: 1;">
+              <h4 style="margin: 0; color: #2e8bc0; font-size: 15px;">${note.name}</h4>
+              <span style="font-size: 11px; color: #6c8da0; background: rgba(46, 139, 192, 0.2); padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 5px;">${note.location}</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button onclick="loadNoteFromLibrary('${note.name.replace(/'/g, "\\'")}', '${note.location}'); event.stopPropagation();" style="padding: 6px 12px; background: linear-gradient(135deg, #2E8BC0 0%, #1a6fa1 100%); border: none; border-radius: 4px; color: #fff; cursor: pointer; font-size: 11px; font-weight: 600;">OPEN</button>
+              <button onclick="deleteNoteFromLibrary('${note.name.replace(/'/g, "\\'")}', '${note.location}'); event.stopPropagation();" style="padding: 6px 12px; background: linear-gradient(135deg, #dc3545 0%, #a71d2a 100%); border: none; border-radius: 4px; color: #fff; cursor: pointer; font-size: 11px; font-weight: 600;">DELETE</button>
+            </div>
+          </div>
+          <p style="margin: 0 0 8px 0; color: #8da9c4; font-size: 12px; font-family: 'Consolas', monospace; line-height: 1.4;">${preview}</p>
+          <p style="margin: 0; color: #6c8da0; font-size: 11px;">Last modified: ${dateStr}</p>
+        </div>
+      `;
+    });
+    
+    html += '</div>';
+    content.innerHTML = html;
+  }
+  
+  modal.style.display = 'flex';
+}
+
+// Close Notes Library
+function closeNotesLibrary() {
+  const modal = document.getElementById('notesLibraryModal');
+  modal.style.display = 'none';
+}
+
+// Load Note from Library
+function loadNoteFromLibrary(filename, location) {
+  const notesKey = location === 'Desktop' ? 'desktopNotes' : 'documentNotes';
+  const notes = JSON.parse(localStorage.getItem(notesKey) || '{}');
+  
+  if (notes[filename]) {
+    if (notepadHasUnsavedChanges) {
+      if (!confirm('You have unsaved changes. Load this note anyway?')) {
+        return;
+      }
+    }
+    
+    document.getElementById('notepadTextarea').value = notes[filename].content;
+    document.getElementById('notepadTitle').textContent = `Notepad - ${filename}`;
+    currentNoteId = filename;
+    notepadHasUnsavedChanges = false;
+    updateNotepadCounts();
+    
+    closeNotesLibrary();
+    showNotificationMDT(`✓ Note "${filename}" loaded from ${location}`, 'success');
+  }
+}
+
+// Delete Note from Library
+function deleteNoteFromLibrary(filename, location) {
+  if (!confirm(`Are you sure you want to delete "${filename}"?`)) {
+    return;
+  }
+  
+  const notesKey = location === 'Desktop' ? 'desktopNotes' : 'documentNotes';
+  const notes = JSON.parse(localStorage.getItem(notesKey) || '{}');
+  delete notes[filename];
+  localStorage.setItem(notesKey, JSON.stringify(notes));
+  
+  if (currentNoteId === filename) {
+    newNote();
+  }
+  
+  showNotificationMDT(`✓ Note "${filename}" deleted`, 'success');
+  showNotesLibrary(); // Refresh the library
+  
+  // Update desktop/documents view
+  if (location === 'Desktop') {
+    updateDesktopNotes();
+  } else {
+    refreshDocuments();
+  }
+}
+
+// Update Desktop Notes
+function updateDesktopNotes() {
+  const desktopIcons = document.querySelector('.desktop-icons');
+  const notes = JSON.parse(localStorage.getItem('desktopNotes') || '{}');
+  
+  // Remove existing note icons
+  desktopIcons.querySelectorAll('.desktop-note-icon').forEach(icon => icon.remove());
+  
+  // Add note icons
+  Object.keys(notes).forEach(noteName => {
+    const noteIcon = document.createElement('div');
+    noteIcon.className = 'desktop-icon desktop-note-icon';
+    noteIcon.ondblclick = () => openNoteFromDesktop(noteName);
+    noteIcon.oncontextmenu = (e) => showNoteContextMenu(e, noteName, 'Desktop');
+    noteIcon.draggable = true;
+    noteIcon.dataset.noteName = noteName;
+    noteIcon.dataset.location = 'Desktop';
+    noteIcon.innerHTML = `
+      <svg viewBox="0 0 24 24" class="icon-image" style="width: 48px; height: 48px;">
+        <path fill="#2E8BC0" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+      </svg>
+      <span class="icon-label">${noteName}</span>
+    `;
+    desktopIcons.appendChild(noteIcon);
+  });
+}
+
+// Open Note from Desktop
+function openNoteFromDesktop(noteName) {
+  const notes = JSON.parse(localStorage.getItem('desktopNotes') || '{}');
+  
+  if (notes[noteName]) {
+    openNotepadWindow();
+    
+    if (notepadHasUnsavedChanges) {
+      if (!confirm('You have unsaved changes. Load this note anyway?')) {
+        return;
+      }
+    }
+    
+    document.getElementById('notepadTextarea').value = notes[noteName].content;
+    document.getElementById('notepadTitle').textContent = `Notepad - ${noteName}`;
+    currentNoteId = noteName;
+    notepadHasUnsavedChanges = false;
+    updateNotepadCounts();
+  }
+}
+
+// Documents Window Functions
+function openDocumentsFolder() {
+  const documentsWindow = document.getElementById('documentsWindow');
+  const taskbarApps = document.querySelector('.taskbar-apps');
+  
+  if (documentsWindow.style.display === 'none' || documentsWindow.style.display === '') {
+    documentsWindow.style.display = 'flex';
+    focusWindow('documentsWindow');
+    refreshDocuments();
+    
+    // Add taskbar button if not already present
+    if (!document.querySelector('.taskbar-app[data-window="documentsWindow"]')) {
+      const taskbarButton = document.createElement('button');
+      taskbarButton.className = 'taskbar-app active';
+      taskbarButton.setAttribute('data-window', 'documentsWindow');
+      taskbarButton.onclick = () => toggleWindow('documentsWindow');
+      taskbarButton.innerHTML = `
+        <svg viewBox="0 0 24 24" width="20" height="20" style="fill: currentColor;">
+          <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+        </svg>
+        <span>Documents</span>
+      `;
+      taskbarApps.appendChild(taskbarButton);
+    }
+  } else {
+    focusWindow('documentsWindow');
+  }
+}
+
+function closeDocumentsWindow() {
+  const documentsWindow = document.getElementById('documentsWindow');
+  documentsWindow.style.display = 'none';
+  
+  const taskbarButton = document.querySelector('.taskbar-app[data-window="documentsWindow"]');
+  if (taskbarButton) {
+    taskbarButton.remove();
+  }
+}
+
+function minimizeDocumentsWindow() {
+  const documentsWindow = document.getElementById('documentsWindow');
+  documentsWindow.style.display = 'none';
+}
+
+function maximizeDocumentsWindow() {
+  const documentsWindow = document.getElementById('documentsWindow');
+  const isMaximized = documentsWindow.classList.toggle('maximized');
+  
+  if (isMaximized) {
+    documentsWindow.dataset.prevLeft = documentsWindow.style.left;
+    documentsWindow.dataset.prevTop = documentsWindow.style.top;
+    documentsWindow.dataset.prevWidth = documentsWindow.style.width;
+    documentsWindow.dataset.prevHeight = documentsWindow.style.height;
+  } else {
+    if (documentsWindow.dataset.prevLeft) {
+      documentsWindow.style.left = documentsWindow.dataset.prevLeft;
+      documentsWindow.style.top = documentsWindow.dataset.prevTop;
+      documentsWindow.style.width = documentsWindow.dataset.prevWidth;
+      documentsWindow.style.height = documentsWindow.dataset.prevHeight;
+    }
+  }
+}
+
+function refreshDocuments() {
+  const fileList = document.getElementById('documentsFileList');
+  const notes = JSON.parse(localStorage.getItem('documentNotes') || '{}');
+  const noteKeys = Object.keys(notes);
+  
+  if (noteKeys.length === 0) {
+    fileList.innerHTML = `
+      <div style="text-align: center; padding: 60px 20px; color: #8da9c4;">
+        <svg viewBox="0 0 24 24" width="64" height="64" style="opacity: 0.3; margin-bottom: 20px;">
+          <path fill="currentColor" d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+        </svg>
+        <p style="font-size: 16px; margin: 0;">No documents yet</p>
+        <p style="font-size: 13px; margin: 10px 0 0 0; opacity: 0.7;">Save notes to Documents to see them here</p>
+      </div>
+    `;
+  } else {
+    let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px;">';
+    
+    noteKeys.forEach(noteName => {
+      const note = notes[noteName];
+      const date = new Date(note.lastModified);
+      const dateStr = date.toLocaleDateString();
+      
+      html += `
+        <div onclick="openNoteFromDocuments('${noteName.replace(/'/g, "\\'")}');" oncontextmenu="showNoteContextMenu(event, '${noteName.replace(/'/g, "\\'")}', 'Documents'); return false;" style="background: rgba(13, 36, 64, 0.6); border: 1px solid rgba(46, 139, 192, 0.3); border-radius: 8px; padding: 15px; cursor: pointer; text-align: center; transition: all 0.2s ease;" 
+             onmouseover="this.style.borderColor='rgba(46, 139, 192, 0.6)'; this.style.background='rgba(13, 36, 64, 0.8)';" 
+             onmouseout="this.style.borderColor='rgba(46, 139, 192, 0.3)'; this.style.background='rgba(13, 36, 64, 0.6)';">
+          <svg viewBox="0 0 24 24" width="48" height="48" style="margin-bottom: 10px;">
+            <path fill="#2e8bc0" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+          </svg>
+          <div style="color: #fff; font-size: 13px; font-weight: 600; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${noteName}</div>
+          <div style="color: #8da9c4; font-size: 11px;">${dateStr}</div>
+        </div>
+      `;
+    });
+    
+    html += '</div>';
+    fileList.innerHTML = html;
+  }
+}
+
+function openNoteFromDocuments(noteName) {
+  const notes = JSON.parse(localStorage.getItem('documentNotes') || '{}');
+  
+  if (notes[noteName]) {
+    openNotepadWindow();
+    
+    if (notepadHasUnsavedChanges) {
+      if (!confirm('You have unsaved changes. Load this note anyway?')) {
+        return;
+      }
+    }
+    
+    document.getElementById('notepadTextarea').value = notes[noteName].content;
+    document.getElementById('notepadTitle').textContent = `Notepad - ${noteName}`;
+    currentNoteId = noteName;
+    notepadHasUnsavedChanges = false;
+    updateNotepadCounts();
+  }
+}
+
+// Show context menu for notes
+let contextMenuNoteName = null;
+let contextMenuLocation = null;
+
+function showNoteContextMenu(event, noteName, location) {
+  event.preventDefault();
+  event.stopPropagation();
+  
+  contextMenuNoteName = noteName;
+  contextMenuLocation = location;
+  
+  const menu = document.getElementById('noteContextMenu');
+  menu.style.display = 'block';
+  menu.style.left = event.pageX + 'px';
+  menu.style.top = event.pageY + 'px';
+  
+  return false;
+}
+
+function deleteNoteFromContextMenu() {
+  if (contextMenuNoteName && contextMenuLocation) {
+    deleteNoteFromLibrary(contextMenuNoteName, contextMenuLocation);
+  }
+  hideNoteContextMenu();
+}
+
+function hideNoteContextMenu() {
+  const menu = document.getElementById('noteContextMenu');
+  menu.style.display = 'none';
+  contextMenuNoteName = null;
+  contextMenuLocation = null;
+}
+
+// Hide context menu when clicking anywhere
+document.addEventListener('click', hideNoteContextMenu);
+
+// Setup drag and drop functionality for notes
+function setupNoteDragAndDrop() {
+  const recycleBin = document.getElementById('recycleBinIcon');
+  const documentsIcon = document.querySelector('.desktop-icon[ondblclick="openDocumentsFolder()"]');
+  
+  if (recycleBin) {
+    recycleBin.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      recycleBin.style.opacity = '0.5';
+      recycleBin.style.transform = 'scale(1.1)';
+    });
+    
+    recycleBin.addEventListener('dragleave', () => {
+      recycleBin.style.opacity = '';
+      recycleBin.style.transform = '';
+    });
+    
+    recycleBin.addEventListener('drop', (e) => {
+      e.preventDefault();
+      recycleBin.style.opacity = '';
+      recycleBin.style.transform = '';
+      
+      const noteName = e.dataTransfer.getData('noteName');
+      const location = e.dataTransfer.getData('location');
+      
+      if (noteName && location) {
+        deleteNoteFromLibrary(noteName, location);
+      }
+    });
+  }
+  
+  if (documentsIcon) {
+    documentsIcon.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      documentsIcon.style.opacity = '0.5';
+      documentsIcon.style.transform = 'scale(1.1)';
+    });
+    
+    documentsIcon.addEventListener('dragleave', () => {
+      documentsIcon.style.opacity = '';
+      documentsIcon.style.transform = '';
+    });
+    
+    documentsIcon.addEventListener('drop', (e) => {
+      e.preventDefault();
+      documentsIcon.style.opacity = '';
+      documentsIcon.style.transform = '';
+      
+      const noteName = e.dataTransfer.getData('noteName');
+      const location = e.dataTransfer.getData('location');
+      
+      if (noteName && location === 'Desktop') {
+        // Move from Desktop to Documents
+        const desktopNotes = JSON.parse(localStorage.getItem('desktopNotes') || '{}');
+        const documentNotes = JSON.parse(localStorage.getItem('documentNotes') || '{}');
+        
+        if (desktopNotes[noteName]) {
+          documentNotes[noteName] = desktopNotes[noteName];
+          delete desktopNotes[noteName];
+          
+          localStorage.setItem('desktopNotes', JSON.stringify(desktopNotes));
+          localStorage.setItem('documentNotes', JSON.stringify(documentNotes));
+          
+          updateDesktopNotes();
+          refreshDocuments();
+          showNotificationMDT(`✓ "${noteName}" moved to Documents`, 'success');
+        }
+      }
+    });
+  }
+  
+  // Setup drag start for desktop note icons
+  document.addEventListener('dragstart', (e) => {
+    if (e.target.classList.contains('desktop-note-icon')) {
+      e.dataTransfer.setData('noteName', e.target.dataset.noteName);
+      e.dataTransfer.setData('location', e.target.dataset.location);
+      e.target.style.opacity = '0.5';
+    }
+  });
+  
+  document.addEventListener('dragend', (e) => {
+    if (e.target.classList.contains('desktop-note-icon')) {
+      e.target.style.opacity = '';
+    }
+  });
+}
+
+// Setup drag and drop for start menu tiles
+function setupStartMenuDragAndDrop() {
+  const grid = document.getElementById('startMenuGrid');
+  if (!grid) return;
+  
+  let draggedElement = null;
+  let sourceIndex = -1;
+  
+  grid.addEventListener('dragstart', (e) => {
+    if (e.target.classList.contains('start-menu-tile')) {
+      draggedElement = e.target;
+      sourceIndex = [...grid.children].indexOf(e.target);
+      setTimeout(() => e.target.style.opacity = '0.4', 0);
+      e.dataTransfer.effectAllowed = 'move';
+    }
+  });
+  
+  grid.addEventListener('dragend', (e) => {
+    if (e.target.classList.contains('start-menu-tile')) {
+      e.target.style.opacity = '';
+      draggedElement = null;
+      sourceIndex = -1;
+      
+      // Remove all drag-over classes
+      grid.querySelectorAll('.start-menu-tile').forEach(tile => {
+        tile.classList.remove('drag-over');
+      });
+    }
+  });
+  
+  grid.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    if (!draggedElement) return;
+    
+    const target = e.target.closest('.start-menu-tile');
+    if (target && target !== draggedElement) {
+      const targetIndex = [...grid.children].indexOf(target);
+      
+      if (sourceIndex < targetIndex) {
+        target.parentNode.insertBefore(draggedElement, target.nextSibling);
+      } else {
+        target.parentNode.insertBefore(draggedElement, target);
+      }
+      sourceIndex = targetIndex;
+    }
+  });
+}
+
+// Setup drag and drop for desktop icons
+function setupDesktopIconsDragAndDrop() {
+  const desktopIcons = document.getElementById('desktopIcons');
+  if (!desktopIcons) return;
+  
+  let draggedElement = null;
+  let sourceIndex = -1;
+  
+  desktopIcons.addEventListener('dragstart', (e) => {
+    const target = e.target.closest('.desktop-icon');
+    if (target && !target.classList.contains('desktop-note-icon')) {
+      draggedElement = target;
+      sourceIndex = [...desktopIcons.children].indexOf(target);
+      setTimeout(() => target.style.opacity = '0.4', 0);
+      e.dataTransfer.effectAllowed = 'move';
+    }
+  });
+  
+  desktopIcons.addEventListener('dragend', (e) => {
+    const target = e.target.closest('.desktop-icon');
+    if (target) {
+      target.style.opacity = '';
+      draggedElement = null;
+      sourceIndex = -1;
+    }
+  });
+  
+  desktopIcons.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    if (!draggedElement) return;
+    
+    const target = e.target.closest('.desktop-icon');
+    if (target && target !== draggedElement && !target.classList.contains('desktop-note-icon')) {
+      const targetIndex = [...desktopIcons.children].indexOf(target);
+      
+      if (sourceIndex < targetIndex) {
+        target.parentNode.insertBefore(draggedElement, target.nextSibling);
+      } else {
+        target.parentNode.insertBefore(draggedElement, target);
+      }
+      sourceIndex = targetIndex;
+    }
+  });
+  
+  desktopIcons.addEventListener('drop', (e) => {
+    e.preventDefault();
+  });
+}
+
+// Update character and word counts
+function updateNotepadCounts() {
+  const textarea = document.getElementById('notepadTextarea');
+  const content = textarea.value;
+  
+  const charCount = content.length;
+  const wordCount = content.trim() === '' ? 0 : content.trim().split(/\s+/).length;
+  
+  document.getElementById('notepadCharCount').textContent = `${charCount} character${charCount !== 1 ? 's' : ''}`;
+  document.getElementById('notepadWordCount').textContent = `${wordCount} word${wordCount !== 1 ? 's' : ''}`;
+}
+
+// Track unsaved changes
+document.addEventListener('DOMContentLoaded', () => {
+  const textarea = document.getElementById('notepadTextarea');
+  if (textarea) {
+    textarea.addEventListener('input', () => {
+      notepadHasUnsavedChanges = true;
+      updateNotepadCounts();
+    });
+  }
+  
+  // Make notepad window draggable
+  const notepadWindow = document.getElementById('notepadWindow');
+  const notepadTitlebar = document.getElementById('notepadTitlebar');
+  
+  if (notepadWindow && notepadTitlebar) {
+    let isDragging = false;
+    let dragStartX, dragStartY, windowStartX, windowStartY;
+    
+    notepadTitlebar.addEventListener('mousedown', (e) => {
+      if (e.target.closest('.window-controls')) return;
+      if (notepadWindow.classList.contains('maximized')) return;
+      
+      isDragging = true;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      
+      const rect = notepadWindow.getBoundingClientRect();
+      windowStartX = rect.left;
+      windowStartY = rect.top;
+      
+      notepadWindow.style.transition = 'none';
+      e.preventDefault();
+    });
+    
+    document.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        e.preventDefault();
+        
+        const dx = e.clientX - dragStartX;
+        const dy = e.clientY - dragStartY;
+        
+        notepadWindow.style.left = `${Math.max(0, Math.min(windowStartX + dx, window.innerWidth - 100))}px`;
+        notepadWindow.style.top = `${Math.max(0, Math.min(windowStartY + dy, window.innerHeight - 100))}px`;
+        notepadWindow.style.transform = 'none';
+      }
+    });
+    
+    document.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        notepadWindow.style.transition = '';
+      }
+    });
+  }
+});
+
+// =====================================================
+// END NOTEPAD FUNCTIONALITY
+// =====================================================
 
 // Window drag and resize functionality
 document.addEventListener('DOMContentLoaded', () => {

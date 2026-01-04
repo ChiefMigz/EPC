@@ -17,13 +17,13 @@
     <!-- Windows Desktop Environment -->
     <div class="desktop-background">
       <!-- Desktop Icons -->
-      <div class="desktop-icons">
-        <div class="desktop-icon" ondblclick="openMdtWindow()">
+      <div class="desktop-icons" id="desktopIcons">
+        <div class="desktop-icon" ondblclick="openMdtWindow()" draggable="true">
           <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Seal_of_the_Los_Angeles_Police_Department.png/1033px-Seal_of_the_Los_Angeles_Police_Department.png" alt="LAPD Logo" class="icon-image" style="width: 48px; height: 48px; object-fit: contain;">
           <span class="icon-label">LAPD MDT</span>
         </div>
         
-        <div class="desktop-icon">
+        <div class="desktop-icon" draggable="true">
           <svg viewBox="0 0 48 48" class="icon-image">
             <rect x="8" y="8" width="32" height="32" rx="2" fill="#2b579a"/>
             <text x="24" y="28" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">W</text>
@@ -31,17 +31,24 @@
           <span class="icon-label">Word 2016</span>
         </div>
         
-        <div class="desktop-icon">
+        <div class="desktop-icon" draggable="true">
           <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg" alt="Chrome" class="icon-image" style="width: 48px; height: 48px; object-fit: contain;">
           <span class="icon-label">Chrome</span>
         </div>
         
-        <div class="desktop-icon">
+        <div class="desktop-icon" ondblclick="openDocumentsFolder()" draggable="true">
           <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Windows_Explorer.svg" alt="Documents" class="icon-image" style="width: 48px; height: 48px; object-fit: contain;">
           <span class="icon-label">Documents</span>
         </div>
         
-        <div class="desktop-icon">
+        <div class="desktop-icon" ondblclick="openNotepadWindow()" draggable="true">
+          <svg viewBox="0 0 24 24" class="icon-image" style="width: 48px; height: 48px;">
+            <path fill="#2E8BC0" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+          </svg>
+          <span class="icon-label">Notepad</span>
+        </div>
+        
+        <div class="desktop-icon" draggable="true">
           <svg viewBox="0 0 48 48" class="icon-image">
             <rect x="8" y="8" width="32" height="32" rx="2" fill="#217346"/>
             <text x="24" y="28" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">X</text>
@@ -49,11 +56,9 @@
           <span class="icon-label">Excel 2016</span>
         </div>
         
-        <div class="desktop-icon">
-          <svg viewBox="0 0 48 48" class="icon-image">
-            <path fill="#fff" d="M8 8h12v12H8z"/>
-            <path fill="#d4d4d4" d="M8 22h12v18H8z"/>
-            <path fill="#d4d4d4" d="M22 8h18v32H22z"/>
+        <div class="desktop-icon" id="recycleBinIcon">
+          <svg viewBox="0 0 24 24" class="icon-image" style="width: 48px; height: 48px;">
+            <path fill="#8da9c4" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
           </svg>
           <span class="icon-label">Recycle Bin</span>
         </div>
@@ -78,25 +83,25 @@
             <div class="window-login-container">
               <div class="login-header">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Seal_of_the_Los_Angeles_Police_Department.png/1033px-Seal_of_the_Los_Angeles_Police_Department.png" alt="LAPD Logo" class="login-logo">
-                <h1>LAPD Mobile Data Terminal</h1>
-                <p>Los Angeles Police Department</p>
+                <h1 id="loginTitle">LAPD Mobile Data Terminal</h1>
+                <p id="loginSubtitle">Los Angeles Police Department</p>
               </div>
               <form id="loginForm" class="login-form">
                 <div class="login-field">
-                  <label for="badgeNumber">Badge Number</label>
+                  <label for="badgeNumber" id="badgeLabel">Badge Number</label>
                   <input type="text" id="badgeNumber" name="badgeNumber" placeholder="Enter badge number" autocomplete="off" required>
                 </div>
                 <div class="login-field">
-                  <label for="password">Password</label>
+                  <label for="password" id="passwordLabel">Password</label>
                   <input type="password" id="password" name="password" placeholder="Enter password" required>
                 </div>
                 <div id="loginError" class="login-error" style="display: none;"></div>
                 <button type="submit" class="login-button">
-                  <span>LOG IN</span>
+                  <span id="loginButtonText">LOG IN</span>
                 </button>
               </form>
               <div class="login-footer">
-                <p>Authorized Personnel Only</p>
+                <p id="loginFooterText">Authorized Personnel Only</p>
                 <p class="login-warning">⚠️ Unauthorized access is prohibited and will be prosecuted</p>
                 <p class="login-legal">California Penal Code § 502(c) - Unauthorized Computer Access<br>
                 Punishable by imprisonment up to 3 years and/or fines up to $10,000</p>
@@ -348,40 +353,49 @@
           <div class="start-menu-section-header">
             <span>Pinned</span>
           </div>
-          <div class="start-menu-grid">
-            <button class="start-menu-tile" onclick="openMdtWindow(); toggleStartMenu();">
+          <div class="start-menu-grid" id="startMenuGrid">
+            <button class="start-menu-tile" onclick="openMdtWindow(); toggleStartMenu();" draggable="true">
               <div class="tile-icon" style="padding: 0; overflow: hidden; background: transparent;">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Seal_of_the_Los_Angeles_Police_Department.png/1033px-Seal_of_the_Los_Angeles_Police_Department.png" alt="LAPD MDT" style="width: 100%; height: 100%; object-fit: contain;">
               </div>
               <span class="tile-label">LAPD MDT</span>
             </button>
             
-            <button class="start-menu-tile" onclick="toggleStartMenu();">
+            <button class="start-menu-tile" onclick="toggleStartMenu();" draggable="true">
               <div class="tile-icon" style="background: #2b579a; display: flex; align-items: center; justify-content: center;">
                 <span style="color: #fff; font-size: 20px; font-weight: bold; font-family: 'Segoe UI', sans-serif;">W</span>
               </div>
               <span class="tile-label">Word 2016</span>
             </button>
             
-            <button class="start-menu-tile" onclick="toggleStartMenu();">
+            <button class="start-menu-tile" onclick="toggleStartMenu();" draggable="true">
               <div class="tile-icon" style="padding: 0; overflow: hidden; background: transparent;">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg" alt="Chrome" style="width: 100%; height: 100%; object-fit: contain;">
               </div>
               <span class="tile-label">Chrome</span>
             </button>
             
-            <button class="start-menu-tile" onclick="toggleStartMenu();">
+            <button class="start-menu-tile" onclick="toggleStartMenu();" draggable="true">
               <div class="tile-icon" style="background: #217346; display: flex; align-items: center; justify-content: center;">
                 <span style="color: #fff; font-size: 20px; font-weight: bold; font-family: 'Segoe UI', sans-serif;">X</span>
               </div>
               <span class="tile-label">Excel 2016</span>
             </button>
             
-            <button class="start-menu-tile" onclick="toggleStartMenu();">
+            <button class="start-menu-tile" onclick="toggleStartMenu();" draggable="true">
               <div class="tile-icon" style="padding: 0; overflow: hidden; background: transparent;">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Windows_Explorer.svg" alt="File Explorer" style="width: 100%; height: 100%; object-fit: contain;">
               </div>
               <span class="tile-label">File Explorer</span>
+            </button>
+            
+            <button class="start-menu-tile" onclick="openNotepadWindow(); toggleStartMenu();" draggable="true">
+              <div class="tile-icon" style="display: flex; align-items: center; justify-content: center; background: transparent;">
+                <svg viewBox="0 0 24 24" width="48" height="48">
+                  <path fill="#2E8BC0" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                </svg>
+              </div>
+              <span class="tile-label">Notepad</span>
             </button>
           </div>
         </div>
@@ -1438,6 +1452,166 @@
       <div class="resize-handle resize-bottom-right"></div>
     </div>
 
+    <!-- Notepad Window (hidden by default) -->
+    <div class="window-container" id="notepadWindow" style="display: none; width: 700px; height: 500px; top: 10%; left: 50%; transform: translateX(-50%);">
+      <div class="window-titlebar" id="notepadTitlebar">
+        <div class="window-title">
+          <svg viewBox="0 0 24 24" width="16" height="16" style="margin-right: 8px;">
+            <path fill="currentColor" d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M10,19L12,15H9V10H15V15L13,19H10Z"/>
+          </svg>
+          <span id="notepadTitle">Notepad - Untitled</span>
+        </div>
+        <div class="window-controls">
+          <button class="window-btn minimize" onclick="minimizeNotepadWindow()" title="Minimize">−</button>
+          <button class="window-btn maximize" onclick="maximizeNotepadWindow()" title="Maximize">□</button>
+          <button class="window-btn close" onclick="closeNotepadWindow()" title="Close">×</button>
+        </div>
+      </div>
+      <div class="window-content" style="padding: 0; display: flex; flex-direction: column;">
+        <!-- Notepad Toolbar -->
+        <div style="display: flex; gap: 8px; padding: 8px; background: rgba(13, 36, 64, 0.6); border-bottom: 1px solid rgba(46, 139, 192, 0.3);">
+          <button onclick="newNote()" style="padding: 8px 14px; background: linear-gradient(135deg, #2E8BC0 0%, #1a6fa1 100%); border: none; border-radius: 4px; color: #fff; cursor: pointer; font-weight: 600; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+            <svg viewBox="0 0 24 24" width="14" height="14">
+              <path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+            </svg>
+            New
+          </button>
+          <button onclick="saveNote()" style="padding: 8px 14px; background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); border: none; border-radius: 4px; color: #fff; cursor: pointer; font-weight: 600; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+            <svg viewBox="0 0 24 24" width="14" height="14">
+              <path fill="currentColor" d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"/>
+            </svg>
+            Save
+          </button>
+          <button onclick="showNotesLibrary()" style="padding: 8px 14px; background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%); border: none; border-radius: 4px; color: #000; cursor: pointer; font-weight: 600; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+            <svg viewBox="0 0 24 24" width="14" height="14">
+              <path fill="currentColor" d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z"/>
+            </svg>
+            My Notes
+          </button>
+        </div>
+        
+        <!-- Notepad Text Area -->
+        <textarea id="notepadTextarea" placeholder="Type your notes here..." style="flex: 1; width: 100%; padding: 20px; background: rgba(10, 31, 61, 0.8); border: none; color: #fff; font-size: 14px; font-family: 'Consolas', 'Monaco', monospace; resize: none; outline: none; line-height: 1.6;"></textarea>
+        
+        <!-- Character/Word Count -->
+        <div style="padding: 8px 20px; background: rgba(13, 36, 64, 0.6); border-top: 1px solid rgba(46, 139, 192, 0.3); color: #8da9c4; font-size: 11px; display: flex; justify-content: space-between;">
+          <span id="notepadCharCount">0 characters</span>
+          <span id="notepadWordCount">0 words</span>
+        </div>
+      </div>
+      <div class="resize-handle resize-right"></div>
+      <div class="resize-handle resize-bottom"></div>
+      <div class="resize-handle resize-corner"></div>
+    </div>
+
+    <!-- Notes Library Modal -->
+    <div id="notesLibraryModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 10001; align-items: center; justify-content: center;">
+      <div style="background: linear-gradient(135deg, #0f2b4d 0%, #0a1f3d 100%); border: 1px solid rgba(46, 139, 192, 0.5); border-radius: 12px; width: 90%; max-width: 600px; max-height: 80%; display: flex; flex-direction: column;">
+        <div style="background: linear-gradient(135deg, #2E8BC0 0%, #1a6fa1 100%); padding: 15px 20px; border-radius: 12px 12px 0 0; display: flex; align-items: center; justify-content: space-between;">
+          <h3 style="margin: 0; color: #fff; font-size: 18px; display: flex; align-items: center; gap: 10px;">
+            <svg viewBox="0 0 24 24" width="22" height="22">
+              <path fill="currentColor" d="M19,4H5A2,2 0 0,0 3,6V20A2,2 0 0,0 5,22H19A2,2 0 0,0 21,20V6A2,2 0 0,0 19,4M9,18H7V6H9V18M13,18H11V6H13V18M17,18H15V6H17V18Z"/>
+            </svg>
+            My Saved Notes
+          </h3>
+          <button onclick="closeNotesLibrary()" style="background: transparent; border: none; color: #fff; font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">×</button>
+        </div>
+        <div id="notesLibraryContent" style="flex: 1; overflow-y: auto; padding: 20px;">
+          <!-- Notes list will be populated here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Documents Folder Window -->
+    <div class="window-container" id="documentsWindow" style="display: none; width: 800px; height: 600px; top: 8%; left: 50%; transform: translateX(-50%);">
+      <div class="window-titlebar" id="documentsTitlebar">
+        <div class="window-title">
+          <svg viewBox="0 0 24 24" width="16" height="16" style="margin-right: 8px;">
+            <path fill="currentColor" d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+          </svg>
+          <span>Documents</span>
+        </div>
+        <div class="window-controls">
+          <button class="window-btn minimize" onclick="minimizeDocumentsWindow()" title="Minimize">−</button>
+          <button class="window-btn maximize" onclick="maximizeDocumentsWindow()" title="Maximize">□</button>
+          <button class="window-btn close" onclick="closeDocumentsWindow()" title="Close">×</button>
+        </div>
+      </div>
+      <div class="window-content" style="padding: 0; display: flex; flex-direction: column;">
+        <!-- Toolbar -->
+        <div style="display: flex; gap: 8px; padding: 10px; background: rgba(13, 36, 64, 0.6); border-bottom: 1px solid rgba(46, 139, 192, 0.3);">
+          <button onclick="refreshDocuments()" style="padding: 8px 14px; background: linear-gradient(135deg, #2E8BC0 0%, #1a6fa1 100%); border: none; border-radius: 4px; color: #fff; cursor: pointer; font-weight: 600; font-size: 12px; display: flex; align-items: center; gap: 6px;">
+            <svg viewBox="0 0 24 24" width="14" height="14">
+              <path fill="currentColor" d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z"/>
+            </svg>
+            Refresh
+          </button>
+        </div>
+        
+        <!-- File List -->
+        <div id="documentsFileList" style="flex: 1; padding: 20px; overflow-y: auto; background: rgba(10, 31, 61, 0.8);">
+          <!-- Files will be populated here -->
+        </div>
+      </div>
+      <div class="resize-handle resize-right"></div>
+      <div class="resize-handle resize-bottom"></div>
+      <div class="resize-handle resize-corner"></div>
+    </div>
+
+    <!-- Save Note Dialog -->
+    <div id="saveNoteDialog" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); z-index: 10002; align-items: center; justify-content: center;">
+      <div style="background: linear-gradient(135deg, #0f2b4d 0%, #0a1f3d 100%); border: 1px solid rgba(46, 139, 192, 0.5); border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);">
+        <div style="background: linear-gradient(135deg, #2E8BC0 0%, #1a6fa1 100%); padding: 15px 20px; border-radius: 12px 12px 0 0; display: flex; align-items: center; justify-content: space-between;">
+          <h3 style="margin: 0; color: #fff; font-size: 18px; display: flex; align-items: center; gap: 10px;">
+            <svg viewBox="0 0 24 24" width="22" height="22">
+              <path fill="currentColor" d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"/>
+            </svg>
+            Save Note
+          </h3>
+          <button onclick="closeSaveNoteDialog()" style="background: transparent; border: none; color: #fff; font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">×</button>
+        </div>
+        <div style="padding: 25px;">
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; color: #2e8bc0; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Note Name</label>
+            <input type="text" id="saveNoteNameInput" placeholder="Enter note name..." style="width: 100%; padding: 12px; background: rgba(37, 58, 90, 0.6); border: 1px solid rgba(46, 139, 192, 0.3); border-radius: 8px; color: #fff; font-size: 14px; box-sizing: border-box;">
+          </div>
+          
+          <div style="margin-bottom: 25px;">
+            <label style="display: block; color: #2e8bc0; font-size: 13px; font-weight: 600; margin-bottom: 8px;">Save Location</label>
+            <div style="display: flex; gap: 12px;">
+              <label style="flex: 1; cursor: pointer;">
+                <input type="radio" name="saveLocation" value="desktop" checked style="display: none;">
+                <div class="save-location-option" data-location="desktop" style="padding: 15px; background: rgba(37, 58, 90, 0.6); border: 2px solid #2e8bc0; border-radius: 8px; text-align: center; transition: all 0.2s;">
+                  <svg viewBox="0 0 24 24" width="32" height="32" style="margin-bottom: 8px;">
+                    <path fill="currentColor" d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7v2H8v2h8v-2h-2v-2h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/>
+                  </svg>
+                  <div style="color: #fff; font-weight: 600; font-size: 13px;">Desktop</div>
+                </div>
+              </label>
+              <label style="flex: 1; cursor: pointer;">
+                <input type="radio" name="saveLocation" value="documents" style="display: none;">
+                <div class="save-location-option" data-location="documents" style="padding: 15px; background: rgba(37, 58, 90, 0.6); border: 2px solid rgba(46, 139, 192, 0.3); border-radius: 8px; text-align: center; transition: all 0.2s;">
+                  <svg viewBox="0 0 24 24" width="32" height="32" style="margin-bottom: 8px;">
+                    <path fill="currentColor" d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
+                  </svg>
+                  <div style="color: #fff; font-weight: 600; font-size: 13px;">Documents</div>
+                </div>
+              </label>
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 10px;">
+            <button onclick="confirmSaveNote()" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%); border: none; border-radius: 8px; color: #fff; cursor: pointer; font-weight: 700; font-size: 14px;">
+              Save
+            </button>
+            <button onclick="closeSaveNoteDialog()" style="flex: 1; padding: 12px; background: linear-gradient(135deg, #6c757d 0%, #495057 100%); border: none; border-radius: 8px; color: #fff; cursor: pointer; font-weight: 700; font-size: 14px;">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Settings Window (hidden by default) -->
     <div class="window-container settings-window" id="playerSettingsWindow" style="display: none; width: 900px; height: 700px; top: 5%; left: 50%; transform: translateX(-50%);">
       <!-- Resize Handles -->
@@ -1475,8 +1649,7 @@
                 </svg>
               </div>
               <div>
-                <div id="settingsSidebarName" style="color: #8da9c4; font-size: 13px; margin-bottom: 0;">Unit #</div>
-                <div id="settingsSidebarUnit" style="display: none;"></div>
+                <div id="settingsSidebarName" style="color: #fff; font-size: 16px; font-weight: 600; margin-bottom: 0;"></div>
               </div>
             </div>
           </div>
@@ -1581,6 +1754,43 @@
               </div>
               <input type="file" id="wallpaperFile" accept="image/*" style="display: none;" onchange="handleWallpaperFileSelect(event)">
               <small style="color: #8da9c4; font-size: 11px; margin-top: 4px; display: block;">Enter URL or choose a file • Leave empty to use default blue gradient</small>
+            </div>
+            
+            <!-- Login Screen Customization -->
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(46, 139, 192, 0.3);">
+              <h4 style="margin: 0 0 15px 0; color: #2e8bc0; font-size: 14px; font-weight: 600;">Login Screen Text</h4>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                  <label style="display: block; color: #8da9c4; font-size: 12px; font-weight: 600; margin-bottom: 6px;">Main Title</label>
+                  <input type="text" id="customLoginTitle" placeholder="LAPD Mobile Data Terminal" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(46, 139, 192, 0.5); border-radius: 4px; color: #fff; font-size: 13px; box-sizing: border-box;">
+                </div>
+                
+                <div>
+                  <label style="display: block; color: #8da9c4; font-size: 12px; font-weight: 600; margin-bottom: 6px;">Subtitle</label>
+                  <input type="text" id="customLoginSubtitle" placeholder="Los Angeles Police Department" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(46, 139, 192, 0.5); border-radius: 4px; color: #fff; font-size: 13px; box-sizing: border-box;">
+                </div>
+                
+                <div>
+                  <label style="display: block; color: #8da9c4; font-size: 12px; font-weight: 600; margin-bottom: 6px;">Badge Field Label</label>
+                  <input type="text" id="customBadgeLabel" placeholder="Badge Number" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(46, 139, 192, 0.5); border-radius: 4px; color: #fff; font-size: 13px; box-sizing: border-box;">
+                </div>
+                
+                <div>
+                  <label style="display: block; color: #8da9c4; font-size: 12px; font-weight: 600; margin-bottom: 6px;">Password Field Label</label>
+                  <input type="text" id="customPasswordLabel" placeholder="Password" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(46, 139, 192, 0.5); border-radius: 4px; color: #fff; font-size: 13px; box-sizing: border-box;">
+                </div>
+                
+                <div>
+                  <label style="display: block; color: #8da9c4; font-size: 12px; font-weight: 600; margin-bottom: 6px;">Login Button Text</label>
+                  <input type="text" id="customLoginButton" placeholder="LOG IN" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(46, 139, 192, 0.5); border-radius: 4px; color: #fff; font-size: 13px; box-sizing: border-box;">
+                </div>
+                
+                <div>
+                  <label style="display: block; color: #8da9c4; font-size: 12px; font-weight: 600; margin-bottom: 6px;">Footer Text</label>
+                  <input type="text" id="customLoginFooter" placeholder="Authorized Personnel Only" style="width: 100%; padding: 10px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(46, 139, 192, 0.5); border-radius: 4px; color: #fff; font-size: 13px; box-sizing: border-box;">
+                </div>
+              </div>
             </div>
             
             <!-- Primary Color -->
@@ -1813,6 +2023,18 @@
             </div>
           </form>
         </div>
+      </div>
+    </div>
+
+    <!-- Note Context Menu -->
+    <div id="noteContextMenu" style="display: none; position: fixed; z-index: 10003; background: #2a2a2a; border: 1px solid #3a3a3a; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); min-width: 150px;">
+      <div onclick="deleteNoteFromContextMenu()" style="padding: 10px 15px; color: #fff; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 10px;" 
+           onmouseover="this.style.background='rgba(231, 76, 60, 0.2)'" 
+           onmouseout="this.style.background=''">
+        <svg viewBox="0 0 24 24" width="16" height="16">
+          <path fill="#ef5350" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+        </svg>
+        <span style="font-size: 13px;">Delete</span>
       </div>
     </div>
 
