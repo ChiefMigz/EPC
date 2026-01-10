@@ -3131,7 +3131,10 @@ function applyInterfaceCustomization() {
   }
   if (customization.deptAcronym) {
     document.querySelectorAll('#deptAcronym').forEach(el => el.textContent = customization.deptAcronym);
-    document.querySelector('.mdt-logo-title').textContent = deptAcronym + ' MDT';
+    document.querySelectorAll('.mdt-logo-title').forEach(el => el.textContent = customization.deptAcronym + ' MDT');
+  }
+  if (customization.deptLogo) {
+    document.querySelectorAll('.pd-icon').forEach(el => el.src = customization.deptLogo);
   }
   
   if (customization.deptLogo) {
