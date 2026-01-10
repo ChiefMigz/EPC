@@ -1,7 +1,7 @@
 # User-specific data files
 EPC.log
 ipAddresses.txt
-defaults/*.json
+defaults/
 
 # User data directories
 data/
@@ -33,4 +33,5 @@ node_modules/
 # Logs
 *.log
 logs/
+
 
