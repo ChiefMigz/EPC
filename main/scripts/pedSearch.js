@@ -8,10 +8,31 @@ function getLatestPlateFromDb() {
 }
 // Listen for vehicle plate selection from vehicleSearch window
 window.addEventListener('message', function(event) {
-  if (event.data && event.data.type === 'vehiclePlateSelected' && event.data.plate) {
+  if (!event.data) return;
+  if (event.data.type === 'vehiclePlateSelected' && event.data.plate) {
     recentVehiclePlate = event.data.plate;
+    return;
+  }
+  if (event.data.type === 'applyInterfaceCustomization') {
+    try {
+      applyInterfaceCustomization();
+    } catch (e) {
+      // ignore
+    }
   }
 });
+
+function applyInterfaceCustomization() {
+  const customization = JSON.parse(localStorage.getItem('interfaceCustomization') || '{}');
+  if (customization.deptAcronym) {
+    const el = document.querySelector('.mdt-title-acronym');
+    if (el) el.textContent = customization.deptAcronym;
+  }
+  if (customization.deptLogo) {
+    const logo = document.querySelector('.mdt-header-logo') || document.querySelector('.pd-icon');
+    if (logo) logo.src = customization.deptLogo;
+  }
+}
 // --- Begin: Logic moved from pedSearch.html ---
 let recentVehiclePlate = '';
 

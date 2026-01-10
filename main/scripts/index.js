@@ -1,27 +1,41 @@
 // Global Officer Database (loaded from officerInformation.json)
 window.OFFICER_DATABASE = [];
 
-// Initialize MDT program logo and acronym from localStorage (safe, updates all matching elements)
-const _interfaceCustomization = JSON.parse(localStorage.getItem('interfaceCustomization') || '{}');
-const _deptName = _interfaceCustomization.deptName || '';
-const _deptLogo = _interfaceCustomization.deptLogo || '';
-const _deptAcronym = _interfaceCustomization.deptAcronym || '';
+// Runtime helpers to read interface customization so updates take effect immediately
+function getInterfaceCustomization() {
+  return JSON.parse(localStorage.getItem('interfaceCustomization') || '{}');
+}
+function getDeptAcronym() {
+  return getInterfaceCustomization().deptAcronym || '';
+}
+function getDeptName() {
+  return getInterfaceCustomization().deptName || '';
+}
+function getDeptLogo() {
+  return getInterfaceCustomization().deptLogo || '';
+}
 
+// Initialize some UI elements from current customization
 const mdtTitleEl = document.querySelector('.mdt-title-main');
-if (mdtTitleEl && _deptName) mdtTitleEl.textContent = _deptName;
+if (mdtTitleEl && getDeptName()) mdtTitleEl.textContent = getDeptName();
 
 const pdIconEl = document.querySelector('.pd-icon');
-if (pdIconEl && _deptLogo) pdIconEl.src = _deptLogo;
+if (pdIconEl && getDeptLogo()) pdIconEl.src = getDeptLogo();
 
 const mdtLogoEls = document.querySelectorAll('.mdt-logo-title');
 if (mdtLogoEls && mdtLogoEls.length > 0) {
   mdtLogoEls.forEach(el => {
-    el.textContent = _deptAcronym ? `${_deptAcronym} MDT` : el.textContent;
+    el.textContent = getDeptAcronym() ? `${getDeptAcronym()} MDT` : el.textContent;
   })
 }
 
+// Set the browser window title from customization (use acronym when available)
+document.title = getDeptAcronym()
+  ? `${getDeptAcronym()} MDT - Mobile Data Terminal`
+  : (getDeptName() ? `${getDeptName()} - Mobile Data Terminal` : 'LAPD MDT - Mobile Data Terminal');
+
 // Custom Dialog Function
-function showCustomDialog(message, title = 'LAPD MDT') {
+function showCustomDialog(message, title) {
   return new Promise((resolve) => {
     const overlay = document.getElementById('customDialogOverlay');
     const dialogTitle = document.getElementById('customDialogTitle');
@@ -35,8 +49,8 @@ function showCustomDialog(message, title = 'LAPD MDT') {
       return;
     }
     
-    // Set the content
-    dialogTitle.textContent = title;
+    // Set the content (use department acronym if title not provided)
+    dialogTitle.textContent = title || (getDeptAcronym() ? `${getDeptAcronym()} MDT` : 'LAPD MDT');
     dialogMessage.textContent = message;
     
     // Show the dialog
@@ -358,7 +372,7 @@ let durationInterval;
       if (badgeEl) {
         badgeEl.textContent = loggedInOfficer.badgeNumber || '-';
       }
-      if (deptEl) deptEl.textContent = loggedInOfficer.agency || 'LAPD';
+      if (deptEl) deptEl.textContent = (getDeptAcronym() ? getDeptAcronym() : (loggedInOfficer.agency || 'LAPD'));
       if (divisionEl) divisionEl.textContent = loggedInOfficer.division || '-';
       if (unitEl) unitEl.textContent = loggedInOfficer.unit || '-';
       
@@ -621,8 +635,8 @@ let durationInterval;
     if (logoutButton) {
       logoutButton.addEventListener('click', async () => {
         const confirmed = await showCustomDialog(
-          'Are you sure you want to close LAPD MDT?\n\nThis will log you out of the system.',
-          'Close LAPD MDT'
+          `Are you sure you want to close ${getDeptAcronym() ? getDeptAcronym() + ' MDT' : 'LAPD MDT'}?\n\nThis will log you out of the system.`,
+          `Close ${getDeptAcronym() ? getDeptAcronym() + ' MDT' : 'LAPD MDT'}`
         );
         
         if (confirmed) {
@@ -679,8 +693,8 @@ let durationInterval;
         
         // Show confirmation dialog
         const confirmed = await showCustomDialog(
-          'Are you sure you want to close LAPD MDT?\n\nThis will log you out of the system.',
-          'Close LAPD MDT'
+          `Are you sure you want to close ${getDeptAcronym() ? getDeptAcronym() + ' MDT' : 'LAPD MDT'}?\n\nThis will log you out of the system.`,
+          `Close ${getDeptAcronym() ? getDeptAcronym() + ' MDT' : 'LAPD MDT'}`
         );
         
         if (confirmed) {
@@ -1974,12 +1988,14 @@ function createOfficerMgmtTaskbarButton() {
   const button = document.createElement('div');
   button.className = 'taskbar-app active';
   button.dataset.window = 'officerMgmt';
+  const _custom = JSON.parse(localStorage.getItem('interfaceCustomization') || '{}');
+  const _label = _custom.deptName ? `${_custom.deptName} Officer Management System` : 'LAPD Officer Management System';
   button.innerHTML = `
     <svg viewBox="0 0 24 24" width="20" height="20" class="taskbar-icon">
       <path fill="currentColor" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
       <path fill="currentColor" d="M19 13h-2v2h-2v2h2v2h2v-2h2v-2h-2z"/>
     </svg>
-    <span class="taskbar-label">LAPD Officer Management System</span>
+    <span class="taskbar-label">${_label}</span>
   `;
   
   button.addEventListener('click', () => {
@@ -2094,27 +2110,48 @@ function openPlayerSettings() {
 }
 
 // Officer Profile Window Functions
-function openOfficerProfile() {
+function openOfficerProfile(mode = 'edit', officerData = null) {
   const window = document.getElementById('officerProfileWindow');
+  const titleEl = document.getElementById('officerProfileTitle');
+
+  // Determine data source
   const loggedInOfficer = JSON.parse(sessionStorage.getItem('loggedInOfficer'));
-  
-  if (window && loggedInOfficer) {
-    // Populate form with officer data
-    document.getElementById('profileFirstName').value = loggedInOfficer.firstName || '';
-    document.getElementById('profileLastName').value = loggedInOfficer.lastName || '';
-    document.getElementById('profileBadgeNumber').value = loggedInOfficer.badgeNumber || '';
-    document.getElementById('profileRank').value = loggedInOfficer.rank || '';
-    document.getElementById('profileCallSign').value = loggedInOfficer.callSign || '';
-    document.getElementById('profileDivision').value = loggedInOfficer.division || '';
-    document.getElementById('profileUnit').value = loggedInOfficer.unit || '';
-    document.getElementById('profileOldPassword').value = ''; // Clear password fields
-    document.getElementById('profileNewPassword').value = '';
-    document.getElementById('profileConfirmPassword').value = '';
-    
-    // Show window
-    window.style.display = 'block';
-    createOfficerProfileTaskbarButton();
+  const data = officerData || (mode === 'edit' ? loggedInOfficer : null);
+
+  if (!window) return;
+
+  // Update window title based on mode
+  if (titleEl) {
+    if (mode === 'add') titleEl.textContent = 'Add New Officer';
+    else titleEl.textContent = 'Edit Officer';
   }
+
+  // If we're in edit mode and have data, populate form fields
+  if (mode === 'edit' && data) {
+    document.getElementById('profileFirstName').value = data.firstName || '';
+    document.getElementById('profileLastName').value = data.lastName || '';
+    document.getElementById('profileBadgeNumber').value = data.badgeNumber || '';
+    document.getElementById('profileRank').value = data.rank || '';
+    document.getElementById('profileCallSign').value = data.callSign || '';
+    document.getElementById('profileDivision').value = data.division || '';
+    document.getElementById('profileUnit').value = data.unit || '';
+  } else if (mode === 'add') {
+    // Clear form for new officer
+    const fields = ['profileFirstName','profileLastName','profileBadgeNumber','profileRank','profileCallSign','profileDivision','profileUnit','profileOldPassword','profileNewPassword','profileConfirmPassword'];
+    fields.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+  }
+
+  // Always clear password fields when showing
+  const oldPw = document.getElementById('profileOldPassword'); if (oldPw) oldPw.value = '';
+  const newPw = document.getElementById('profileNewPassword'); if (newPw) newPw.value = '';
+  const confPw = document.getElementById('profileConfirmPassword'); if (confPw) confPw.value = '';
+
+  // Show window and create taskbar button
+  window.style.display = 'block';
+  createOfficerProfileTaskbarButton();
 }
 
 function createOfficerProfileTaskbarButton() {
@@ -2124,11 +2161,13 @@ function createOfficerProfileTaskbarButton() {
     taskbarButton.className = 'taskbar-app active';
     taskbarButton.setAttribute('data-window', 'officerProfileWindow');
     taskbarButton.onclick = () => toggleWindow('officerProfileWindow');
+    // Use current window title text if available
+    const titleText = (document.getElementById('officerProfileTitle') && document.getElementById('officerProfileTitle').textContent) || 'Officer Profile';
     taskbarButton.innerHTML = `
       <svg viewBox="0 0 24 24" width="16" height="16" fill="#fff">
         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
       </svg>
-      <span>Officer Profile</span>
+      <span>${titleText}</span>
     `;
     taskbarApps.appendChild(taskbarButton);
   }
@@ -2635,11 +2674,18 @@ function editOfficer(badgeNumber) {
     tabBtn.textContent = 'Edit Officer';
   }
   
-  // Switch to Add New Officer tab and populate with data
-  showMgmtTab('add-officer');
-  
   // Populate the form
+  // Prepare form for edit mode before switching tabs to avoid it being reset
   const form = document.getElementById('addOfficerForm');
+  if (form) {
+    form.dataset.editMode = 'true';
+    form.dataset.originalBadge = badgeNumber;
+  }
+
+  // Switch to Add New Officer tab
+  showMgmtTab('add-officer');
+
+  // Populate the form fields
   if (form) {
     form.elements['firstName'].value = officer.firstName;
     form.elements['lastName'].value = officer.lastName;
@@ -2649,12 +2695,8 @@ function editOfficer(badgeNumber) {
     form.elements['callSign'].value = officer.callSign;
     form.elements['division'].value = officer.division;
     form.elements['unit'].value = officer.unit;
-    
-    // Change form to edit mode
-    form.dataset.editMode = 'true';
-    form.dataset.originalBadge = badgeNumber;
-    
-    // Update button text and icon
+
+    // Update submit button to reflect update action
     const submitBtn = form.querySelector('button[type="submit"]');
     if (submitBtn) {
       submitBtn.innerHTML = `
@@ -3120,7 +3162,8 @@ function applyInterfaceCustomization() {
     badgeLabel: document.getElementById('customBadgeLabel').value.trim(),
     passwordLabel: document.getElementById('customPasswordLabel').value.trim(),
     loginButton: document.getElementById('customLoginButton').value.trim(),
-    loginFooter: document.getElementById('customLoginFooter').value.trim()
+    loginFooter: document.getElementById('customLoginFooter').value.trim(),
+    loginLegal: document.getElementById('customLoginLegal') ? document.getElementById('customLoginLegal').value.trim() : ''
   };
   
   localStorage.setItem('interfaceCustomization', JSON.stringify(customization));
@@ -3130,8 +3173,24 @@ function applyInterfaceCustomization() {
     document.querySelectorAll('.mdt-title-main').forEach(el => el.textContent = customization.deptName);
   }
   if (customization.deptAcronym) {
-    document.querySelectorAll('#deptAcronym').forEach(el => el.textContent = customization.deptAcronym);
+    document.querySelectorAll('.dept-acronym').forEach(el => el.textContent = customization.deptAcronym);
     document.querySelectorAll('.mdt-logo-title').forEach(el => el.textContent = customization.deptAcronym + ' MDT');
+    // Elements that should display the full "ACR MDT" phrase
+    document.querySelectorAll('.dept-display-acronym').forEach(el => el.textContent = customization.deptAcronym + ' MDT');
+  }
+  // Update officer management window title if present
+  if (customization.deptName) {
+    document.querySelectorAll('.dept-display-officer').forEach(el => el.textContent = `${customization.deptName} Officer Management System`);
+  } else if (customization.deptAcronym) {
+    document.querySelectorAll('.dept-display-officer').forEach(el => el.textContent = `${customization.deptAcronym} Officer Management System`);
+  }
+  // Update browser window title to reflect customization
+  if (customization.deptAcronym) {
+    document.title = `${customization.deptAcronym} MDT - Mobile Data Terminal`;
+  } else if (customization.deptName) {
+    document.title = `${customization.deptName} - Mobile Data Terminal`;
+  } else {
+    document.title = 'LAPD MDT - Mobile Data Terminal';
   }
   if (customization.deptLogo) {
     document.querySelectorAll('.pd-icon').forEach(el => el.src = customization.deptLogo);
@@ -3143,6 +3202,18 @@ function applyInterfaceCustomization() {
     if (loginLogo) loginLogo.src = customization.deptLogo;
     document.querySelector(".pd-icon").src = customization.deptLogo;
   }
+
+  // Update main window title element if present
+  const windowTitleEl = document.getElementById('windowTitle');
+  if (windowTitleEl) {
+    if (customization.deptAcronym) {
+      windowTitleEl.textContent = `${customization.deptAcronym} MDT - Mobile Data Terminal`;
+    } else if (customization.deptName) {
+      windowTitleEl.textContent = `${customization.deptName} - Mobile Data Terminal`;
+    } else {
+      windowTitleEl.textContent = 'LAPD MDT - Mobile Data Terminal';
+    }
+  }
   
   if (customization.wallpaper) {
     const bg = document.querySelector('.desktop-background');
@@ -3151,15 +3222,21 @@ function applyInterfaceCustomization() {
     bg.style.backgroundPosition = 'center';
   }
   
-  // Apply login screen customization
+  // Apply login screen customization (use same fallback logic as on initial load)
+  const loginTitleEl = document.getElementById('loginTitle');
+  const loginSubtitleEl = document.getElementById('loginSubtitle');
   if (customization.loginTitle) {
-    const loginTitle = document.getElementById('loginTitle');
-    if (loginTitle) loginTitle.textContent = customization.loginTitle;
+    if (loginTitleEl) loginTitleEl.textContent = customization.loginTitle;
+  } else if (customization.deptAcronym) {
+    if (loginTitleEl) loginTitleEl.textContent = customization.deptAcronym + ' MDT';
+  } else if (customization.deptName) {
+    if (loginTitleEl) loginTitleEl.textContent = customization.deptName;
   }
-  
+
   if (customization.loginSubtitle) {
-    const loginSubtitle = document.getElementById('loginSubtitle');
-    if (loginSubtitle) loginSubtitle.textContent = customization.loginSubtitle;
+    if (loginSubtitleEl) loginSubtitleEl.textContent = customization.loginSubtitle;
+  } else if (customization.deptName) {
+    if (loginSubtitleEl) loginSubtitleEl.textContent = customization.deptName;
   }
   
   if (customization.badgeLabel) {
@@ -3181,12 +3258,41 @@ function applyInterfaceCustomization() {
     const loginFooterText = document.getElementById('loginFooterText');
     if (loginFooterText) loginFooterText.textContent = customization.loginFooter;
   }
+
+  if (customization.loginLegal) {
+    const loginLegalEl = document.querySelector('.login-legal');
+    if (loginLegalEl) loginLegalEl.innerHTML = customization.loginLegal.replace(/\n/g, '<br>');
+  }
   
   document.documentElement.style.setProperty('--color-lapd-gold', customization.primaryColor);
   document.documentElement.style.setProperty('--color-border', customization.secondaryColor);
   document.documentElement.style.setProperty('--color-border-light', customization.secondaryColor);
   
-  showNotificationMDT('✓ Interface customization applied successfully!', 'success');
+  showNotificationMDT('Interface customization applied successfully!', 'success');
+
+  // Propagate customization to any iframes (call their applyInterfaceCustomization() if exposed,
+  // otherwise send a postMessage so they can re-apply on receipt).
+  try {
+    const topDoc = window.top.document;
+    const iframes = Array.from(topDoc.querySelectorAll('iframe'));
+    for (const iframe of iframes) {
+      try {
+        const win = iframe.contentWindow;
+        if (!win) continue;
+        if (typeof win.applyInterfaceCustomization === 'function') {
+          // Same-origin: call the function directly
+          win.applyInterfaceCustomization();
+        } else {
+          // Fallback: send a message the child can listen for
+          win.postMessage({ type: 'applyInterfaceCustomization' }, '*');
+        }
+      } catch (e) {
+        // ignore per-iframe errors
+      }
+    }
+  } catch (e) {
+    // ignore if top/document access is restricted
+  }
 }
 
 // Handle logo file selection
@@ -3262,6 +3368,8 @@ function resetInterfaceCustomization() {
   
   const loginFooterText = document.getElementById('loginFooterText');
   if (loginFooterText) loginFooterText.textContent = 'Authorized Personnel Only';
+  const loginLegalEl = document.querySelector('.login-legal');
+  if (loginLegalEl) loginLegalEl.innerHTML = 'California Penal Code § 502(c) - Unauthorized Computer Access<br>Punishable by imprisonment up to 3 years and/or fines up to $10,000';
   
   const bg = document.querySelector('.desktop-background');
   bg.style.backgroundImage = '';
@@ -3282,7 +3390,10 @@ window.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('.mdt-title-main').forEach(el => el.textContent = customization.deptName);
     }
     if (customization.deptAcronym) {
-      document.querySelectorAll('#deptAcronym').forEach(el => el.textContent = customization.deptAcronym);
+      document.querySelectorAll('.dept-acronym').forEach(el => el.textContent = customization.deptAcronym);
+      document.querySelectorAll('.dept-display-acronym').forEach(el => el.textContent = customization.deptAcronym + ' MDT');
+      const windowTitleEl = document.getElementById('windowTitle');
+      if (windowTitleEl) windowTitleEl.textContent = customization.deptAcronym + ' MDT - Mobile Data Terminal';
     }
 
     if (customization.deptLogo) {
@@ -3297,6 +3408,31 @@ window.addEventListener('DOMContentLoaded', function() {
       bg.style.backgroundSize = 'cover';
       bg.style.backgroundPosition = 'center';
     }
+
+    // Apply login screen customization on initial load too
+    const loginTitleEl = document.getElementById('loginTitle');
+    const loginSubtitleEl = document.getElementById('loginSubtitle');
+    const loginFooterEl = document.getElementById('loginFooterText');
+    const loginLegalEl = document.querySelector('.login-legal');
+    const loginButtonText = document.getElementById('loginButtonText');
+
+    if (customization.loginTitle) {
+      if (loginTitleEl) loginTitleEl.textContent = customization.loginTitle;
+    } else if (customization.deptAcronym) {
+      if (loginTitleEl) loginTitleEl.textContent = customization.deptAcronym + ' MDT';
+    } else if (customization.deptName) {
+      if (loginTitleEl) loginTitleEl.textContent = customization.deptName;
+    }
+
+    if (customization.loginSubtitle) {
+      if (loginSubtitleEl) loginSubtitleEl.textContent = customization.loginSubtitle;
+    } else if (customization.deptName) {
+      if (loginSubtitleEl) loginSubtitleEl.textContent = customization.deptName;
+    }
+
+    if (customization.loginFooter && loginFooterEl) loginFooterEl.textContent = customization.loginFooter;
+    if (customization.loginLegal && loginLegalEl) loginLegalEl.innerHTML = customization.loginLegal.replace(/\n/g, '<br>');
+    if (customization.loginButton && loginButtonText) loginButtonText.textContent = customization.loginButton;
     
     if (customization.primaryColor) {
       document.documentElement.style.setProperty('--color-lapd-gold', customization.primaryColor);
@@ -3337,6 +3473,10 @@ window.addEventListener('DOMContentLoaded', function() {
       const loginFooterText = document.getElementById('loginFooterText');
       if (loginFooterText) loginFooterText.textContent = customization.loginFooter;
     }
+    if (customization.loginLegal) {
+      const loginLegalEl = document.querySelector('.login-legal');
+      if (loginLegalEl) loginLegalEl.innerHTML = customization.loginLegal.replace(/\n/g, '<br>');
+    }
   }
   
   // Load saved values into settings form
@@ -3354,6 +3494,7 @@ window.addEventListener('DOMContentLoaded', function() {
   document.getElementById('customPasswordLabel').value = customization.passwordLabel || '';
   document.getElementById('customLoginButton').value = customization.loginButton || '';
   document.getElementById('customLoginFooter').value = customization.loginFooter || '';
+  if (document.getElementById('customLoginLegal')) document.getElementById('customLoginLegal').value = customization.loginLegal || '';
   
   // Initialize desktop notes
   updateDesktopNotes();

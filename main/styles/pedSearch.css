@@ -37,6 +37,24 @@ body {
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
 
+/* DOJ badge: match visual footprint of search-icon */
+.doj-icon {
+  /* Match the visual footprint of .search-icon (32px icon + 15px padding each side = 62px) */
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.doj-icon img {
+  /* Fill most of the square while leaving a small inset */
+  width: calc(100% - 12px);
+  height: calc(100% - 12px);
+  object-fit: contain;
+  display: block;
+}
+
 .search-info h3 {
   margin: 0 0 8px 0;
   font-size: 22px;

@@ -3,6 +3,27 @@
   if (config.updateDomWithLanguageOnLoad) await updateDomWithLanguage('reports')
 })()
 
+// Listen for customization propagation from parent frame
+window.addEventListener('message', function(event) {
+  if (!event.data) return;
+  if (event.data.type === 'applyInterfaceCustomization') {
+    try {
+      applyInterfaceCustomizationForReports();
+    } catch (e) {}
+  }
+});
+
+function applyInterfaceCustomizationForReports() {
+  const customization = JSON.parse(localStorage.getItem('interfaceCustomization') || '{}');
+  if (customization.deptAcronym) {
+    document.querySelectorAll('.mdt-title-acronym').forEach(el => el.textContent = customization.deptAcronym);
+    document.querySelectorAll('.dept-display-acronym').forEach(el => el.textContent = customization.deptAcronym + ' MDT');
+  }
+  if (customization.deptLogo) {
+    document.querySelectorAll('.mdt-header-logo').forEach(el => el.src = customization.deptLogo);
+  }
+}
+
 document
   .querySelector('.listPage .createButton')
   .addEventListener('click', async function () {
@@ -789,7 +810,10 @@ async function getOfficerInformationSection(
   agencyLabel.htmlFor = 'officerInformationSectionAgencyInput'
   const agencyInput = document.createElement('input')
   agencyInput.type = 'text'
-  agencyInput.value = officerInformation.agency || ''
+  const _customization = JSON.parse(localStorage.getItem('interfaceCustomization') || '{}')
+  agencyInput.value = (_customization.deptAcronym && _customization.deptAcronym.length)
+    ? _customization.deptAcronym
+    : (officerInformation.agency || '')
   agencyInput.id = 'officerInformationSectionAgencyInput'
   agencyInput.autocomplete = 'off'
   agencyInput.disabled = isList
