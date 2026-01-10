@@ -1,6 +1,11 @@
 // Global Officer Database (loaded from officerInformation.json)
 window.OFFICER_DATABASE = [];
 
+//Initialize MDT program logo and acronym from localStorage
+document.querySelector(".mdt-title-main").textContent = JSON.parse(localStorage.getItem('interfaceCustomization') || '{}').deptName;
+document.querySelector(".pd-icon").src = JSON.parse(localStorage.getItem('interfaceCustomization') || '{}').deptLogo;
+document.querySelector('.mdt-logo-title').textContent = JSON.parse(localStorage.getItem('interfaceCustomization') || '{}').deptAcronym + ' MDT';
+
 // Custom Dialog Function
 function showCustomDialog(message, title = 'LAPD MDT') {
   return new Promise((resolve) => {
@@ -30,7 +35,7 @@ function showCustomDialog(message, title = 'LAPD MDT') {
       resolve(true);
     };
     
-    // Handle Cancel button
+    // Handle Cancel button 
     const handleCancel = () => {
       overlay.style.display = 'none';
       cleanup();
@@ -292,6 +297,9 @@ let durationInterval;
       // Setup logout button
       setupLogoutButton()
       
+      // Set up delete note button
+      setupDeleteNoteButton();
+
       // Initialize duty status
       if (typeof initializeDutyStatus === 'function') {
         initializeDutyStatus();
@@ -1150,7 +1158,7 @@ async function openWindow(name) {
   
   // Get the MDT window position if it exists
   const mdtWindow = document.getElementById('mdtWindow');
-  let baseOffsetX = 100; // Default offset from left edge
+  let baseOffsetX = 300; // Default offset from left edge
   let baseOffsetY = 100; // Default offset from top
   
   if (mdtWindow && mdtWindow.style.display !== 'none') {
@@ -1173,9 +1181,46 @@ async function openWindow(name) {
   const windowElement = document.createElement('div')
   windowElement.style.width = `${size[0]}px`
   windowElement.style.height = `${size[1]}px`
-  windowElement.style.left = `${baseOffsetX + cascade}px`
-  windowElement.style.top = `${baseOffsetY + cascade}px`
-  windowElement.style.scale = '0'
+  // Anchor scaling to the top-left so `scale` transitions don't shift position
+  windowElement.style.transformOrigin = 'top left'
+  // Center the new window in the viewport but account for header and taskbar
+  const rootStyles = getComputedStyle(document.documentElement)
+  const headerHeight = parseInt(rootStyles.getPropertyValue('--header-height')) || 180
+  const tbHeight = parseInt(rootStyles.getPropertyValue('--tb-height')) || 45
+  const availableHeight = Math.max(0, window.innerHeight - headerHeight - tbHeight)
+  const centerLeft = Math.max(0, Math.round((window.innerWidth - size[0]) / 2))
+  let centerTop = headerHeight + Math.max(0, Math.round((availableHeight - size[1]) / 2))
+
+  // If viewport is portrait/tall, prefer centering inside the MDT window area (if present)
+  try {
+    if (window.innerHeight > window.innerWidth) {
+      const mdtWin = document.getElementById('mdtWindow')
+      if (mdtWin && mdtWin.style.display !== 'none') {
+        const rect = mdtWin.getBoundingClientRect()
+        // center inside MDT visible area
+        const leftInMdt = Math.round(rect.left + (rect.width - size[0]) / 2)
+        const topInMdt = Math.round(rect.top + (rect.height - size[1]) / 2)
+        if (!Number.isNaN(leftInMdt) && !Number.isNaN(topInMdt)) {
+          // ensure we keep window within viewport bounds
+          const safeLeft = Math.max(0, Math.min(leftInMdt, window.innerWidth - size[0]))
+          const safeTop = Math.max(headerHeight, Math.min(topInMdt, window.innerHeight - tbHeight - size[1]))
+          // apply MDT-relative centering
+          windowElement.style.left = `${safeLeft}px`
+          windowElement.style.top = `${safeTop}px`
+          windowElement.style.transform = 'scale(0) translateX(0)'
+          // skip the default centerTop assignment below
+          centerTop = null
+        }
+      }
+    }
+  } catch (e) {
+    // ignore and fall back to viewport centering
+  }
+  if (centerTop !== null) {
+    windowElement.style.left = `${centerLeft}px`
+    windowElement.style.top = `${centerTop}px`
+  }
+          windowElement.style.transform = 'scale(0) translateX(0)'
   windowElement.classList.add('window')
   windowElement.classList.add('window-container') // Add window-container class for styling
 
@@ -1286,7 +1331,7 @@ async function openWindow(name) {
     windowElement.style.minWidth = `${
       windowTitle.offsetWidth + windowControls.offsetWidth
     }px`
-    windowElement.style.scale = '1'
+    windowElement.style.transform = 'scale(1) translateX(0)'
 
     new MutationObserver(() => {
       title.textContent = iframe.contentDocument.title
@@ -1300,8 +1345,45 @@ async function openWindow(name) {
 
     iframe.contentWindow.addEventListener('mousedown', focusWindow)
     iframe.contentWindow.addEventListener('mousedown', function () {
-      document.querySelector('.overlay .settings').classList.add('hide')
+      const settingsEl = document.querySelector('.overlay .settings')
+      if (settingsEl) settingsEl.classList.add('hide')
     })
+
+    // Reposition window after iframe content loads and minWidth/minHeight settle
+    try {
+      // allow layout to settle
+      requestAnimationFrame(() => {
+        const actualW = windowElement.offsetWidth || size[0]
+        const actualH = windowElement.offsetHeight || size[1]
+        const rootStyles = getComputedStyle(document.documentElement)
+        const headerHeight = parseInt(rootStyles.getPropertyValue('--header-height')) || 180
+        const tbHeight = parseInt(rootStyles.getPropertyValue('--tb-height')) || 45
+
+        // Prefer MDT-relative centering on tall viewports
+        if (window.innerHeight > window.innerWidth) {
+          const mdtWin = document.getElementById('mdtWindow')
+          if (mdtWin && mdtWin.style.display !== 'none') {
+            const rect = mdtWin.getBoundingClientRect()
+            const leftInMdt = Math.round(rect.left + (rect.width - actualW) / 2)
+            const topInMdt = Math.round(rect.top + (rect.height - actualH) / 2)
+            const safeLeft = Math.max(0, Math.min(leftInMdt, window.innerWidth - actualW))
+            const safeTop = Math.max(headerHeight, Math.min(topInMdt, window.innerHeight - tbHeight - actualH))
+            windowElement.style.left = `${safeLeft}px`
+            windowElement.style.top = `${safeTop}px`
+            return
+          }
+        }
+
+        // Fallback: center between header and taskbar
+        const availableHeight = Math.max(0, window.innerHeight - headerHeight - tbHeight)
+        const centerLeft = Math.max(0, Math.round((window.innerWidth - actualW) / 2))
+        const centerTop = headerHeight + Math.max(0, Math.round((availableHeight - actualH) / 2))
+        windowElement.style.left = `${centerLeft}px`
+        windowElement.style.top = `${centerTop}px`
+      })
+    } catch (e) {
+      // ignore errors and keep existing position
+    }
   })
 
   const minimize = document.createElement('button')
@@ -1371,7 +1453,7 @@ async function openWindow(name) {
         .trim()
         .slice(0, -'ms'.length)
     )
-    windowElement.style.scale = '0'
+    windowElement.style.transform = 'scale(0) translateX(0)'
     taskbarIcon.style.opacity = '0'
     await sleep(CSSRootTransitionTimeLong)
     windowElement.remove()
@@ -2188,7 +2270,7 @@ async function setTimeDisplayMode(useInGameTime) {
       }
     });
     
-    showNotificationMDT(`✓ Time display mode set to ${useInGameTime ? 'In-Game Time' : 'Real-Time'}. Changes will apply immediately.`, 'success');
+    showNotificationMDT(`Time display mode set to ${useInGameTime ? 'In-Game Time' : 'Real-Time'}. Changes will apply immediately.`, 'success');
   } catch (error) {
     console.error('Error setting time display mode:', error);
     showNotificationMDT('Failed to update time display mode. Please try again.', 'error');
@@ -2317,7 +2399,7 @@ async function resetOfficersToDefaultFromSettings() {
         loadOfficersList();
       }
       
-      showNotificationMDT('✓ Officers database has been reset to defaults. All 7 default officers have been restored.', 'success');
+      showNotificationMDT('Officers database has been reset to defaults. All 7 default officers have been restored.', 'success');
       
       // Close the player settings window
       closePlayerSettingsWindow();
@@ -2382,7 +2464,7 @@ function showMgmtTab(tabName) {
 // Reset officers database to default values
 async function resetOfficersToDefault() {
   const firstConfirm = await showCustomDialog(
-    '⚠️ WARNING: This will delete ALL current officers and restore the default 7 officers.\n\nThis action CANNOT be undone!\n\nAre you sure you want to continue?',
+    '⚠ WARNING: This will delete ALL current officers and restore the default 7 officers.\n\nThis action CANNOT be undone!\n\nAre you sure you want to continue?',
     'Reset to Defaults'
   );
   
@@ -2402,7 +2484,7 @@ async function resetOfficersToDefault() {
       // Refresh the list
       loadOfficersList();
       
-      showNotificationMDT('✓ Officers database has been reset to defaults. All 7 default officers have been restored.', 'success');
+      showNotificationMDT('Officers database has been reset to defaults. All 7 default officers have been restored.', 'success');
     }
   }
 }
@@ -2522,7 +2604,7 @@ function editOfficer(badgeNumber) {
   
   // Only Sergeant II and above (rank 10 or lower) can edit
   if (currentOfficerRank > 10) {
-    showNotificationMDT('Access Denied: Only Police Sergeant II and above can edit officer information.', 'error');
+    showNotificationMDT('Access Denied: User is not authorzied for this task.', 'error');
     return;
   }
 
@@ -2943,11 +3025,44 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// Generic window dragging helper used by multiple windows
+function makeWindowDraggable(winEl, titlebarEl) {
+  if (!winEl || !titlebarEl) return;
+  let isDragging = false;
+  let offsetX = 0, offsetY = 0;
+
+  titlebarEl.addEventListener('mousedown', (e) => {
+    if (e.target.closest && e.target.closest('.window-btn')) return;
+    if (winEl.classList.contains('maximized')) return;
+    isDragging = true;
+    const rect = winEl.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+    winEl.style.transition = 'none';
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    const newLeft = e.clientX - offsetX;
+    const newTop = e.clientY - offsetY;
+    winEl.style.left = `${Math.max(0, Math.min(newLeft, window.innerWidth - 100))}px`;
+    winEl.style.top = `${Math.max(0, Math.min(newTop, window.innerHeight - 100))}px`;
+    winEl.style.transform = 'none';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (!isDragging) return;
+    isDragging = false;
+    winEl.style.transition = '';
+  });
+}
+
 // Interface Customization Functions
 function loadInterfaceCustomization() {
   const customization = JSON.parse(localStorage.getItem('interfaceCustomization') || '{}');
   
   if (customization.deptName) document.getElementById('customDeptName').value = customization.deptName;
+  if (customization.deptAcronym) document.getElementById('customDeptAcronym').value = customization.deptAcronym;
   if (customization.deptLogo) document.getElementById('customDeptLogo').value = customization.deptLogo;
   if (customization.wallpaper) document.getElementById('customWallpaper').value = customization.wallpaper;
   if (customization.primaryColor) {
@@ -2981,6 +3096,7 @@ function loadInterfaceCustomization() {
 function applyInterfaceCustomization() {
   const customization = {
     deptName: document.getElementById('customDeptName').value.trim(),
+    deptAcronym: document.getElementById('customDeptAcronym').value.trim(),
     deptLogo: document.getElementById('customDeptLogo').value.trim(),
     wallpaper: document.getElementById('customWallpaper').value.trim(),
     primaryColor: document.getElementById('customPrimaryColor').value,
@@ -2994,15 +3110,21 @@ function applyInterfaceCustomization() {
   };
   
   localStorage.setItem('interfaceCustomization', JSON.stringify(customization));
-  
+
   if (customization.deptName) {
+    document.querySelector(".mdt-title-main").textContent = customization.deptName;
     document.querySelectorAll('.mdt-title-main').forEach(el => el.textContent = customization.deptName);
+  }
+  if (customization.deptAcronym) {
+    document.querySelectorAll('#deptAcronym').forEach(el => el.textContent = customization.deptAcronym);
+    document.querySelector('.mdt-logo-title').textContent = deptAcronym + ' MDT';
   }
   
   if (customization.deptLogo) {
     document.querySelectorAll('.mdt-header-logo').forEach(el => el.src = customization.deptLogo);
     const loginLogo = document.querySelector('.login-logo');
     if (loginLogo) loginLogo.src = customization.deptLogo;
+    document.querySelector(".pd-icon").src = customization.deptLogo;
   }
   
   if (customization.wallpaper) {
@@ -3086,6 +3208,7 @@ function resetInterfaceCustomization() {
   localStorage.removeItem('interfaceCustomization');
   
   document.getElementById('customDeptName').value = '';
+  document.getElementById('customDeptAcronym').value = '';
   document.getElementById('customDeptLogo').value = '';
   document.getElementById('customWallpaper').value = '';
   document.getElementById('customPrimaryColor').value = '#FDB913';
@@ -3141,7 +3264,10 @@ window.addEventListener('DOMContentLoaded', function() {
     if (customization.deptName) {
       document.querySelectorAll('.mdt-title-main').forEach(el => el.textContent = customization.deptName);
     }
-    
+    if (customization.deptAcronym) {
+      document.querySelectorAll('#deptAcronym').forEach(el => el.textContent = customization.deptAcronym);
+    }
+
     if (customization.deptLogo) {
       document.querySelectorAll('.mdt-header-logo').forEach(el => el.src = customization.deptLogo);
       const loginLogo = document.querySelector('.login-logo');
@@ -3198,6 +3324,7 @@ window.addEventListener('DOMContentLoaded', function() {
   
   // Load saved values into settings form
   document.getElementById('customDeptName').value = customization.deptName || '';
+  document.getElementById('customDeptAcronym').value = customization.deptAcronym || '';
   document.getElementById('customDeptLogo').value = customization.deptLogo || '';
   document.getElementById('customWallpaper').value = customization.wallpaper || '';
   document.getElementById('customPrimaryColor').value = customization.primaryColor || '#FDB913';
@@ -3221,9 +3348,15 @@ window.addEventListener('DOMContentLoaded', function() {
   
   // Make documents window draggable
   const documentsWindow = document.getElementById('documentsWindow');
-  const documentsTitlebar = documentsWindow?.querySelector('.titlebar');
+  const documentsTitlebar = document.getElementById('documentsTitlebar');
   if (documentsWindow && documentsTitlebar) {
     makeWindowDraggable(documentsWindow, documentsTitlebar);
+  }
+  // Make recycle bin window draggable
+  const recycleWindow = document.getElementById('recycleBinWindow');
+  const recycleTitlebar = document.getElementById('recycleBinTitlebar');
+  if (recycleWindow && recycleTitlebar) {
+    makeWindowDraggable(recycleWindow, recycleTitlebar);
   }
 });
 
@@ -3321,7 +3454,6 @@ function newNote() {
   document.getElementById('notepadTitle').textContent = 'Notepad - Untitled';
   notepadHasUnsavedChanges = false;
   updateNotepadCounts();
-  showNotificationMDT('New note created', 'success');
 }
 
 // Save Note
@@ -3329,7 +3461,7 @@ function saveNote() {
   const content = document.getElementById('notepadTextarea').value;
   
   if (!content.trim()) {
-    showNotificationMDT('⚠️ Cannot save empty note', 'warning');
+    showNotificationMDT('⚠ Cannot save empty note', 'warning');
     return;
   }
   
@@ -3384,7 +3516,7 @@ function confirmSaveNote() {
   const content = document.getElementById('notepadTextarea').value;
   
   if (!filename) {
-    showNotificationMDT('⚠️ Please enter a valid filename', 'warning');
+    showNotificationMDT('⚠ Please enter a valid filename', 'warning');
     return;
   }
   
@@ -3406,7 +3538,6 @@ function confirmSaveNote() {
   notepadHasUnsavedChanges = false;
   
   closeSaveNoteDialog();
-  showNotificationMDT(`✓ Note "${filename}" saved to ${location === 'desktop' ? 'Desktop' : 'Documents'}`, 'success');
   
   // Update desktop/documents view
   if (location === 'desktop') {
@@ -3460,9 +3591,9 @@ function showNotesLibrary() {
       const preview = note.content.substring(0, 80) + (note.content.length > 80 ? '...' : '');
       
       html += `
-        <div style="background: rgba(13, 36, 64, 0.6); border: 1px solid rgba(46, 139, 192, 0.3); border-radius: 8px; padding: 15px; cursor: pointer; transition: all 0.2s ease;" 
-             onmouseover="this.style.borderColor='rgba(46, 139, 192, 0.6)'; this.style.background='rgba(13, 36, 64, 0.8)';" 
-             onmouseout="this.style.borderColor='rgba(46, 139, 192, 0.3)'; this.style.background='rgba(13, 36, 64, 0.6)';">
+             <div style="background: transparent; border-radius: 8px; padding: 15px; cursor: pointer; transition: all 0.2s ease;" 
+               onmouseover="this.style.background='rgba(13, 36, 64, 0.8)'; const p=this.querySelector('svg path'); if(p) p.setAttribute('fill','#79bbed');" 
+               onmouseout="this.style.background='transparent'; const p=this.querySelector('svg path'); if(p) p.setAttribute('fill','#2e8bc0');">
           <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
             <div style="flex: 1;">
               <h4 style="margin: 0; color: #2e8bc0; font-size: 15px;">${note.name}</h4>
@@ -3511,28 +3642,33 @@ function loadNoteFromLibrary(filename, location) {
     updateNotepadCounts();
     
     closeNotesLibrary();
-    showNotificationMDT(`✓ Note "${filename}" loaded from ${location}`, 'success');
   }
 }
 
 // Delete Note from Library
-function deleteNoteFromLibrary(filename, location) {
-  if (!confirm(`Are you sure you want to delete "${filename}"?`)) {
-    return;
-  }
-  
+function deleteNoteFromLibrary(filename, location, permanent = false) {
   const notesKey = location === 'Desktop' ? 'desktopNotes' : 'documentNotes';
   const notes = JSON.parse(localStorage.getItem(notesKey) || '{}');
+  const noteObj = notes[filename];
+  if (!noteObj) return;
+
+  // Remove from original location
   delete notes[filename];
   localStorage.setItem(notesKey, JSON.stringify(notes));
-  
-  if (currentNoteId === filename) {
-    newNote();
+
+  if (!permanent) {
+    // Move to recycle bin storage
+    const recycle = JSON.parse(localStorage.getItem('recycleBinNotes') || '{}');
+    recycle[filename] = {
+      note: noteObj,
+      originalLocation: location,
+      deletedAt: new Date().toISOString()
+    };
+    localStorage.setItem('recycleBinNotes', JSON.stringify(recycle));
   }
-  
-  showNotificationMDT(`✓ Note "${filename}" deleted`, 'success');
-  showNotesLibrary(); // Refresh the library
-  
+
+  if (currentNoteId === filename) newNote();
+
   // Update desktop/documents view
   if (location === 'Desktop') {
     updateDesktopNotes();
@@ -3590,33 +3726,181 @@ function openNoteFromDesktop(noteName) {
 }
 
 // Documents Window Functions
-function openDocumentsFolder() {
-  const documentsWindow = document.getElementById('documentsWindow');
+// Generic folder opener: accepts 'Documents' or 'Recycle Bin' (case-sensitive)
+const FOLDER_CONFIG = {
+  'Documents': {
+    windowId: 'documentsWindow',
+    refreshFn: refreshDocuments,
+    taskbarWindow: 'documentsWindow',
+    label: 'Documents',
+    iconPath: '<path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>'
+  },
+  'Recycle Bin': {
+    windowId: 'recycleBinWindow',
+    refreshFn: refreshRecycleBin,
+    taskbarWindow: 'recycleBinWindow',
+    label: 'Recycle Bin',
+    iconPath: '<path d="M9,3L7,6H4A1,1 0 0,0 4,8H20A1,1 0 0,0 20,6H17L15,3H9M6,8L7,19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19L18,8H6Z"/>'
+  }
+};
+
+// Simple per-folder history stacks for breadcrumb navigation
+window.FOLDER_HISTORY = window.FOLDER_HISTORY || {
+  'Documents': [],
+  'Recycle Bin': []
+};
+
+function getFolderPathElement(folderName) {
+  if (folderName === 'Documents') return document.getElementById('documentsPath');
+  if (folderName === 'Recycle Bin') return document.getElementById('recycleBinPath');
+  return null;
+}
+
+function pushFolderHistory(folderName, newPath) {
+  try {
+    if (!folderName) return;
+    window.FOLDER_HISTORY = window.FOLDER_HISTORY || {};
+    if (!Array.isArray(window.FOLDER_HISTORY[folderName])) window.FOLDER_HISTORY[folderName] = [];
+    const el = getFolderPathElement(folderName);
+    const current = (el && el.textContent) ? el.textContent : (newPath || (FOLDER_CONFIG[folderName] && FOLDER_CONFIG[folderName].label) || folderName);
+    const stack = window.FOLDER_HISTORY[folderName];
+    // Avoid pushing duplicate consecutive entries
+    if (stack.length === 0 || stack[stack.length - 1] !== current) {
+      stack.push(current);
+    }
+  } catch (e) {
+    console.warn('pushFolderHistory error', e);
+  }
+}
+
+
+function openFolder(folderName) {
+  const cfg = FOLDER_CONFIG[folderName];
+  if (!cfg) {
+    console.warn('openFolder: unknown folder', folderName);
+    return;
+  }
+
+  // Create taskbar button if missing
+  const taskbar = document.querySelector('.taskbar-apps');
+  if (taskbar && !document.getElementById(cfg.taskbarWindow + '-btn')) {
+    const btn = document.createElement('div');
+    btn.className = 'taskbar-app';
+    btn.id = cfg.taskbarWindow + '-btn';
+    btn.innerHTML = `<div class="taskbar-icon">${cfg.iconPath}</div><div class="taskbar-label">${cfg.label}</div>`;
+    btn.addEventListener('click', () => toggleWindow(cfg.windowId));
+    taskbar.appendChild(btn);
+  }
+
+  const win = document.getElementById(cfg.windowId);
+  if (!win) {
+    console.warn('openFolder: window element not found for', folderName);
+    return;
+  }
+
+  win.style.display = 'block';
+  win.classList.remove('minimized');
+  win.classList.add('active');
+  if (typeof cfg.refreshFn === 'function') cfg.refreshFn();
+}
+
+function closeFolder(folderName) {
+  const cfg = FOLDER_CONFIG[folderName];
+  if (!cfg) return;
+  const win = document.getElementById(cfg.windowId);
+  if (!win) return;
+  win.style.display = 'none';
+  win.classList.remove('active');
+  const btn = document.getElementById(cfg.taskbarWindow + '-btn');
+  if (btn && btn.parentNode) btn.parentNode.removeChild(btn);
+}
+
+function minimizeFolder(folderName) {
+  const cfg = FOLDER_CONFIG[folderName];
+  if (!cfg) return;
+  const win = document.getElementById(cfg.windowId);
+  if (!win) return;
+  win.classList.add('minimized');
+  win.style.display = 'none';
+}
+
+function maximizeFolder(folderName) {
+  const cfg = FOLDER_CONFIG[folderName];
+  if (!cfg) return;
+  const win = document.getElementById(cfg.windowId);
+  if (!win) return;
+  win.classList.remove('minimized');
+  win.style.display = 'block';
+}
+
+// Safe backward-compatible wrappers
+if (typeof openDocumentsFolder !== 'function') {
+  function openDocumentsFolder() { openFolder('Documents'); }
+}
+
+if (typeof openRecycleBinFolder !== 'function') {
+  function openRecycleBinFolder() { openFolder('Recycle Bin'); }
+}
+
+if (typeof closeDocumentsWindow !== 'function') {
+  function closeDocumentsWindow() { closeFolder('Documents'); }
+}
+
+if (typeof closeRecycleBinWindow !== 'function') {
+  function closeRecycleBinWindow() { closeFolder('Recycle Bin'); }
+}
+
+if (typeof minimizeDocumentsWindow !== 'function') {
+  function minimizeDocumentsWindow() { minimizeFolder('Documents'); }
+}
+
+if (typeof maximizeDocumentsWindow !== 'function') {
+  function maximizeDocumentsWindow() { maximizeFolder('Documents'); }
+}
+
+
+
+function openFolder(folderName) {
+  const cfg = FOLDER_CONFIG[folderName];
+  if (!cfg) {
+    console.warn('openFolder: unknown folderName', folderName);
+    return;
+  }
+
+  const winEl = document.getElementById(cfg.windowId);
   const taskbarApps = document.querySelector('.taskbar-apps');
-  
-  if (documentsWindow.style.display === 'none' || documentsWindow.style.display === '') {
-    documentsWindow.style.display = 'flex';
-    focusWindow('documentsWindow');
-    refreshDocuments();
-    
+  if (!winEl) return;
+
+  if (winEl.style.display === 'none' || winEl.style.display === '') {
+    // Show window and focus
+    winEl.style.display = 'flex';
+    // If a page-global focusWindow(windowId) exists, use it; otherwise fallback to local focus behavior
+    try {
+      if (typeof focusWindow === 'function') focusWindow(cfg.windowId);
+    } catch (e) {}
+
+    try { if (typeof cfg.refreshFn === 'function') cfg.refreshFn(); } catch (err) { console.error(err); }
+
     // Add taskbar button if not already present
-    if (!document.querySelector('.taskbar-app[data-window="documentsWindow"]')) {
+    if (taskbarApps && !document.querySelector(`.taskbar-app[data-window="${cfg.taskbarWindow}"]`)) {
       const taskbarButton = document.createElement('button');
       taskbarButton.className = 'taskbar-app active';
-      taskbarButton.setAttribute('data-window', 'documentsWindow');
-      taskbarButton.onclick = () => toggleWindow('documentsWindow');
+      taskbarButton.setAttribute('data-window', cfg.taskbarWindow);
+      taskbarButton.onclick = () => toggleWindow(cfg.taskbarWindow);
       taskbarButton.innerHTML = `
-        <svg viewBox="0 0 24 24" width="20" height="20" style="fill: currentColor;">
-          <path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/>
-        </svg>
-        <span>Documents</span>
+        <svg viewBox="0 0 24 24" width="20" height="20" style="fill: currentColor;">${cfg.iconPath}</svg>
+        <span>${cfg.label}</span>
       `;
       taskbarApps.appendChild(taskbarButton);
     }
   } else {
-    focusWindow('documentsWindow');
+    try { if (typeof focusWindow === 'function') focusWindow(cfg.windowId); } catch (e) {}
   }
 }
+
+// Backwards-compatible wrappers
+function openDocumentsFolder() { try { pushFolderHistory('Documents'); } catch(e) { console.warn(e); } openFolder('Documents'); }
+function openRecycleBinFolder() { try { pushFolderHistory('Recycle Bin'); } catch(e) { console.warn(e); } openFolder('Recycle Bin'); }
 
 function closeDocumentsWindow() {
   const documentsWindow = document.getElementById('documentsWindow');
@@ -3676,9 +3960,9 @@ function refreshDocuments() {
       const dateStr = date.toLocaleDateString();
       
       html += `
-        <div onclick="openNoteFromDocuments('${noteName.replace(/'/g, "\\'")}');" oncontextmenu="showNoteContextMenu(event, '${noteName.replace(/'/g, "\\'")}', 'Documents'); return false;" style="background: rgba(13, 36, 64, 0.6); border: 1px solid rgba(46, 139, 192, 0.3); border-radius: 8px; padding: 15px; cursor: pointer; text-align: center; transition: all 0.2s ease;" 
-             onmouseover="this.style.borderColor='rgba(46, 139, 192, 0.6)'; this.style.background='rgba(13, 36, 64, 0.8)';" 
-             onmouseout="this.style.borderColor='rgba(46, 139, 192, 0.3)'; this.style.background='rgba(13, 36, 64, 0.6)';">
+                    <div onclick="openNoteFromDocuments('${noteName.replace(/'/g, "\\'")}');" oncontextmenu="showNoteContextMenu(event, '${noteName.replace(/'/g, "\\'")}', 'Documents'); return false;" style="background: transparent; border-radius: 8px; padding: 15px; cursor: pointer; text-align: center; transition: all 0.2s ease;" 
+                      onmouseover="this.style.background='rgba(13, 36, 64, 0.8)'; const p=this.querySelector('svg path'); if(p) p.setAttribute('fill','#79bbed');" 
+                      onmouseout="this.style.background='transparent'; const p=this.querySelector('svg path'); if(p) p.setAttribute('fill','#2e8bc0');">
           <svg viewBox="0 0 24 24" width="48" height="48" style="margin-bottom: 10px;">
             <path fill="#2e8bc0" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
           </svg>
@@ -3690,6 +3974,138 @@ function refreshDocuments() {
     
     html += '</div>';
     fileList.innerHTML = html;
+  }
+}
+
+// Open Recycle Bin Window (similar to Documents)
+function openRecycleBinFolder() {
+  const recycleWindow = document.getElementById('recycleBinWindow');
+  const taskbarApps = document.querySelector('.taskbar-apps');
+
+  if (!recycleWindow) return;
+
+  if (recycleWindow.style.display === 'none' || recycleWindow.style.display === '') {
+    recycleWindow.style.display = 'flex';
+    focusWindow('recycleBinWindow');
+    refreshRecycleBin();
+
+    // Add taskbar button if not already present
+    if (!document.querySelector('.taskbar-app[data-window="recycleBinWindow"]')) {
+      const taskbarButton = document.createElement('button');
+      taskbarButton.className = 'taskbar-app active';
+      taskbarButton.setAttribute('data-window', 'recycleBinWindow');
+      taskbarButton.onclick = () => toggleWindow('recycleBinWindow');
+      taskbarButton.innerHTML = `
+        <svg viewBox="0 0 24 24" width="20" height="20" style="fill: currentColor;">
+          <path d="M9,3L7,6H4A1,1 0 0,0 4,8H20A1,1 0 0,0 20,6H17L15,3H9M6,8L7,19A2,2 0 0,0 9,21H15A2,2 0 0,0 17,19L18,8H6Z"/>
+        </svg>
+        <span>Recycle Bin</span>
+      `;
+      taskbarApps.appendChild(taskbarButton);
+    }
+  } else {
+    focusWindow('recycleBinWindow');
+  }
+}
+
+// Refresh Recycle Bin listing from localStorage
+function refreshRecycleBin() {
+  const fileList = document.getElementById('recycleBinFileList');
+  if (!fileList) return;
+
+  const items = JSON.parse(localStorage.getItem('recycleBinNotes') || '{}');
+  const keys = Object.keys(items);
+
+  if (keys.length === 0) {
+    fileList.innerHTML = `
+      <div style="text-align: center; padding: 40px 20px; color: #8da9c4;">
+        <p style="font-size: 16px; margin: 0;">Recycle Bin is empty</p>
+      </div>
+    `;
+    return;
+  }
+
+  let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px;">';
+  keys.sort((a,b) => (items[b].deletedAt || '') > (items[a].deletedAt || '') ? 1 : -1);
+  keys.forEach(key => {
+    const entry = items[key];
+    const deletedAt = entry.deletedAt ? new Date(entry.deletedAt).toLocaleDateString() : '';
+    // Use same card/tile layout as Documents: icon, filename, and date
+    html += `
+       <div onclick="showNoteProperties('${key.replace(/'/g, "\\'")}', 'Recycle Bin');" oncontextmenu="showNoteContextMenu(event, '${key.replace(/'/g, "\\'")}', 'Recycle Bin'); return false;" style="background: transparent; border-radius: 8px; padding: 15px; cursor: pointer; text-align: center; transition: all 0.2s ease;" 
+         onmouseover="this.style.background='rgba(13, 36, 64, 0.8)'; const p=this.querySelector('svg path'); if(p) p.setAttribute('fill','#79bbed');" 
+         onmouseout="this.style.background='transparent'; const p=this.querySelector('svg path'); if(p) p.setAttribute('fill','#2e8bc0');">
+        <svg viewBox="0 0 24 24" width="48" height="48" style="margin-bottom: 10px;">
+          <path fill="#2e8bc0" d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+        </svg>
+        <div style="color: #fff; font-size: 13px; font-weight: 600; margin-bottom: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${key}</div>
+        <div style="color: #8da9c4; font-size: 11px;">${deletedAt}</div>
+      </div>
+    `;
+  });
+  html += '</div>';
+  fileList.innerHTML = html;
+}
+
+// Show properties dialog for a recycle bin item
+function showNoteProperties(noteName, location) {
+  try {
+    if (!noteName) return;
+
+    // Recycle Bin entries store metadata differently (include deletedAt and original note)
+    if (location === 'Recycle Bin') {
+      const notes = JSON.parse(localStorage.getItem('recycleBinNotes') || '{}');
+      const entry = notes[noteName];
+      if (!entry) return showCustomDialog('Item not found in Recycle Bin.');
+      const deletedAt = entry.deletedAt ? new Date(entry.deletedAt).toLocaleString() : 'Unknown';
+      let size = 0;
+      try {
+        const serialized = JSON.stringify(entry.note || '');
+        size = new Blob([serialized]).size;
+      } catch (e) {
+        size = (entry.note && entry.note.length) || 0;
+      }
+      const message = `File: ${noteName}\nDeleted: ${deletedAt}\nSize: ${size} bytes`;
+      return showCustomDialog(message, 'Properties');
+    }
+
+    // Documents/Desktop: show file name, last modified (if available), and size. No deleted date.
+    const key = (location === 'Desktop' ? 'desktopNotes' : 'documentNotes');
+    const notes = JSON.parse(localStorage.getItem(key) || '{}');
+    const note = notes[noteName];
+    if (!note) return showCustomDialog('Item not found.');
+    const lastModified = note.lastModified ? new Date(note.lastModified).toLocaleString() : 'Unknown';
+    let size = 0;
+    try {
+      const serialized = JSON.stringify(note || '');
+      size = new Blob([serialized]).size;
+    } catch (e) {
+      size = (note && note.length) || 0;
+    }
+    const message = `File: ${noteName}\nLast modified: ${lastModified}\nSize: ${size} bytes`;
+    showCustomDialog(message, 'Properties');
+  } catch (e) {
+    console.error('showNoteProperties error', e);
+  }
+}
+
+// Placeholder navigation handler for folder address bar back button
+function navigateFolderBack(folderName) {
+  try {
+    if (!folderName) return showNotificationMDT('No folder specified');
+    window.FOLDER_HISTORY = window.FOLDER_HISTORY || {};
+    const stack = window.FOLDER_HISTORY[folderName] || [];
+    // If there's no history, do nothing
+    if (!stack || stack.length === 0) return;
+    // Pop the last entry and set the breadcrumb to it
+    const prev = stack.pop();
+    const el = getFolderPathElement(folderName);
+    if (el) el.textContent = prev;
+    const cfg = FOLDER_CONFIG[folderName];
+    if (cfg && typeof cfg.refreshFn === 'function') cfg.refreshFn();
+  } catch (e) {
+    console.error('navigateFolderBack error', e);
+    showNotificationMDT('Navigation error');
   }
 }
 
@@ -3714,40 +4130,152 @@ function openNoteFromDocuments(noteName) {
 }
 
 // Show context menu for notes
-let contextMenuNoteName = null;
-let contextMenuLocation = null;
+window.contextMenuNoteName = null;
+window.contextMenuLocation = null;
 
 function showNoteContextMenu(event, noteName, location) {
   event.preventDefault();
   event.stopPropagation();
-  
-  contextMenuNoteName = noteName;
-  contextMenuLocation = location;
-  
+
+  // Defensive: ensure noteName and location are valid
+  if (!noteName || !location) {
+    console.warn('showNoteContextMenu called without valid noteName or location:', noteName, location);
+    return false;
+  }
+
+  // Set context variables globally
+  window.contextMenuNoteName = noteName;
+  window.contextMenuLocation = location;
+
   const menu = document.getElementById('noteContextMenu');
+  if (!menu) {
+    console.error('Note context menu element not found!');
+    return false;
+  }
+
+  // Show menu and position it
   menu.style.display = 'block';
-  menu.style.left = event.pageX + 'px';
-  menu.style.top = event.pageY + 'px';
-  
+
+  // Toggle restore option for Recycle Bin items
+  const restoreBtn = document.getElementById('restore-note');
+  const deleteBtn = document.getElementById('delete-note');
+  const propertiesBtn = document.getElementById('properties-note');
+  try {
+    // Restore only for Recycle Bin
+    if (restoreBtn) restoreBtn.style.display = (location === 'Recycle Bin') ? 'flex' : 'none';
+    // Properties available for all locations
+    if (propertiesBtn) propertiesBtn.style.display = 'flex';
+    // Delete text varies for Recycle Bin
+    if (deleteBtn) deleteBtn.querySelector('span').textContent = (location === 'Recycle Bin') ? 'Delete Permanently' : 'Delete';
+  } catch (e) {}
+
+  // Calculate position to avoid going off-screen
+  const menuWidth = menu.offsetWidth || 160;
+  const menuHeight = menu.offsetHeight || 60;
+  let left = event.pageX;
+  let top = event.pageY;
+  if ((left + menuWidth) > window.innerWidth) {
+    left = window.innerWidth - menuWidth - 5;
+  }
+  if ((top + menuHeight) > window.innerHeight) {
+    top = window.innerHeight - menuHeight - 5;
+  }
+  menu.style.left = left + 'px';
+  menu.style.top = top + 'px';
+
+  // Debug: log context
+  console.log('Context menu for note:', noteName, 'at', location);
   return false;
 }
 
-function deleteNoteFromContextMenu() {
-  if (contextMenuNoteName && contextMenuLocation) {
-    deleteNoteFromLibrary(contextMenuNoteName, contextMenuLocation);
-  }
-  hideNoteContextMenu();
+function setupDeleteNoteButton() {
+  document.addEventListener('click', async (e) => {
+    const deleteTarget = e.target && e.target.closest && e.target.closest('#delete-note');
+    const restoreTarget = e.target && e.target.closest && e.target.closest('#restore-note');
+    const propertiesTarget = e.target && e.target.closest && e.target.closest('#properties-note');
+
+    if (restoreTarget) {
+      // Restore from recycle bin
+      if (window.contextMenuNoteName) {
+        const notes = JSON.parse(localStorage.getItem('recycleBinNotes')||'{}');
+        const entry = notes[window.contextMenuNoteName];
+        if (entry) {
+          const targetKey = entry.originalLocation === 'Desktop' ? 'desktopNotes' : 'documentNotes';
+          const target = JSON.parse(localStorage.getItem(targetKey) || '{}');
+          target[window.contextMenuNoteName] = entry.note;
+          localStorage.setItem(targetKey, JSON.stringify(target));
+          delete notes[window.contextMenuNoteName];
+          localStorage.setItem('recycleBinNotes', JSON.stringify(notes));
+          refreshRecycleBin();
+          if (entry.originalLocation === 'Desktop') updateDesktopNotes(); else refreshDocuments();
+        }
+      }
+      window.contextMenuNoteName = null;
+      window.contextMenuLocation = null;
+      hideNoteContextMenu();
+      return;
+    }
+
+    if (propertiesTarget) {
+      if (window.contextMenuNoteName && window.contextMenuLocation) {
+        showNoteProperties(window.contextMenuNoteName, window.contextMenuLocation);
+      }
+      window.contextMenuNoteName = null;
+      window.contextMenuLocation = null;
+      hideNoteContextMenu();
+      return;
+    }
+
+    if (deleteTarget) {
+      // handle clicks inside the delete div (covers svg/span clicks)
+      if (window.contextMenuLocation === 'Recycle Bin') {
+        const confirmed = await showCustomDialog(
+          'Permanently delete this note?\n\nThis action cannot be undone.',
+          'Delete permanently?'
+        );
+        if (confirmed && window.contextMenuNoteName) {
+          const notes = JSON.parse(localStorage.getItem('recycleBinNotes')||'{}');
+          delete notes[window.contextMenuNoteName];
+          localStorage.setItem('recycleBinNotes', JSON.stringify(notes));
+          refreshRecycleBin();
+        }
+        window.contextMenuNoteName = null;
+        window.contextMenuLocation = null;
+        hideNoteContextMenu();
+        return;
+      }
+
+      // Default delete path (move to Recycle Bin)
+      const confirmed = await showCustomDialog(
+        'Are you sure you want to delete this note?\n\nThis action cannot be undone.',
+        'Delete note?'
+      );
+      if (confirmed && window.contextMenuNoteName && window.contextMenuLocation) {
+        deleteNoteFromLibrary(window.contextMenuNoteName, window.contextMenuLocation);
+      }
+      window.contextMenuNoteName = null;
+      window.contextMenuLocation = null;
+      hideNoteContextMenu();
+      return;
+    }
+  });
 }
+
+
 
 function hideNoteContextMenu() {
   const menu = document.getElementById('noteContextMenu');
   menu.style.display = 'none';
-  contextMenuNoteName = null;
-  contextMenuLocation = null;
+  // Do not clear context here; only clear after delete/cancel
 }
 
 // Hide context menu when clicking anywhere
 document.addEventListener('click', hideNoteContextMenu);
+
+// Ensure delete note button handler is set up
+document.addEventListener('DOMContentLoaded', () => {
+  setupDeleteNoteButton();
+});
 
 // Setup drag and drop functionality for notes
 function setupNoteDragAndDrop() {
@@ -3814,7 +4342,6 @@ function setupNoteDragAndDrop() {
           
           updateDesktopNotes();
           refreshDocuments();
-          showNotificationMDT(`✓ "${noteName}" moved to Documents`, 'success');
         }
       }
     });

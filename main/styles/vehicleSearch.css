@@ -31,7 +31,7 @@ body {
   gap: 12px;
 }
 
-.lapd-badge-icon {
+.mdt-header-logo {
   width: 65px;
   height: 65px;
   border-radius: 50%;
@@ -43,7 +43,7 @@ body {
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
-.lapd-badge {
+.mdt-title-acronym {
   background: transparent;
   color: var(--color-text-primary);
   font-weight: 900;

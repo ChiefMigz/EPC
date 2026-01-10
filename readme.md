@@ -19,7 +19,7 @@
 
 The LAPD MDT (Mobile Data Terminal) is a comprehensive law enforcement management system designed for **GTA V singleplayer** using LSPDFR (Los Santos Police Department First Response). It provides officers with a Windows-style desktop interface for managing personnel, conducting searches, filing reports, and tracking shift activities.
 
-> **⚠️ Important Note**: This repository contains **ONLY the web interface portion** (HTML/CSS/JavaScript files). The complete External Police Computer mod requires the **compiled RAGE Plugin Hook DLL** that interfaces with GTA V. This web interface will NOT work without the C# plugin component. For the full mod installation including the compiled DLL, download from the LCPDFR.com link below.
+> **⚠ Important Note**: This repository contains **ONLY the web interface portion** (HTML/CSS/JavaScript files). The complete External Police Computer mod requires the **compiled RAGE Plugin Hook DLL** that interfaces with GTA V. This web interface will NOT work without the C# plugin component. For the full mod installation including the compiled DLL, download from the LCPDFR.com link below.
 >
 > This website was built based on the original EPC creator's (jullevistrunz) website code, with enhancements and modifications to improve functionality and user experience.
 
@@ -703,7 +703,7 @@ if (DEBUG) console.log('Debug info:', data);
 - ✅ Chrome 90+
 - ✅ Edge 90+
 - ✅ Firefox 88+
-- ⚠️ Safari (limited testing)
+- ⚠ Safari (limited testing)
 
 **Required Features**:
 - LocalStorage API

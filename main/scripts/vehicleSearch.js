@@ -1,8 +1,18 @@
+function applyInterfaceCustomization() {
+  const customization = JSON.parse(localStorage.getItem('interfaceCustomization') || '{}');
+    // Use consistent selectors: .mdt-title-acronym for acronym, .mdt-header-logo for logo
+    if (customization.deptAcronym) document.querySelector('.mdt-title-acronym').textContent = customization.deptAcronym;
+    if (customization.deptLogo) document.querySelector('.mdt-header-logo').src = customization.deptLogo;
+  
+}
+
 ;(async function () {
   const config = await getConfig()
   if (config.updateDomWithLanguageOnLoad)
     await updateDomWithLanguage('vehicleSearch')
 })()
+
+applyInterfaceCustomization()
 // Attach input/button listeners when DOM is ready and elements exist
 function attachVehicleSearchListeners() {
   try {

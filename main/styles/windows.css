@@ -95,6 +95,8 @@ body.windows-desktop {
 
 /* Windows Application Window */
 .window-container {
+  /* Anchor CSS transforms to top-left so scaling doesn't change computed position */
+  transform-origin: top left;
   position: absolute;
   top: 10%;
   left: 50%;
