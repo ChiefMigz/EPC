@@ -1,10 +1,24 @@
 // Global Officer Database (loaded from officerInformation.json)
 window.OFFICER_DATABASE = [];
 
-//Initialize MDT program logo and acronym from localStorage
-document.querySelector(".mdt-title-main").textContent = JSON.parse(localStorage.getItem('interfaceCustomization') || '{}').deptName;
-document.querySelector(".pd-icon").src = JSON.parse(localStorage.getItem('interfaceCustomization') || '{}').deptLogo;
-document.querySelector('.mdt-logo-title').textContent = JSON.parse(localStorage.getItem('interfaceCustomization') || '{}').deptAcronym + ' MDT';
+// Initialize MDT program logo and acronym from localStorage (safe, updates all matching elements)
+const _interfaceCustomization = JSON.parse(localStorage.getItem('interfaceCustomization') || '{}');
+const _deptName = _interfaceCustomization.deptName || '';
+const _deptLogo = _interfaceCustomization.deptLogo || '';
+const _deptAcronym = _interfaceCustomization.deptAcronym || '';
+
+const mdtTitleEl = document.querySelector('.mdt-title-main');
+if (mdtTitleEl && _deptName) mdtTitleEl.textContent = _deptName;
+
+const pdIconEl = document.querySelector('.pd-icon');
+if (pdIconEl && _deptLogo) pdIconEl.src = _deptLogo;
+
+const mdtLogoEls = document.querySelectorAll('.mdt-logo-title');
+if (mdtLogoEls && mdtLogoEls.length > 0) {
+  mdtLogoEls.forEach(el => {
+    el.textContent = _deptAcronym ? `${_deptAcronym} MDT` : el.textContent;
+  })
+}
 
 // Custom Dialog Function
 function showCustomDialog(message, title = 'LAPD MDT') {
