@@ -532,6 +532,22 @@ async function onCreatePageTypeSelectorButtonClick(type) {
     // ignore JSON parse errors or missing storage
   }
 
+  // If user is logged in, prefer the logged-in officer data for report autofill
+  try {
+    const logged = JSON.parse(sessionStorage.getItem('loggedInOfficer'))
+    if (logged && typeof logged === 'object') {
+      // Only copy core identifying fields if they are not already set by sessionCopy
+      const keys = ['firstName', 'lastName', 'badgeNumber', 'rank', 'callSign', 'agency', 'division', 'unit']
+      keys.forEach(k => {
+        if ((!officerInformation[k] || officerInformation[k] === '' || officerInformation[k] === 0) && logged[k] !== undefined) {
+          officerInformation[k] = logged[k]
+        }
+      })
+    }
+  } catch (e) {
+    // ignore if sessionStorage missing or malformed
+  }
+
   const inGameDateArr = (await (await fetch('/data/currentTime')).text()).split(
     ':'
   )
@@ -811,9 +827,31 @@ async function getOfficerInformationSection(
   const agencyInput = document.createElement('input')
   agencyInput.type = 'text'
   const _customization = JSON.parse(localStorage.getItem('interfaceCustomization') || '{}')
+  function parseAgencyOverridesLocal() {
+    const raw = _customization.agencyOverrides || '';
+    const map = {};
+    raw.split('\n').forEach(line => {
+      const trimmed = line.trim();
+      if (!trimmed) return;
+      const parts = trimmed.split('=');
+      if (parts.length < 2) return;
+      const key = parts[0].trim().toLowerCase();
+      const val = parts.slice(1).join('=').trim();
+      if (key && val) map[key] = val;
+    });
+    return map;
+  }
+
+  function translateAgencyLocal(name) {
+    if (!name) return name;
+    const map = parseAgencyOverridesLocal();
+    const key = ('' + name).trim().toLowerCase();
+    return map[key] || name;
+  }
+
   agencyInput.value = (_customization.deptAcronym && _customization.deptAcronym.length)
     ? _customization.deptAcronym
-    : (officerInformation.agency || '')
+    : (translateAgencyLocal(officerInformation.agency || ''))
   agencyInput.id = 'officerInformationSectionAgencyInput'
   agencyInput.autocomplete = 'off'
   agencyInput.disabled = isList

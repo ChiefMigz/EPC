@@ -596,19 +596,23 @@
         }
       }
       
-      // Function to focus window
+      // Function to focus window (bring to front and set taskbar active)
       function focusWindow(windowId) {
-        const window = document.getElementById(windowId);
-        const taskbarButton = document.querySelector(`.taskbar-app[data-window="${windowId}"]`);
-        
-        // Remove active from all taskbar buttons
+        const windowElement = document.getElementById(windowId);
+        if (!windowElement) return;
+
+        // Lower all windows slightly so the focused one can be raised above header
+        document.querySelectorAll('.window-container, .window').forEach((win) => {
+          win.style.zIndex = '50000'; // unfocused windows
+        });
+
+        // Raise focused window above header so its header receives pointer events
+        windowElement.style.zIndex = '100000';
+
+        // Update taskbar active state
         document.querySelectorAll('.taskbar-app').forEach(btn => btn.classList.remove('active'));
-        
-        if (taskbarButton) {
-          taskbarButton.classList.add('active');
-        }
-        
-        window.style.zIndex = '100';
+        const taskbarButton = document.querySelector(`.taskbar-app[data-window="${windowId}"]`);
+        if (taskbarButton) taskbarButton.classList.add('active');
       }
       
       let isDragging = false;

@@ -129,7 +129,7 @@
   gap: 20px;
   flex: 1;
   justify-content: flex-end;
-  padding-right: 10rem; /* Reserve space for officer dropdown button */
+  padding-right: 11vw; /* Reserve space for officer dropdown button */
 }
 
 .mdt-header-info {
@@ -144,6 +144,16 @@
   font-weight: 700;
   color: #FDB913;
   letter-spacing: 0.5px;
+}
+
+/* Prevent long callsign text from overlapping the profile button */
+.mdt-header-unit {
+  max-width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .mdt-header-datetime {

@@ -15,6 +15,31 @@ function getDeptLogo() {
   return getInterfaceCustomization().deptLogo || '';
 }
 
+// Agency overrides: allow mapping of raw agency identifiers to display names.
+// Stored in `interfaceCustomization.agencyOverrides` as newline-separated `from=to` pairs.
+function parseAgencyOverrides() {
+  const customization = getInterfaceCustomization();
+  const raw = customization.agencyOverrides || '';
+  const map = {};
+  raw.split('\n').forEach(line => {
+    const trimmed = line.trim();
+    if (!trimmed) return;
+    const parts = trimmed.split('=');
+    if (parts.length < 2) return;
+    const key = parts[0].trim().toLowerCase();
+    const val = parts.slice(1).join('=').trim();
+    if (key && val) map[key] = val;
+  });
+  return map;
+}
+
+function translateAgency(name) {
+  if (!name) return name;
+  const map = parseAgencyOverrides();
+  const key = ('' + name).trim().toLowerCase();
+  return map[key] || name;
+}
+
 // Initialize some UI elements from current customization
 const mdtTitleEl = document.querySelector('.mdt-title-main');
 if (mdtTitleEl && getDeptName()) mdtTitleEl.textContent = getDeptName();
@@ -1972,13 +1997,14 @@ function openOfficerManagement() {
   if (window) {
     window.style.display = 'block';
     createOfficerMgmtTaskbarButton();
+    focusWindow('officerMgmtWindow');
     loadOfficersList();
   }
 }
 
 function createOfficerMgmtTaskbarButton() {
   // Check if taskbar button already exists
-  if (document.querySelector('.taskbar-app[data-window="officerMgmt"]')) {
+  if (document.querySelector('.taskbar-app[data-window="officerMgmtWindow"]')) {
     return;
   }
   
@@ -1987,7 +2013,7 @@ function createOfficerMgmtTaskbarButton() {
   
   const button = document.createElement('div');
   button.className = 'taskbar-app active';
-  button.dataset.window = 'officerMgmt';
+  button.dataset.window = 'officerMgmtWindow';
   const _custom = JSON.parse(localStorage.getItem('interfaceCustomization') || '{}');
   const _label = _custom.deptName ? `${_custom.deptName} Officer Management System` : 'LAPD Officer Management System';
   button.innerHTML = `
@@ -2004,6 +2030,7 @@ function createOfficerMgmtTaskbarButton() {
       if (window.style.display === 'none') {
         window.style.display = 'block';
         button.classList.add('active');
+        focusWindow('officerMgmtWindow');
       } else {
         window.style.display = 'none';
         button.classList.remove('active');
@@ -2015,7 +2042,7 @@ function createOfficerMgmtTaskbarButton() {
 }
 
 function removeOfficerMgmtTaskbarButton() {
-  const button = document.querySelector('.taskbar-app[data-window="officerMgmt"]');
+  const button = document.querySelector('.taskbar-app[data-window="officerMgmtWindow"]');
   if (button) {
     button.remove();
   }
@@ -2603,7 +2630,7 @@ async function loadOfficersList() {
           </div>
           <div class="officer-info-row">
             <span><strong>Division:</strong> ${officer.division}</span>
-            <span><strong>Callsign:</strong> ${officer.callSign}</span>
+            <span><strong>Unit:</strong> ${officer.unit}</span>
           </div>
         </div>
         ${canEdit ? `
@@ -3014,6 +3041,8 @@ document.addEventListener('DOMContentLoaded', () => {
     officerMgmtTitlebar.addEventListener('mousedown', (e) => {
       if (e.target.closest('.window-btn')) return;
       if (officerMgmtWindow.classList.contains('maximized')) return;
+      // bring this window to front when starting a drag
+      focusWindow('officerMgmtWindow');
       
       isDragging = true;
       const rect = officerMgmtWindow.getBoundingClientRect();
@@ -3040,6 +3069,9 @@ document.addEventListener('DOMContentLoaded', () => {
         officerMgmtWindow.style.transition = '';
       }
     });
+    
+    // Also focus when clicking anywhere on the window container
+    officerMgmtWindow.addEventListener('mousedown', () => focusWindow('officerMgmtWindow'));
   }
   
   // Make Player Settings window draggable
@@ -3084,33 +3116,51 @@ document.addEventListener('DOMContentLoaded', () => {
 // Generic window dragging helper used by multiple windows
 function makeWindowDraggable(winEl, titlebarEl) {
   if (!winEl || !titlebarEl) return;
+  // prevent double-initialization
+  if (winEl.__draggableInitialized) return;
+  winEl.__draggableInitialized = true;
+
   let isDragging = false;
   let offsetX = 0, offsetY = 0;
+  let lastPointerId = null;
 
-  titlebarEl.addEventListener('mousedown', (e) => {
+  // Use pointer events so we capture drag even when pointer leaves iframe/browser
+  titlebarEl.addEventListener('pointerdown', (e) => {
     if (e.target.closest && e.target.closest('.window-btn')) return;
     if (winEl.classList.contains('maximized')) return;
     isDragging = true;
+    lastPointerId = e.pointerId;
+    try { if (titlebarEl.setPointerCapture) titlebarEl.setPointerCapture(e.pointerId); } catch (err) {}
     const rect = winEl.getBoundingClientRect();
     offsetX = e.clientX - rect.left;
     offsetY = e.clientY - rect.top;
     winEl.style.transition = 'none';
   });
 
-  document.addEventListener('mousemove', (e) => {
+  const onPointerMove = (e) => {
     if (!isDragging) return;
     const newLeft = e.clientX - offsetX;
     const newTop = e.clientY - offsetY;
     winEl.style.left = `${Math.max(0, Math.min(newLeft, window.innerWidth - 100))}px`;
     winEl.style.top = `${Math.max(0, Math.min(newTop, window.innerHeight - 100))}px`;
     winEl.style.transform = 'none';
-  });
+  };
 
-  document.addEventListener('mouseup', () => {
+  const endDrag = (e) => {
     if (!isDragging) return;
     isDragging = false;
     winEl.style.transition = '';
-  });
+    try { if (lastPointerId && titlebarEl.releasePointerCapture) titlebarEl.releasePointerCapture(lastPointerId); } catch (err) {}
+    lastPointerId = null;
+  };
+
+  document.addEventListener('pointermove', onPointerMove);
+  document.addEventListener('pointerup', endDrag);
+  document.addEventListener('pointercancel', endDrag);
+
+  // If the window loses focus (user switches apps) or the pointer leaves the browser, cancel dragging to avoid 'stuck' state
+  window.addEventListener('blur', () => { if (isDragging) endDrag(); });
+  document.addEventListener('mouseleave', (e) => { if (isDragging) endDrag(); });
 }
 
 // Interface Customization Functions
@@ -3515,6 +3565,22 @@ window.addEventListener('DOMContentLoaded', function() {
   const recycleTitlebar = document.getElementById('recycleBinTitlebar');
   if (recycleWindow && recycleTitlebar) {
     makeWindowDraggable(recycleWindow, recycleTitlebar);
+  }
+  // Make notepad window draggable and focusable
+  const notepadWindow = document.getElementById('notepadWindow');
+  const notepadTitlebar = document.getElementById('notepadTitlebar');
+  if (notepadWindow && notepadTitlebar) {
+    makeWindowDraggable(notepadWindow, notepadTitlebar);
+    notepadWindow.addEventListener('mousedown', () => focusWindow('notepadWindow'));
+    notepadTitlebar.addEventListener('mousedown', () => focusWindow('notepadWindow'));
+  }
+
+  // Ensure MDT window focuses when clicked (bring to front)
+  const mdtWindowInit = document.getElementById('mdtWindow');
+  const mdtTitlebarInit = document.getElementById('mdtTitlebar');
+  if (mdtWindowInit) {
+    mdtWindowInit.addEventListener('mousedown', () => focusWindow('mdtWindow'));
+    if (mdtTitlebarInit) mdtTitlebarInit.addEventListener('mousedown', () => focusWindow('mdtWindow'));
   }
 });
 
